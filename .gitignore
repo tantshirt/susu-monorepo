@@ -1,0 +1,53 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Editor / OS
+*.swp
+*.swo
+*~
+.idea/
+.vscode/
+
+# Local-only workspace — never commit
+_bmad/
+.claude/
+.agents/
+.codex/
+output_susu/
+.worktrees/
+
+# Node
+node_modules/
+.next/
+.turbo/
+.pnpm-store/
+dist/
+build/
+*.log
+.npmrc
+
+# Rust / Anchor
+target/
+Cargo.lock.bak
+.anchor/
+test-ledger/
+
+# Solana keys (NEVER commit)
+*.json.keypair
+keypair.json
+*-keypair.json
+id.json
+
+# Env / secrets
+.env
+.env.*
+!.env.example
+
+# Coverage / test artifacts (commit canonical adversary artifact under audits/, not coverage)
+coverage/
+.nyc_output/
+
+# Submodule / nested unrelated project
+mempalace/
