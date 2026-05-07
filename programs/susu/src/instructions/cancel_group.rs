@@ -27,9 +27,12 @@ pub fn apply_cancel_group(group: &mut Group) -> Result<()> {
 }
 
 pub fn handler(ctx: Context<CancelGroup>, group_id: u64) -> Result<()> {
-    let _ = group_id;
     let group = &mut ctx.accounts.group;
 
+    require!(
+        group_id == group.group_id,
+        anchor_lang::error::ErrorCode::ConstraintSeeds
+    );
     apply_cancel_group(group)?;
 
     msg!("group_cancelled group_pda={} creator={}", group.key(), ctx.accounts.creator.key());
