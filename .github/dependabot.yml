@@ -1,0 +1,25 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directories:
+      - "/"
+      - "/apps/reference"
+      - "/sdk/ts"
+      - "/examples/with-privy"
+      - "/examples/with-squads"
+      - "/examples/with-token-extensions"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+
+  - package-ecosystem: "cargo"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
