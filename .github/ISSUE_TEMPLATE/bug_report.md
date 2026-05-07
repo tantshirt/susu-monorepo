@@ -10,9 +10,9 @@ Describe the bug in one paragraph.
 
 ## Reproduction steps
 
-1. 
-2. 
-3. 
+1.
+2.
+3.
 
 ## Expected behavior
 
