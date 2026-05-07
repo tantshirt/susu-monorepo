@@ -147,12 +147,8 @@
           "type": "pubkey"
         },
         {
-          "name": "contribution_period_slots",
-          "type": "u64"
-        },
-        {
-          "name": "grace_period_slots",
-          "type": "u64"
+          "name": "contribution_period",
+          "type": "i64"
         }
       ]
     },

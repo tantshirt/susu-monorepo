@@ -80,6 +80,13 @@ function assertIdlEnumVariants(idl, name, expectedVariants) {
   assert.deepEqual(actualVariants, expectedVariants, `IDL ${name} variants must match Story 2.1 shape`);
 }
 
+function assertIdlInstructionArgs(idl, name, expectedArgs) {
+  const instruction = (idl.instructions ?? []).find((item) => item.name === name);
+  assert.ok(instruction, `IDL must define instruction ${name}`);
+  const actualArgs = (instruction.args ?? []).map((arg) => [arg.name, normalizeIdlType(arg.type)]);
+  assert.deepEqual(actualArgs, expectedArgs, `IDL ${name} args must match the persisted Story 2.1 state shape`);
+}
+
 async function listRustFiles(dirPath) {
   const dir = new URL(dirPath, repoRoot);
   const entries = await readdir(dir, { withFileTypes: true });
@@ -239,6 +246,14 @@ test('[P0] IDL exposes Story 2.1 surface while retaining frozen hash behavior', 
   for (const variant of expectedErrors) {
     assert.ok(idlErrorNames.has(variant), `IDL must expose SusuError.${variant}`);
   }
+
+  assertIdlInstructionArgs(idl, 'create_group', [
+    ['group_id', 'u64'],
+    ['contribution_amount', 'u64'],
+    ['member_count', 'u8'],
+    ['mint', 'pubkey'],
+    ['contribution_period', 'i64'],
+  ]);
 
   const expectedHash = freeze.match(/[a-f0-9]{64}/)?.[0];
   assert.ok(expectedHash, 'IDL_FREEZE.md must contain a SHA-256 hash');

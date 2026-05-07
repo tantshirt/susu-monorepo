@@ -39,8 +39,7 @@ pub mod susu {
         contribution_amount: u64,
         member_count: u8,
         mint: Pubkey,
-        contribution_period_slots: u64,
-        grace_period_slots: u64,
+        contribution_period: i64,
     ) -> Result<()> {
         instructions::create_group::handler(
             ctx,
@@ -48,8 +47,7 @@ pub mod susu {
             contribution_amount,
             member_count,
             mint,
-            contribution_period_slots,
-            grace_period_slots,
+            contribution_period,
         )
     }
 

@@ -4,7 +4,7 @@
 - Program: susu
 - Program ID: 2f6CBrNHZp8oyXPFRXfzroGx5pZ7WyLA6dUqFFpYsX2N
 - IDL Path: programs/susu/idl/susu.json
-- SHA-256: 005791e876e7780098f6888751e6af6692943d3ebbcc2ab8c17955b904052b08
+- SHA-256: ee0df6d2e8f6fb49f42cea48181dbd729b53e8d2c1f3ea671f11b8e83f18036d
 - Justification: Story 2.1 finalized the account/error IDL surface and logged the hash update in `log/2026-05-07.md`.
 
 ## Freeze Policy
