@@ -50,6 +50,14 @@ jobs:
           install -m 0755 /tmp/anchor "$HOME/.cargo/bin/anchor"
           anchor --version
 
+      - name: Install Solana CLI
+        run: |
+          sh -c "$(curl -sSfL https://release.anza.xyz/stable/install)"
+          echo "$HOME/.local/share/solana/install/active_release/bin" >> "$GITHUB_PATH"
+          export PATH="$HOME/.local/share/solana/install/active_release/bin:$PATH"
+          solana --version
+          cargo-build-sbf --version
+
       - name: Install JS dependencies
         run: |
           if [ -f pnpm-lock.yaml ]; then
