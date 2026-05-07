@@ -32,4 +32,8 @@ pub enum SusuError {
     ContributionAlreadyRecorded,
     #[msg("The rotation index is invalid for this group.")]
     InvalidContributionRotation,
+    #[msg("The group_id argument does not match this group account.")]
+    GroupIdMismatch,
+    #[msg("Member position state does not match the group and signer.")]
+    MemberPositionMismatch,
 }

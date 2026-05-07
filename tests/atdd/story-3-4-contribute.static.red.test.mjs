@@ -64,6 +64,8 @@ test('[P0] SusuError defines contribution-specific variants for Story 3.4', asyn
     'MemberSlashedCannotContribute',
     'ContributionAlreadyRecorded',
     'InvalidContributionRotation',
+    'GroupIdMismatch',
+    'MemberPositionMismatch',
   ]) {
     assert.match(
       source,

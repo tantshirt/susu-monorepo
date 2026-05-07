@@ -1,6 +1,6 @@
 use anchor_lang::context::CpiContext;
 use anchor_lang::prelude::*;
-use anchor_spl::token::{self, Mint, Token, TokenAccount, Transfer};
+use anchor_spl::token::{self, Mint, Token, TokenAccount, TransferChecked};
 
 use crate::error::SusuError;
 use crate::seeds::{GROUP_SEED, MEMBER_SEED, VAULT_SEED};
@@ -20,6 +20,8 @@ pub struct Contribute<'info> {
         mut,
         seeds = [MEMBER_SEED, group.key().as_ref(), member.key().as_ref()],
         bump,
+        constraint = member_position.group == group.key() @ SusuError::MemberPositionMismatch,
+        constraint = member_position.member_pubkey == member.key() @ SusuError::MemberPositionMismatch,
     )]
     pub member_position: Account<'info, MemberPosition>,
     #[account(mut)]
@@ -45,10 +47,15 @@ pub struct Contribute<'info> {
 
 pub fn handler(
     ctx: Context<Contribute>,
-    _group_id: u64,
+    group_id: u64,
     amount: u64,
     rotation_index: u8,
 ) -> Result<()> {
+    require!(
+        group_id == ctx.accounts.group.group_id,
+        SusuError::GroupIdMismatch
+    );
+
     require!(
         ctx.accounts.group.status == GroupStatus::Active,
         SusuError::GroupNotActive
@@ -106,16 +113,19 @@ pub fn handler(
         SusuError::ContributionAmountMismatch
     );
 
-    token::transfer(
+    let decimals = ctx.accounts.mint.decimals;
+    token::transfer_checked(
         CpiContext::new(
-            token::ID,
-            Transfer {
+            ctx.accounts.token_program.key(),
+            TransferChecked {
                 from: ctx.accounts.member_token_account.to_account_info(),
+                mint: ctx.accounts.mint.to_account_info(),
                 to: ctx.accounts.vault.to_account_info(),
                 authority: ctx.accounts.member.to_account_info(),
             },
         ),
         amount,
+        decimals,
     )?;
 
     let member_position = &mut ctx.accounts.member_position;
