@@ -10,6 +10,7 @@ use instructions::{
 };
 
 pub mod error;
+pub mod constants;
 pub mod instructions;
 pub mod seeds;
 pub mod state;
@@ -36,18 +37,20 @@ pub mod susu {
     pub fn create_group(
         ctx: Context<CreateGroup>,
         group_id: u64,
+        n: u8,
         contribution_amount: u64,
-        member_count: u8,
-        mint: Pubkey,
         contribution_period: i64,
+        mint: Pubkey,
+        curve_params: state::CurveParams,
     ) -> Result<()> {
         instructions::create_group::handler(
             ctx,
             group_id,
+            n,
             contribution_amount,
-            member_count,
-            mint,
             contribution_period,
+            mint,
+            curve_params,
         )
     }
 

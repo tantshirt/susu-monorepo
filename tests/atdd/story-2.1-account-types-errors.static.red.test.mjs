@@ -84,7 +84,7 @@ function assertIdlInstructionArgs(idl, name, expectedArgs) {
   const instruction = (idl.instructions ?? []).find((item) => item.name === name);
   assert.ok(instruction, `IDL must define instruction ${name}`);
   const actualArgs = (instruction.args ?? []).map((arg) => [arg.name, normalizeIdlType(arg.type)]);
-  assert.deepEqual(actualArgs, expectedArgs, `IDL ${name} args must match the persisted Story 2.1 state shape`);
+  assert.deepEqual(actualArgs, expectedArgs, `IDL ${name} args must match the current persisted instruction contract`);
 }
 
 async function listRustFiles(dirPath) {
@@ -249,10 +249,11 @@ test('[P0] IDL exposes Story 2.1 surface while retaining frozen hash behavior', 
 
   assertIdlInstructionArgs(idl, 'create_group', [
     ['group_id', 'u64'],
+    ['n', 'u8'],
     ['contribution_amount', 'u64'],
-    ['member_count', 'u8'],
-    ['mint', 'pubkey'],
     ['contribution_period', 'i64'],
+    ['mint', 'pubkey'],
+    ['curve_params', 'CurveParams'],
   ]);
 
   const expectedHash = freeze.match(/[a-f0-9]{64}/)?.[0];
