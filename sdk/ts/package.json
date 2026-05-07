@@ -10,7 +10,11 @@
     "@solana/kit": "^2.0.0",
     "@solana/web3-compat": "^0.0.21"
   },
+  "devDependencies": {
+    "vitest": "^3.0.0"
+  },
   "scripts": {
-    "build": "tsc -p tsconfig.json"
+    "build": "tsc -p tsconfig.json",
+    "test": "vitest run"
   }
 }
