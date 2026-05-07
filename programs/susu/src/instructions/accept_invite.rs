@@ -27,15 +27,8 @@ pub struct AcceptInvite<'info> {
 
 pub fn handler(ctx: Context<AcceptInvite>) -> Result<()> {
     let group = &mut ctx.accounts.group;
-    validate_accept_invite_group(group)?;
 
-    let slot = group
-        .members
-        .iter_mut()
-        .find(|member_slot| member_slot.pubkey == ctx.accounts.member.key())
-        .ok_or(error!(SusuError::MemberNotInvited))?;
-
-    accept_member_slot(slot)?;
+    apply_accept_invite(group, ctx.accounts.member.key())?;
 
     let member_position = &mut ctx.accounts.member_position;
     member_position.group = group.key();
