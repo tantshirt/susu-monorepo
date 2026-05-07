@@ -14,10 +14,20 @@ if [[ ! -f "$PROGRAM_LIB" ]]; then
   exit 0
 fi
 
-placeholder_count="$({
-  grep -r -o --include='*.rs' 'Ok(())' "$INSTRUCTION_DIR" 2>/dev/null || true
+handler_count="$({
+  grep -rEl --include='*.rs' 'pub[[:space:]]+fn[[:space:]]+handler[[:space:]]*\(' "$INSTRUCTION_DIR" 2>/dev/null || true
 } | wc -l | tr -d ' ')"
-if [[ "$placeholder_count" -ge 9 ]]; then
+placeholder_count="$(
+  for instruction_file in "$INSTRUCTION_DIR"/*.rs; do
+    [[ -f "$instruction_file" ]] || continue
+    perl -0ne '
+      s{//[^\n]*}{}g;
+      s{/\*.*?\*/}{}gs;
+      print "$ARGV\n" if /\bpub\s+fn\s+handler\s*\([^{}]*\)\s*->\s*Result\s*<\s*\(\s*\)\s*>\s*\{\s*Ok\s*\(\s*\(\s*\)\s*\)\s*\}/s;
+    ' "$instruction_file"
+  done | wc -l | tr -d ' '
+)"
+if [[ "$handler_count" -gt 0 && "$placeholder_count" -eq "$handler_count" ]]; then
   echo "check-fincen-posture: vacuously passing (instruction handlers are placeholders)"
   exit 0
 fi
