@@ -26,11 +26,9 @@ test('[P0] pnpm install completes for initial workspace scaffold', async (t) => 
     return;
   }
 
-  const { stdout, stderr } = await execFileAsync('pnpm', ['install'], {
+  await execFileAsync('pnpm', ['install'], {
     cwd: repoRootPath,
   });
-
-  assert.ok(stdout !== undefined || stderr !== undefined);
 });
 
 test('[P0] cargo metadata resolves workspace', async (t) => {
