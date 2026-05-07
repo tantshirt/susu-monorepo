@@ -14,7 +14,9 @@ if [[ ! -f "$PROGRAM_LIB" ]]; then
   exit 0
 fi
 
-placeholder_count="$(grep -o 'Ok(())' "$PROGRAM_LIB" 2>/dev/null | wc -l | tr -d ' ')"
+placeholder_count="$({
+  grep -r -o --include='*.rs' 'Ok(())' "$INSTRUCTION_DIR" 2>/dev/null || true
+} | wc -l | tr -d ' ')"
 if [[ "$placeholder_count" -ge 9 ]]; then
   echo "check-fincen-posture: vacuously passing (instruction handlers are placeholders)"
   exit 0
