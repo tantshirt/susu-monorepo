@@ -67,7 +67,7 @@ development_status:
   3-1-curve-module: done
   3-2-post-collateral: ready-for-dev
   3-3-pda-vault-init: ready-for-dev
-  3-4-contribute: ready-for-dev
+  3-4-contribute: atdd-done # BMad testarch ATDD Step 2
   3-5-top-up-collateral: ready-for-dev
   3-6-slash-member: ready-for-dev
   3-7-withdraw-collateral: ready-for-dev
