@@ -25,8 +25,9 @@ inputDocuments:
 
 ## TDD Red Phase
 
-- Generated RED-phase acceptance scaffolds only; every test is `test.skip(...)` by design.
-- These tests encode the expected Story 1.1 behavior before implementation.
+- Generated RED-phase acceptance scaffolds were activated during Story 1.1 implementation.
+- Directory/manifest/README/license checks execute normally; runtime smoke checks for `pnpm` and `cargo`
+  are environment-aware and skip only when those tools are unavailable locally.
 
 ## Acceptance Criteria Coverage
 
