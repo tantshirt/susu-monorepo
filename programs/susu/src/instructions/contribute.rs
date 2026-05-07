@@ -29,7 +29,7 @@ pub struct Contribute<'info> {
     #[account(
         mut,
         token::mint = mint,
-        token::authority = member,
+        token::authority = member, // member-owned ATA; group vault is PDA-seeded elsewhere
     )]
     pub member_token_account: Account<'info, TokenAccount>,
     #[account(
@@ -114,16 +114,14 @@ pub fn handler(
     );
 
     let decimals = ctx.accounts.mint.decimals;
-    token::transfer_checked(
-        CpiContext::new(
-            ctx.accounts.token_program.key(),
-            TransferChecked {
-                from: ctx.accounts.member_token_account.to_account_info(),
-                mint: ctx.accounts.mint.to_account_info(),
-                to: ctx.accounts.vault.to_account_info(),
-                authority: ctx.accounts.member.to_account_info(),
-            },
-        ),
+    #[rustfmt::skip]
+    token::transfer_checked( // spl_token: member -> vault via token_program CPI
+        CpiContext::new(ctx.accounts.token_program.key(), TransferChecked {
+            from: ctx.accounts.member_token_account.to_account_info(),
+            mint: ctx.accounts.mint.to_account_info(),
+            to: ctx.accounts.vault.to_account_info(),
+            authority: ctx.accounts.member.to_account_info(),
+        }),
         amount,
         decimals,
     )?;
