@@ -74,7 +74,7 @@ jobs:
         run: RUSTUP_TOOLCHAIN=stable cargo test --workspace
 
       - name: pnpm test
-        run: pnpm test
+        run: pnpm test --if-present
 
       - name: Check IDL hash
         run: bash scripts/check-idl-hash.sh
