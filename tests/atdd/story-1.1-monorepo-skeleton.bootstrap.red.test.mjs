@@ -28,6 +28,7 @@ test('[P0] pnpm install completes for initial workspace scaffold', async (t) => 
 
   await execFileAsync('pnpm', ['install'], {
     cwd: repoRootPath,
+    timeout: 120000,
   });
 });
 
@@ -39,6 +40,7 @@ test('[P0] cargo metadata resolves workspace', async (t) => {
 
   const { stdout } = await execFileAsync('cargo', ['metadata', '--format-version', '1'], {
     cwd: repoRootPath,
+    timeout: 120000,
   });
 
   assert.match(stdout, /"workspace_members"/);
