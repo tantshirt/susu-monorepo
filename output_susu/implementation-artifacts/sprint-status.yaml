@@ -1,5 +1,5 @@
 # generated: 2026-05-06
-# last_updated: 2026-05-07
+# last_updated: 2026-05-08
 # project: Susu Protocol
 # project_key: NOKEY
 # tracking_system: file-system
@@ -35,7 +35,7 @@
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 
 generated: 2026-05-06
-last_updated: 2026-05-07
+last_updated: 2026-05-08
 project: Susu Protocol
 project_key: NOKEY
 tracking_system: file-system
@@ -64,7 +64,7 @@ development_status:
 
   # Epic 3: Curve Module, Contributions & Collateral Lifecycle
   epic-3: in-progress
-  3-1-curve-module: ready-for-dev
+  3-1-curve-module: review
   3-2-post-collateral: ready-for-dev
   3-3-pda-vault-init: ready-for-dev
   3-4-contribute: ready-for-dev

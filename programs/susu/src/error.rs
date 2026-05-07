@@ -16,4 +16,8 @@ pub enum SusuError {
     GroupCancelled,
     #[msg("This member has already accepted the invite.")]
     AlreadyAccepted,
+    #[msg("Curve arithmetic overflowed; reduce contribution or parameters.")]
+    CurveOverflow,
+    #[msg("Curve inputs are out of range (n must be 3..=12, slot < n).")]
+    InvalidCurveParams,
 }
