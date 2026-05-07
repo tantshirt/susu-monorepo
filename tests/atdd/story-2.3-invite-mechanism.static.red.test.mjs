@@ -107,6 +107,10 @@ test('[P0] invite_members validates Forming status and exact count before mutati
     normalized.includes('require!(invitees.len()==group.nasusize,SusuError::InvalidMemberCount)'),
     'invitee count must exactly match Group.n',
   );
+  assert.ok(
+    normalized.includes('require!(group.members.is_empty(),SusuError::GroupFull)'),
+    'already-populated rosters must reject re-invite attempts',
+  );
   assertSourceOrder(
     normalized,
     'require!(group.status==GroupStatus::Forming,SusuError::GroupAlreadyStarted)',
@@ -119,6 +123,12 @@ test('[P0] invite_members validates Forming status and exact count before mutati
     'group.members=',
     'count validation must run before members mutation',
   );
+  assertSourceOrder(
+    normalized,
+    'require!(group.members.is_empty(),SusuError::GroupFull)',
+    'group.members=',
+    're-invite validation must run before members mutation',
+  );
 
   for (const partialMutation of ['.push(', '.extend(', '.append(', '.resize(', '.truncate(', '.clear(']) {
     assert.ok(!normalized.includes(partialMutation), `invite_members must not use partial roster mutation ${partialMutation}`);
@@ -130,7 +140,11 @@ test('[P0] invite_members writes ordered MemberSlot roster entries into Group.me
   const normalized = compact(source);
 
   assert.ok(normalized.includes('group.members=invitees.into_iter().map('), 'invite_members must map input invitees in order');
-  assert.match(source, /MemberSlot\s*\{\s*pubkey\s*:\s*[^,]+,\s*accepted\s*:\s*false\s*\}/s, 'each invitee must become an unaccepted MemberSlot');
+  assert.ok(
+    /MemberSlot\{pubkey,accepted:false,?\}/.test(normalized) ||
+      /MemberSlot\s*\{\s*pubkey\s*:\s*[^,]+,\s*accepted\s*:\s*false\s*\}/s.test(source),
+    'each invitee must become an unaccepted MemberSlot',
+  );
   assert.ok(normalized.includes('.collect();'), 'mapped MemberSlot entries must be collected into Group.members');
   assert.doesNotMatch(source, /\bMemberPosition\b/, 'Story 2.3 must not create MemberPosition PDAs');
 });

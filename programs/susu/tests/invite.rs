@@ -1,5 +1,7 @@
+use anchor_lang::error::Error;
 use anchor_lang::prelude::Pubkey;
 use susu::error::SusuError;
+use susu::instructions::invite_members::apply_invite_members;
 use susu::seeds::GROUP_SEED;
 use susu::state::{CurveParams, Group, GroupStatus, MemberSlot};
 use susu::ID;
@@ -49,23 +51,6 @@ fn member_snapshot(group: &Group) -> Vec<(Pubkey, bool)> {
         .collect()
 }
 
-fn invite_members_proxy(group: &mut Group, invitees: Vec<Pubkey>) -> Result<(), SusuError> {
-    if group.status != GroupStatus::Forming {
-        return Err(SusuError::GroupAlreadyStarted);
-    }
-
-    if invitees.len() != group.n as usize {
-        return Err(SusuError::InvalidMemberCount);
-    }
-
-    group.members = invitees
-        .into_iter()
-        .map(|pubkey| member_slot(pubkey, false))
-        .collect();
-
-    Ok(())
-}
-
 fn derive_group_pda(creator: Pubkey, group_id: u64) -> Pubkey {
     let group_id_bytes = group_id.to_le_bytes();
     Pubkey::find_program_address(
@@ -75,13 +60,23 @@ fn derive_group_pda(creator: Pubkey, group_id: u64) -> Pubkey {
     .0
 }
 
+fn assert_susu_error(result: anchor_lang::Result<()>, expected: SusuError) {
+    match result {
+        Err(Error::AnchorError(error)) => {
+            assert_eq!(error.error_code_number, u32::from(expected));
+            assert_eq!(error.error_name, expected.name());
+        }
+        other => panic!("expected {expected:?}, got {other:?}"),
+    }
+}
+
 #[test]
 fn test_invite_happy_path_5_members() {
     let mut group = group_fixture(5, GroupStatus::Forming);
     let invitees: Vec<_> = (0..5).map(|_| Pubkey::new_unique()).collect();
     let expected = invitees.clone();
 
-    invite_members_proxy(&mut group, invitees).expect("forming group with n invitees must pass");
+    apply_invite_members(&mut group, invitees).expect("forming group with n invitees must pass");
 
     assert_eq!(group.members.len(), 5);
     assert_eq!(
@@ -106,10 +101,10 @@ fn test_invite_wrong_count_rejected() {
     ];
     let original_snapshot = member_snapshot(&group);
 
-    assert!(matches!(
-        invite_members_proxy(&mut group, invitees),
-        Err(SusuError::InvalidMemberCount)
-    ));
+    assert_susu_error(
+        apply_invite_members(&mut group, invitees),
+        SusuError::InvalidMemberCount,
+    );
     assert_eq!(member_snapshot(&group), original_snapshot);
 }
 
@@ -128,12 +123,32 @@ fn test_invite_post_forming_rejected() {
         ];
         let original_snapshot = member_snapshot(&group);
 
-        assert!(matches!(
-            invite_members_proxy(&mut group, invitees),
-            Err(SusuError::GroupAlreadyStarted)
-        ));
+        assert_susu_error(
+            apply_invite_members(&mut group, invitees),
+            SusuError::GroupAlreadyStarted,
+        );
         assert_eq!(member_snapshot(&group), original_snapshot);
     }
+}
+
+#[test]
+fn test_invite_reinvite_rejected() {
+    let mut group = group_fixture(5, GroupStatus::Forming);
+    group.members = vec![
+        member_slot(Pubkey::new_unique(), false),
+        member_slot(Pubkey::new_unique(), false),
+        member_slot(Pubkey::new_unique(), false),
+        member_slot(Pubkey::new_unique(), false),
+        member_slot(Pubkey::new_unique(), false),
+    ];
+    let original_snapshot = member_snapshot(&group);
+    let invitees: Vec<_> = (0..5).map(|_| Pubkey::new_unique()).collect();
+
+    assert_susu_error(
+        apply_invite_members(&mut group, invitees),
+        SusuError::GroupFull,
+    );
+    assert_eq!(member_snapshot(&group), original_snapshot);
 }
 
 #[test]
@@ -148,7 +163,7 @@ fn test_invite_duplicate_pubkeys_are_preserved_for_story_2_4() {
         Pubkey::new_unique(),
     ];
 
-    invite_members_proxy(&mut group, invitees.clone())
+    apply_invite_members(&mut group, invitees.clone())
         .expect("Story 2.3 preserves duplicate invitees for Story 2.4 accept handling");
 
     assert_eq!(group.members.len(), 5);

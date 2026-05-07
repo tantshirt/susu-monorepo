@@ -16,10 +16,21 @@ pub struct InviteMembers<'info> {
     pub group: Account<'info, Group>,
 }
 
-#[allow(clippy::redundant_field_names)]
 pub fn handler(ctx: Context<InviteMembers>, invitees: Vec<Pubkey>) -> Result<()> {
     let group = &mut ctx.accounts.group;
 
+    apply_invite_members(group, invitees)?;
+
+    msg!(
+        "members_invited group_pda={} count={}",
+        group.key(),
+        group.members.len()
+    );
+
+    Ok(())
+}
+
+pub fn apply_invite_members(group: &mut Group, invitees: Vec<Pubkey>) -> Result<()> {
     require!(
         group.status == GroupStatus::Forming,
         SusuError::GroupAlreadyStarted
@@ -28,17 +39,15 @@ pub fn handler(ctx: Context<InviteMembers>, invitees: Vec<Pubkey>) -> Result<()>
         invitees.len() == group.n as usize,
         SusuError::InvalidMemberCount
     );
+    require!(group.members.is_empty(), SusuError::GroupFull);
 
     group.members = invitees
         .into_iter()
-        .map(|pubkey| MemberSlot { pubkey: pubkey, accepted: false })
+        .map(|pubkey| MemberSlot {
+            pubkey,
+            accepted: false,
+        })
         .collect();
-
-    msg!(
-        "members_invited group_pda={} count={}",
-        group.key(),
-        group.members.len()
-    );
 
     Ok(())
 }
