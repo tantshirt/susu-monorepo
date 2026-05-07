@@ -12,6 +12,11 @@
     "ContributionAmountMismatch": "The amount sent does not match this group's fixed contribution. Resubmit using the exact contribution amount configured on the group.",
     "MemberSlashedCannotContribute": "This member position was slashed and can no longer contribute. Contact the group admin or choose a different wallet or group.",
     "ContributionAlreadyRecorded": "You already recorded a contribution for this rotation. Wait for the next rotation or verify on-chain history before retrying.",
-    "InvalidContributionRotation": "That rotation index is not valid for this group's size. Use a rotation within the group's member count and try again."
+    "InvalidContributionRotation": "That rotation index is not valid for this group's size. Use a rotation within the group's member count and try again.",
+    "InvalidCurveParams": "Curve inputs are outside the supported range. Check group size and rotation slot.",
+    "GroupIdMismatch": "The group id in the transaction does not match this group account. Reload group details and retry.",
+    "MemberPositionMismatch": "This member position does not match your wallet or this group.",
+    "CurveOverflow": "Collateral math overflowed. Use smaller amounts or contact support if this seems wrong.",
+    "InsufficientCollateral": "Your posted collateral plus this top-up is still below the minimum required by the curve. Increase the amount or wait until you can post more."
   }
 }

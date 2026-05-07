@@ -36,4 +36,6 @@ pub enum SusuError {
     GroupIdMismatch,
     #[msg("Member position state does not match the group and signer.")]
     MemberPositionMismatch,
+    #[msg("Posted collateral plus top-up is below the curve-required minimum.")]
+    InsufficientCollateral,
 }

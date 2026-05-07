@@ -4,8 +4,8 @@
 - Program: susu
 - Program ID: 2f6CBrNHZp8oyXPFRXfzroGx5pZ7WyLA6dUqFFpYsX2N
 - IDL Path: programs/susu/idl/susu.json
-- SHA-256: c18e27587ee22ac2b35453325912dd24f0cbec586729ced96b73a5ef88fd590f
-- Justification: Story 3.4 implemented `contribute` with vault PDA wiring, SPL token CPI, `ContributionRecord` participation fields, rotation/window validation, group lifecycle gates, and expanded SusuError variants; `Group` gained rotation-window metadata fields; IDL and Codama outputs were regenerated after `anchor build --ignore-keys` and `pnpm sdk:codegen`.
+- SHA-256: 6fb1f7b68e1e6cdc57e358205c6ff20d4166f6147a7f5153ac31caf7f094d1ba
+- Justification: Story 3.5 `top_up_collateral` + read-only `group` account in instruction layout (`InsufficientCollateral`, Epic 3 curve + `contribute`); IDL regenerated (`anchor build --ignore-keys`, `pnpm sdk:codegen`).
 
 ## Freeze Policy
 
