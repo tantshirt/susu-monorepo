@@ -1,0 +1,155 @@
+# generated: 2026-05-06
+# last_updated: 2026-05-08
+# project: Susu Protocol
+# project_key: NOKEY
+# tracking_system: file-system
+# story_location: {project-root}/output_susu/implementation-artifacts
+
+# STATUS DEFINITIONS:
+# ==================
+# Epic Status:
+#   - backlog: Epic not yet started
+#   - in-progress: Epic actively being worked on
+#   - done: All stories in epic completed
+#
+# Epic Status Transitions:
+#   - backlog → in-progress: Automatically when first story is created (via create-story)
+#   - in-progress → done: Manually when all stories reach 'done' status
+#
+# Story Status:
+#   - backlog: Story only exists in epic file
+#   - ready-for-dev: Story file created in stories folder
+#   - in-progress: Developer actively working on implementation
+#   - review: Ready for code review (via Dev's code-review workflow)
+#   - done: Story completed
+#
+# Retrospective Status:
+#   - optional: Can be completed but not required
+#   - done: Retrospective has been completed
+#
+# WORKFLOW NOTES:
+# ===============
+# - Epic transitions to 'in-progress' automatically when first story is created
+# - Stories can be worked in parallel if team capacity allows
+# - Developer typically creates next story after previous one is 'done' to incorporate learnings
+# - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
+
+generated: 2026-05-06
+last_updated: 2026-05-08
+project: Susu Protocol
+project_key: NOKEY
+tracking_system: file-system
+story_location: "{project-root}/output_susu/implementation-artifacts"
+
+development_status:
+  # Epic 1: Project Bootstrap, Foundation & IDL Freeze
+  epic-1: in-progress
+  1-1-monorepo-skeleton: ready-for-dev
+  1-2-anchor-program-shell: ready-for-dev
+  1-3-codama-codegen: ready-for-dev
+  1-4-ci-scaffold: ready-for-dev
+  1-5-license-readme-contributing: ready-for-dev
+  1-6-daily-log-day1-spikes: ready-for-dev
+  epic-1-retrospective: optional
+
+  # Epic 2: Group Lifecycle Anchor Program
+  epic-2: done
+  2-1-account-types-errors: done # merged via PR #12
+  2-2-create-group: done # merged via PR #13
+  2-3-invite-mechanism: done # merged via PR #14
+  2-4-accept-invite: done # merged via PR #15 on 2026-05-07
+  2-5-cancel-group: done # merged via PR #16 on 2026-05-07
+  2-6-state-query-helpers: done # merged via PR #17 on 2026-05-07
+  epic-2-retrospective: done
+
+  # Epic 3: Curve Module, Contributions & Collateral Lifecycle
+  epic-3: backlog
+  3-1-curve-module: ready-for-dev
+  3-2-post-collateral: ready-for-dev
+  3-3-pda-vault-init: ready-for-dev
+  3-4-contribute: ready-for-dev
+  3-5-top-up-collateral: ready-for-dev
+  3-6-slash-member: ready-for-dev
+  3-7-withdraw-collateral: ready-for-dev
+  3-8-all-collateralized-gate: ready-for-dev
+  epic-3-retrospective: optional
+
+  # Epic 4: Permissionless Rotation & Payout Claim
+  epic-4: backlog
+  4-1-rotation-slot-algorithm: ready-for-dev
+  4-2-claim-payout: ready-for-dev
+  4-3-non-recipient-guard: ready-for-dev
+  4-4-pre-deadline-guard: ready-for-dev
+  4-5-double-claim-guard: ready-for-dev
+  4-6-e2e-lifecycle-test: ready-for-dev
+  epic-4-retrospective: optional
+
+  # Epic 5: Curve Verification, Adversary Simulation & Public Documentation
+  epic-5: backlog
+  5-1-no-strategic-default-proptest: ready-for-dev
+  5-2-adversary-cli-skeleton: ready-for-dev
+  5-3-thirty-percent-cartel-scenario: ready-for-dev
+  5-4-deterministic-adversary-report: ready-for-dev
+  5-5-collateral-curve-doc: ready-for-dev
+  5-6-threat-model-doc: ready-for-dev
+  5-7-fincen-cvc-framing-doc: ready-for-dev
+  5-8-audit-engagement: ready-for-dev
+  5-9-legal-opinion: ready-for-dev
+  epic-5-retrospective: optional
+
+  # Epic 6: SDK Surface, Examples & One-Command Reproducibility
+  epic-6: backlog
+  6-1-ts-sdk-fluent-client: ready-for-dev
+  6-2-sdk-simulate-cluster-gate: ready-for-dev
+  6-3-sdk-error-classes: ready-for-dev
+  6-4-rust-client: ready-for-dev
+  6-5-sdk-parity-check: ready-for-dev
+  6-6-example-with-privy: ready-for-dev
+  6-7-example-with-squads: ready-for-dev
+  6-8-example-with-token-extensions: ready-for-dev
+  6-9-integration-docs: ready-for-dev
+  6-10-susu-demo-script: ready-for-dev
+  6-11-verify-orchestrator: ready-for-dev
+  6-12-publish-pipeline: ready-for-dev
+  epic-6-retrospective: optional
+
+  # Epic 7: Reference App — Dual-Skin Multi-Locale End-Saver Experience
+  epic-7: backlog
+  7-1-next-app-scaffold: ready-for-dev
+  7-2-design-tokens: ready-for-dev
+  7-3-typography: ready-for-dev
+  7-4-shadcn-primitives: ready-for-dev
+  7-5-skin-toggle: ready-for-dev
+  7-6-top-nav: ready-for-dev
+  7-7-i18n-routing: ready-for-dev
+  7-8-i18n-parity: ready-for-dev
+  7-9-privy-onboarding: ready-for-dev
+  7-10-tx-confirm-modal: ready-for-dev
+  7-11-rotation-card-curve-viz: ready-for-dev
+  7-12-supporting-components: ready-for-dev
+  7-13-convex-schema: ready-for-dev
+  7-14-one-tap-contribute: ready-for-dev
+  7-15-one-tap-claim: ready-for-dev
+  7-16-helius-fallback-sphere: ready-for-dev
+  7-17-mobile-responsive: ready-for-dev
+  7-18-accessibility: ready-for-dev
+  epic-7-retrospective: optional
+
+  # Epic 8: README Hero, Demo Video & Submission Marketing Surface
+  epic-8: backlog
+  8-1-readme-first-viewport: ready-for-dev
+  8-2-adversary-badge: ready-for-dev
+  8-3-upgrade-burned-badge: ready-for-dev
+  8-4-curve-svg-plot: ready-for-dev
+  8-5-readme-link-cluster: ready-for-dev
+  8-6-demo-video: ready-for-dev
+  8-7-partner-outreach: ready-for-dev
+  epic-8-retrospective: optional
+
+  # Epic 9: Mainnet Deploy & Immutability Gate
+  epic-9: backlog
+  9-1-audit-signoff-gate: ready-for-dev
+  9-2-mainnet-deploy-burn: ready-for-dev
+  9-3-immutability-check: ready-for-dev
+  9-4-upgrade-burned-badge-live: ready-for-dev
+  epic-9-retrospective: optional
