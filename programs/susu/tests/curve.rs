@@ -1,61 +1,80 @@
 //! Story 3.1 — curve golden fixture + `calculate_collateral` integration checks.
 //! Run: `cargo test -p susu --test curve`
 
+use std::collections::HashSet;
 use std::path::PathBuf;
 
+use serde::Deserialize;
 use susu::curve::calculate_collateral;
 
 fn curve_golden_fixture_path() -> PathBuf {
     PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../tests/fixtures/curve-golden.json")
 }
 
-fn u64_field(segment: &str, key_json: &str) -> u64 {
-    let i = segment
-        .find(key_json)
-        .unwrap_or_else(|| panic!("missing {} in segment:\n{segment}", key_json));
-    let tail = segment[i + key_json.len()..].trim_start();
-    let digits: String = tail
-        .chars()
-        .take_while(|c| c.is_ascii_digit())
-        .collect();
-    digits
-        .parse()
-        .unwrap_or_else(|_| panic!("bad u64 after {key_json} in {tail}"))
+#[derive(Debug, Deserialize)]
+struct CurveGoldenFixture {
+    schema_version: u32,
+    cases: Vec<CurveGoldenCase>,
 }
 
-fn u8_field(segment: &str, key_json: &str) -> u8 {
-    u64_field(segment, key_json) as u8
+#[derive(Debug, Deserialize)]
+struct CurveGoldenCase {
+    label: String,
+    n: u8,
+    slot: u8,
+    contribution_base_units: u64,
+    decimals: u8,
+    expected_required_collateral_base_units: u64,
 }
+
+/// Vector sizes we commit to covering in the golden file (at least one case each).
+const REQUIRED_N_VALUES: &[u8] = &[3, 5, 7, 10, 12];
 
 #[test]
 fn curve_golden_fixture_exists_and_matches_calculate_collateral() {
     let path = curve_golden_fixture_path();
     let raw =
         std::fs::read_to_string(&path).unwrap_or_else(|e| panic!("read {}: {}", path.display(), e));
-    assert!(
-        raw.contains("\"schema_version\""),
-        "fixture must declare schema_version"
+
+    let fixture: CurveGoldenFixture = serde_json::from_str(&raw)
+        .unwrap_or_else(|e| panic!("parse {} as JSON: {e}", path.display()));
+
+    assert_eq!(
+        fixture.schema_version, 1,
+        "curve-golden.json schema_version must be 1 (bump only with coordinated cross-lang update)"
     );
-    assert!(raw.contains("\"cases\""), "fixture must expose a cases array");
-    for n in ["\"n\": 3", "\"n\": 5", "\"n\": 7", "\"n\": 10", "\"n\": 12"] {
+
+    assert!(
+        !fixture.cases.is_empty(),
+        "fixture must contain at least one case"
+    );
+
+    let ns_present: HashSet<u8> = fixture.cases.iter().map(|c| c.n).collect();
+    for &n in REQUIRED_N_VALUES {
         assert!(
-            raw.contains(n),
-            "fixture must include at least one case for {}",
-            n
+            ns_present.contains(&n),
+            "fixture must include at least one case for n={n}"
         );
     }
 
-    for segment in raw.split("\"label\":").skip(1) {
-        let segment = segment.splitn(2, '}').next().unwrap_or(segment);
-        if !segment.contains("\"n\":") {
-            continue;
-        }
-        let n = u8_field(segment, "\"n\":");
-        let slot = u8_field(segment, "\"slot\":");
-        let contribution = u64_field(segment, "\"contribution_base_units\":");
-        let decimals = u8_field(segment, "\"decimals\":");
-        let expected = u64_field(segment, "\"expected_required_collateral_base_units\":");
-        let got = calculate_collateral(slot, n, contribution, decimals).unwrap();
-        assert_eq!(got, expected);
+    for case in &fixture.cases {
+        let got = calculate_collateral(
+            case.slot,
+            case.n,
+            case.contribution_base_units,
+            case.decimals,
+        )
+        .unwrap_or_else(|e| {
+            panic!(
+                "calculate_collateral failed for label={:?} n={} slot={}: {:?}",
+                case.label, case.n, case.slot, e
+            )
+        });
+        assert_eq!(
+            got,
+            case.expected_required_collateral_base_units,
+            "label={:?}",
+            case.label
+        );
     }
 }
