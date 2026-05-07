@@ -20,3 +20,32 @@ fn contribute_source_orders_active_before_cpi_and_duplicate_before_cpi() {
     let dup = compact.find("ContributionAlreadyRecorded").unwrap();
     assert!(dup < cpi, "duplicate guard must precede CPI");
 }
+
+#[test]
+fn contribute_source_checks_accepted_members_before_amount_rules() {
+    let compact: String = CONTRIBUTE_SOURCE.chars().filter(|c| !c.is_whitespace()).collect();
+    assert!(
+        compact.contains(".members") && compact.contains(".accepted"),
+        "must verify accepted membership on Group.members"
+    );
+    let membership = compact.find("MemberNotInvited").expect("MemberNotInvited guard");
+    let amount_mismatch = compact
+        .find("ContributionAmountMismatch")
+        .expect("amount validation");
+    assert!(
+        membership < amount_mismatch,
+        "membership guard must precede amount validation"
+    );
+}
+
+#[test]
+fn contribute_source_enforces_outside_window_before_cpi() {
+    let compact: String = CONTRIBUTE_SOURCE.chars().filter(|c| !c.is_whitespace()).collect();
+    assert!(
+        compact.contains("OutsideContributionWindow"),
+        "must surface OutsideContributionWindow for bad timing"
+    );
+    let window = compact.find("OutsideContributionWindow").unwrap();
+    let cpi = compact.find("CpiContext::new").unwrap();
+    assert!(window < cpi, "window enforcement must precede CPI");
+}

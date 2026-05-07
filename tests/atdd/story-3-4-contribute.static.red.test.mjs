@@ -60,6 +60,7 @@ test('[P0] SusuError defines contribution-specific variants for Story 3.4', asyn
   for (const expected of [
     'ContributionAmountMismatch',
     'GroupNotActive',
+    'OutsideContributionWindow',
     'MemberSlashedCannotContribute',
     'ContributionAlreadyRecorded',
     'InvalidContributionRotation',
@@ -124,6 +125,50 @@ test('[P0] contribute account struct wires group, signer, vault, SPL token inter
     source,
     /seeds\s*=\s*\[\s*VAULT_SEED[\s\S]*group\.key\(\)\.as_ref\(\)[\s\S]*\]/s,
     'vault PDA must bind VAULT_SEED with group key',
+  );
+});
+
+test('[P0] contribute verifies accepted Group.members slot before contribution rules', async () => {
+  const source = await readRepoFile('programs/susu/src/instructions/contribute.rs');
+  const normalized = compact(source);
+
+  assert.ok(normalized.includes('.members'), 'handler must consult group.members');
+  assert.ok(normalized.includes('.accepted'), 'must require accepted membership slots');
+  assert.ok(
+    normalized.includes('SusuError::MemberNotInvited'),
+    'non-members must surface MemberNotInvited',
+  );
+
+  const handlerBody = sliceAfterHandlerNormalized(normalized);
+  assertSourceOrder(
+    handlerBody,
+    'SusuError::MemberNotInvited',
+    'SusuError::ContributionAmountMismatch',
+    'accepted-member guard must precede amount validation',
+  );
+});
+
+test('[P0] contribute enforces per-rotation contribution window before SPL CPI', async () => {
+  const source = await readRepoFile('programs/susu/src/instructions/contribute.rs');
+  const normalized = compact(source);
+
+  assert.ok(
+    normalized.includes('SusuError::OutsideContributionWindow'),
+    'contributions outside the window must map to OutsideContributionWindow',
+  );
+  assert.ok(normalized.includes('Sysvar<'), 'must wire Clock sysvar for window checks');
+  assert.ok(
+    normalized.includes('contribution_period') && normalized.includes('contribution_window_duration'),
+    'must combine contribution_period with contribution_window_duration',
+  );
+  assert.ok(normalized.includes('start_timestamp'), 'must anchor windows to group.start_timestamp');
+
+  const handlerBody = sliceAfterHandlerNormalized(normalized);
+  assertSourceOrder(
+    handlerBody,
+    'SusuError::OutsideContributionWindow',
+    'CpiContext',
+    'contribution window enforcement must precede CPI construction',
   );
 });
 

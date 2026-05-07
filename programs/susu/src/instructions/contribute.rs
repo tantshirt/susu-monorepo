@@ -55,6 +55,13 @@ pub fn handler(
     );
 
     require!(
+        ctx.accounts.group.members.iter().any(|slot| {
+            slot.pubkey == ctx.accounts.member.key() && slot.accepted
+        }),
+        SusuError::MemberNotInvited
+    );
+
+    require!(
         ctx.accounts.member_position.slash_status != SlashStatus::Slashed,
         SusuError::MemberSlashedCannotContribute
     );
