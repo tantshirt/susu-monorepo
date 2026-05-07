@@ -30,6 +30,8 @@ Story 2.1 defines type and interface contracts only: `Group`, `MemberPosition`, 
   - `[P1] English i18n messages cover every SusuError with recovery hints`
   - `[P1] PDA seed literals stay centralized in seeds.rs`
   - `[P0] IDL exposes Story 2.1 surface while retaining frozen hash behavior`
+  - `[P0] IDL account type definitions match Story 2.1 account shapes`
+  - `[P1] Story 2.1 parity scripts stay green for i18n, seeds, and generated SDKs`
 
 These are intentionally active red-phase tests. They should fail against the current placeholder production code and turn green only after Story 2.1 implementation updates the account types, error enum, i18n baseline, and regenerated IDL.
 
@@ -42,6 +44,7 @@ These are intentionally active red-phase tests. They should fail against the cur
 - Add `apps/reference/messages/en.json` with `errors.GroupFull`, `errors.GroupAlreadyStarted`, `errors.MemberNotInvited`, `errors.InvalidMemberCount`, `errors.MintNotSupported`, `errors.GroupCancelled`, and `errors.AlreadyAccepted` recovery hints.
 - Keep all PDA byte literals centralized in `programs/susu/src/seeds.rs`; import or document constants by name elsewhere.
 - Regenerate IDL with `anchor build`, then run `scripts/check-idl-hash.sh`. If the Story 2.1 IDL surface is correct but the frozen hash mismatches, escalate the freeze discrepancy instead of silently updating `IDL_FREEZE.md`.
+- Keep the generated TypeScript and Rust SDK surfaces in sync by running `scripts/check-sdk-parity.sh` after IDL or codegen changes.
 
 ## Commands
 

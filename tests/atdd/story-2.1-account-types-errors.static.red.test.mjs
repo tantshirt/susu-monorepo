@@ -1,9 +1,14 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { execFile } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { readdir, readFile } from 'node:fs/promises';
+import { fileURLToPath } from 'node:url';
+import { promisify } from 'node:util';
 
 const repoRoot = new URL('../../', import.meta.url);
+const repoRootPath = fileURLToPath(repoRoot);
+const execFileAsync = promisify(execFile);
 
 const expectedErrors = [
   'GroupFull',
@@ -23,9 +28,56 @@ async function readJson(path) {
   return JSON.parse(await readRepoFile(path));
 }
 
+async function runRepoCommand(command, args) {
+  try {
+    await execFileAsync(command, args, {
+      cwd: repoRootPath,
+      env: process.env,
+      maxBuffer: 1024 * 1024 * 8,
+      timeout: 120_000,
+    });
+  } catch (error) {
+    const output = [error.stdout, error.stderr].filter(Boolean).join('\n');
+    assert.fail(`${command} ${args.join(' ')} failed\n${output}`);
+  }
+}
+
 function assertRustField(source, name, typePattern) {
   const pattern = new RegExp(`pub\\s+${name}\\s*:\\s*${typePattern}\\s*,`);
   assert.match(source, pattern, `expected Rust field ${name}: ${typePattern}`);
+}
+
+function findIdlType(idl, name) {
+  const idlType = (idl.types ?? []).find((type) => type.name === name);
+  assert.ok(idlType, `IDL must define type ${name}`);
+  return idlType;
+}
+
+function normalizeIdlType(type) {
+  if (typeof type === 'string') {
+    return type;
+  }
+  if (type?.defined?.name) {
+    return type.defined.name;
+  }
+  if (type?.vec) {
+    return `Vec<${normalizeIdlType(type.vec)}>`;
+  }
+  return JSON.stringify(type);
+}
+
+function assertIdlStructFields(idl, name, expectedFields) {
+  const idlType = findIdlType(idl, name);
+  assert.equal(idlType.type?.kind, 'struct', `IDL ${name} must be a struct`);
+  const actualFields = (idlType.type.fields ?? []).map((field) => [field.name, normalizeIdlType(field.type)]);
+  assert.deepEqual(actualFields, expectedFields, `IDL ${name} fields must match Story 2.1 shape`);
+}
+
+function assertIdlEnumVariants(idl, name, expectedVariants) {
+  const idlType = findIdlType(idl, name);
+  assert.equal(idlType.type?.kind, 'enum', `IDL ${name} must be an enum`);
+  const actualVariants = (idlType.type.variants ?? []).map((variant) => variant.name);
+  assert.deepEqual(actualVariants, expectedVariants, `IDL ${name} variants must match Story 2.1 shape`);
 }
 
 async function listRustFiles(dirPath) {
@@ -191,4 +243,52 @@ test('[P0] IDL exposes Story 2.1 surface while retaining frozen hash behavior', 
   assert.ok(expectedHash, 'IDL_FREEZE.md must contain a SHA-256 hash');
   const actualHash = createHash('sha256').update(idlRaw).digest('hex');
   assert.equal(actualHash, expectedHash, 'regenerated IDL must still match the frozen preflight hash');
+});
+
+test('[P0] IDL account type definitions match Story 2.1 account shapes', async () => {
+  const idl = await readJson('programs/susu/idl/susu.json');
+
+  assertIdlStructFields(idl, 'Group', [
+    ['mint', 'pubkey'],
+    ['contribution_amount', 'u64'],
+    ['contribution_period', 'i64'],
+    ['n', 'u8'],
+    ['curve_params', 'CurveParams'],
+    ['members', 'Vec<MemberSlot>'],
+    ['status', 'GroupStatus'],
+    ['created_at', 'i64'],
+    ['creator', 'pubkey'],
+    ['group_id', 'u64'],
+  ]);
+  assertIdlStructFields(idl, 'MemberSlot', [
+    ['pubkey', 'pubkey'],
+    ['accepted', 'bool'],
+  ]);
+  assertIdlStructFields(idl, 'CurveParams', []);
+  assertIdlEnumVariants(idl, 'GroupStatus', ['Forming', 'Active', 'Cancelled', 'Completed']);
+
+  assertIdlStructFields(idl, 'MemberPosition', [
+    ['group', 'pubkey'],
+    ['member_pubkey', 'pubkey'],
+    ['rotation_slot', 'u8'],
+    ['contribution_history', 'Vec<ContributionRecord>'],
+    ['collateral_posted', 'u64'],
+    ['slash_status', 'SlashStatus'],
+  ]);
+  assertIdlStructFields(idl, 'ContributionRecord', []);
+  assertIdlEnumVariants(idl, 'SlashStatus', ['None', 'Slashed', 'Refunded']);
+
+  assertIdlStructFields(idl, 'RotationReceipt', [
+    ['group', 'pubkey'],
+    ['rotation_index', 'u8'],
+    ['amount', 'u64'],
+    ['recipient', 'pubkey'],
+    ['claimed_at', 'i64'],
+  ]);
+});
+
+test('[P1] Story 2.1 parity scripts stay green for i18n, seeds, and generated SDKs', async () => {
+  await runRepoCommand(process.execPath, ['scripts/check-i18n-parity.ts']);
+  await runRepoCommand('bash', ['scripts/check-patterns.sh']);
+  await runRepoCommand('bash', ['scripts/check-sdk-parity.sh']);
 });
