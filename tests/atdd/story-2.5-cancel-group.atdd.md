@@ -55,6 +55,7 @@ The repository does not yet have a committed LiteSVM transaction fixture that ca
 4. Return `SusuError::GroupAlreadyStarted` for every non-Forming status, including re-cancel.
 5. Do not add token accounts, vault/custody/refund logic, collateral mutation, close/realloc, or SPL token CPI.
 6. Replace static/proxy coverage with real LiteSVM instruction tests when the shared runtime fixture exists.
+7. After Story 2.4 accept-invite semantics land, add follow-up cancellation tests for partially accepted `Forming` groups. Keep those tests out of the Story 2.5 core branch so this branch does not depend on unmerged Story 2.4 behavior.
 
 ## Validation
 
