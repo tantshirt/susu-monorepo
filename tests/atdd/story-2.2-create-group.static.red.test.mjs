@@ -82,6 +82,8 @@ test('[P0] supported USDC and USDT allowlist is centralized in constants.rs', as
   }
   assertMatch(source, /4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU/, 'USDC devnet mint must match the Story 2.2 canonical address');
   assertMatch(source, /EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/, 'USDC mainnet mint must match the Story 2.2 canonical address');
+  assertMatch(source, /EiXDnrAg9ea2Q6vEPV7E5TpTU1vh41jcuZqKjU5Dc4ZF/, 'USDT devnet mint must match the Story 2.2 allowlist address');
+  assertMatch(source, /Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB/, 'USDT mainnet mint must match the Story 2.2 canonical address');
   assertMatch(source, /pub\s+fn\s+is_supported_mint\s*\(\s*mint\s*:\s*&Pubkey\s*\)\s*->\s*bool/, 'constants.rs must expose is_supported_mint');
 
   const compact = removeWhitespace(source);
