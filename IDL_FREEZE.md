@@ -4,8 +4,8 @@
 - Program: susu
 - Program ID: 2f6CBrNHZp8oyXPFRXfzroGx5pZ7WyLA6dUqFFpYsX2N
 - IDL Path: programs/susu/idl/susu.json
-- SHA-256: 6120fe5a6bb5613e9c1ea64a4abab0ccb154589d69c55f81b0b04e0cdde08ee5
-- Justification: Story 2.2 finalized the `create_group` instruction account/argument surface and logged the hash update in `log/2026-05-07.md`.
+- SHA-256: fd73c6c0f9af6872546328b27965ee848d39d813e7191d73ba7541333bf8ac43
+- Justification: Story 2.3 finalized the `invite_members` instruction surface and persisted `Group.bump` for canonical PDA account constraints; the update is logged in `log/2026-05-07.md`.
 
 ## Freeze Policy
 

@@ -193,6 +193,63 @@
       ]
     },
     {
+      "name": "invite_members",
+      "discriminator": [
+        56,
+        255,
+        155,
+        244,
+        52,
+        212,
+        99,
+        186
+      ],
+      "accounts": [
+        {
+          "name": "creator",
+          "signer": true,
+          "relations": [
+            "group"
+          ]
+        },
+        {
+          "name": "group",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  103,
+                  114,
+                  111,
+                  117,
+                  112
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "creator"
+              },
+              {
+                "kind": "account",
+                "path": "group.group_id",
+                "account": "Group"
+              }
+            ]
+          }
+        }
+      ],
+      "args": [
+        {
+          "name": "invitees",
+          "type": {
+            "vec": "pubkey"
+          }
+        }
+      ]
+    },
+    {
       "name": "post_collateral",
       "discriminator": [
         124,
@@ -444,6 +501,10 @@
           {
             "name": "group_id",
             "type": "u64"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
           }
         ]
       }

@@ -14,6 +14,7 @@ pub struct Group {
     pub created_at: i64,
     pub creator: Pubkey,
     pub group_id: u64,
+    pub bump: u8,
 }
 
 #[derive(AnchorSerialize, AnchorDeserialize, Clone, Debug, Default, InitSpace)]
@@ -25,7 +26,7 @@ pub struct MemberSlot {
 #[derive(AnchorSerialize, AnchorDeserialize, Clone, Copy, Debug, Default, InitSpace)]
 pub struct CurveParams {}
 
-#[derive(AnchorSerialize, AnchorDeserialize, Clone, Copy, Debug, Default, InitSpace)]
+#[derive(AnchorSerialize, AnchorDeserialize, Clone, Copy, Debug, Default, Eq, InitSpace, PartialEq)]
 pub enum GroupStatus {
     #[default]
     Forming,

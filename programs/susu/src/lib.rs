@@ -5,7 +5,7 @@ use anchor_lang::prelude::*;
 use instructions::{
     accept_invite::AcceptInvite, cancel_group::CancelGroup, claim_payout::ClaimPayout,
     contribute::Contribute, create_group::CreateGroup, post_collateral::PostCollateral,
-    slash_member::SlashMember, top_up_collateral::TopUpCollateral,
+    invite_members::InviteMembers, slash_member::SlashMember, top_up_collateral::TopUpCollateral,
     withdraw_collateral::WithdrawCollateral,
 };
 
@@ -22,6 +22,7 @@ use instructions::{
     claim_payout::__client_accounts_claim_payout,
     contribute::__client_accounts_contribute,
     create_group::__client_accounts_create_group,
+    invite_members::__client_accounts_invite_members,
     post_collateral::__client_accounts_post_collateral,
     slash_member::__client_accounts_slash_member,
     top_up_collateral::__client_accounts_top_up_collateral,
@@ -59,6 +60,10 @@ pub mod susu {
         group_id: u64,
     ) -> Result<()> {
         instructions::accept_invite::handler(ctx, group_id)
+    }
+
+    pub fn invite_members(ctx: Context<InviteMembers>, invitees: Vec<Pubkey>) -> Result<()> {
+        instructions::invite_members::handler(ctx, invitees)
     }
 
     pub fn post_collateral(

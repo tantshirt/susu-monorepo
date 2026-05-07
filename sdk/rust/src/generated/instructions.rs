@@ -6,6 +6,7 @@ pub enum SusuInstructionKind {
     ClaimPayout,
     Contribute,
     CreateGroup,
+    InviteMembers,
     PostCollateral,
     SlashMember,
     TopUpCollateral,
@@ -30,6 +31,10 @@ pub fn contribute() -> SusuInstructionKind {
 
 pub fn create_group() -> SusuInstructionKind {
     SusuInstructionKind::CreateGroup
+}
+
+pub fn invite_members() -> SusuInstructionKind {
+    SusuInstructionKind::InviteMembers
 }
 
 pub fn post_collateral() -> SusuInstructionKind {

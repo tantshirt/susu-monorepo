@@ -48,6 +48,7 @@ pub fn handler(
     group.created_at = Clock::get()?.unix_timestamp;
     group.creator = ctx.accounts.creator.key();
     group.group_id = group_id;
+    group.bump = ctx.bumps.group;
 
     msg!(
         "group_created group_pda={} creator={} n={} mint={} group_id={}",
