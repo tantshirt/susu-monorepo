@@ -63,7 +63,7 @@ development_status:
   epic-2-retrospective: done
 
   # Epic 3: Curve Module, Contributions & Collateral Lifecycle
-  epic-3: backlog
+  epic-3: in-progress
   3-1-curve-module: ready-for-dev
   3-2-post-collateral: ready-for-dev
   3-3-pda-vault-init: ready-for-dev

@@ -1,0 +1,20 @@
+# BMad shared config — BAD (BMad Autonomous Development) registered for Susu Protocol
+document_output_language: English
+output_folder: "{project-root}/output_susu"
+
+bad:
+  max_parallel_stories: 3
+  worktree_base_path: ".worktrees"
+  auto_pr_merge: true
+  run_ci_locally: false
+  wait_timer_seconds: 3600
+  retro_timer_seconds: 600
+  context_compaction_threshold: 80
+  stale_timeout_minutes: 60
+  timer_support: true
+  monitor_support: true
+  model_standard: sonnet
+  model_quality: opus
+  api_five_hour_threshold: 80
+  api_seven_day_threshold: 95
+  api_usage_threshold: 80
