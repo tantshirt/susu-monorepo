@@ -10,7 +10,7 @@
 //!
 //! **Strategic-default sign convention** (used by `docs/collateral-curve.md` and Epic 5):
 //! with payout `P(i) = (n-1) * contribution`, contributions paid before payout at slot `i`
-//! equal `i * contribution`, this collateral gives  
+//! equal `i * contribution`, this collateral gives
 //! `P(i) - i * contribution - C(i) = -n * contribution < 0` for every valid `i`.
 
 use crate::error::SusuError;
@@ -72,12 +72,28 @@ mod tests {
     }
 
     #[test]
-    fn curve_overflow_saturation_path() {
+    fn curve_overflow_when_contribution_times_factor_wraps() {
         let huge = u64::MAX;
         assert!(matches!(
             calculate_collateral(0, 12, huge, 6),
             Err(SusuError::CurveOverflow)
         ));
+    }
+
+    #[test]
+    fn zero_contribution_returns_zero() {
+        assert_eq!(calculate_collateral(0, 5, 0, 6).unwrap(), 0);
+    }
+
+    #[test]
+    fn last_valid_slot_factor_equals_n() {
+        // slot == n - 1 => factor = 2n - 1 - (n-1) = n
+        let n = 12u8;
+        let slot = n - 1;
+        assert_eq!(
+            calculate_collateral(slot, n, 50_000_000, 6).unwrap(),
+            50_000_000u64 * u64::from(n)
+        );
     }
 
     /// Table: `expected = contribution * (2*n - 1 - slot)` for $50 @ 6dp = 50_000_000.
