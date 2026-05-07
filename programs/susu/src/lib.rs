@@ -10,6 +10,7 @@ use instructions::{
 };
 
 pub mod error;
+pub mod curve;
 pub mod constants;
 pub mod instructions;
 pub mod seeds;
