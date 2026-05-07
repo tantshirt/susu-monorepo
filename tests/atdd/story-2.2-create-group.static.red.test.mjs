@@ -45,6 +45,7 @@ test('[P0] create_group account constraints derive the deterministic creator-sco
   assertMatch(source, /creator\s*:\s*Signer\s*<\s*'info\s*>/, 'creator must be the signing rent payer');
   assertMatch(source, /system_program\s*:\s*Program\s*<\s*'info\s*,\s*System\s*>/, 'Anchor init requires system_program');
   assertMatch(source, /#\[\s*account\s*\([\s\S]*\binit\b[\s\S]*\)\s*\]\s*pub\s+group\s*:\s*Account\s*<\s*'info\s*,\s*Group\s*>/, 'group must be initialized by Anchor');
+  assert.doesNotMatch(source, /\binit_if_needed\b/, 'duplicate create must fail through Anchor init, not init_if_needed');
   assert.ok(compact.includes('seeds=[GROUP_SEED,creator.key().as_ref(),group_id.to_le_bytes().as_ref()]'), 'Group PDA seeds must be [GROUP_SEED, creator, group_id]');
   assert.ok(compact.includes('bump'), 'Group PDA init must capture the bump');
   assert.ok(compact.includes('payer=creator'), 'creator must pay rent for the Group PDA');
@@ -108,6 +109,28 @@ test('[P0] create_group initializes exact Group fields and emits group_created a
   assertMatch(source, /msg!\s*\(\s*"group_created[^"]*group_pda=\{\}[^"]*creator=\{\}[^"]*n=\{\}[^"]*mint=\{\}[^"]*group_id=\{\}"/s, 'handler must emit group_created with group_pda, creator, n, mint, and group_id');
 });
 
+test('[P0] create_group remains metadata-only with no token custody, fee, or yield scope', async () => {
+  const source = await readRepoFile('programs/susu/src/instructions/create_group.rs');
+  const lower = source.toLowerCase();
+
+  for (const forbidden of [
+    'anchor_spl',
+    'tokenaccount',
+    'token_program',
+    'associated_token',
+    'transfer',
+    'transfer_checked',
+    'cpi',
+    'invoke',
+    'vault',
+    'custody',
+    'fee',
+    'yield',
+  ]) {
+    assert.ok(!lower.includes(forbidden), `create_group must not introduce ${forbidden} behavior`);
+  }
+});
+
 test('[P0] IDL exposes the Story 2.2 create_group account and argument contract', async () => {
   const idl = await readJson('programs/susu/idl/susu.json');
   const instruction = (idl.instructions ?? []).find((item) => item.name === 'create_group');
@@ -144,6 +167,10 @@ test('[P1] LiteSVM acceptance coverage is present or intentionally blocked by th
     'test_create_group_invalid_n_too_large',
     'test_create_group_unsupported_mint',
     'test_create_group_double_create_fails',
+    'test_create_group_accepts_member_count_bounds',
+    'test_create_group_accepts_all_allowlisted_mints',
+    'test_create_group_rejects_default_pubkey_mint',
+    'test_create_group_has_no_token_custody_fee_or_yield_proxy',
   ]) {
     assertMatch(source, new RegExp(`fn\\s+${expected}\\b`), `${path} must cover ${expected}`);
   }
@@ -154,6 +181,9 @@ test('[P1] LiteSVM acceptance coverage is present or intentionally blocked by th
     'AccountAlreadyInitialized',
     'group_created',
     'USDC_DEVNET',
+    'USDC_MAINNET',
+    'USDT_DEVNET',
+    'USDT_MAINNET',
   ]) {
     assertMatch(source, new RegExp(`\\b${expected}\\b`), `${path} must assert ${expected}`);
   }
