@@ -60,7 +60,7 @@ jobs:
           fi
 
       - name: Anchor build
-        run: anchor build
+        run: anchor build --ignore-keys
 
       - name: Cargo test (workspace)
         run: cargo test --workspace
