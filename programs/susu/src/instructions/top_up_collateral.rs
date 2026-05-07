@@ -12,7 +12,7 @@ pub struct TopUpCollateral<'info> {
         mut,
         seeds = [GROUP_SEED, group.creator.as_ref(), group_id.to_le_bytes().as_ref()],
         bump = group.bump,
-        constraint = group.group_id == group_id @ SusuError::InvalidMemberCount,
+        constraint = group.group_id == group_id @ SusuError::GroupIdMismatch,
     )]
     pub group: Account<'info, Group>,
     #[account(
