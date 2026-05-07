@@ -64,7 +64,7 @@ lastSaved: '2026-05-06T10:49:24Z'
 
 | Risk ID | Category | Description | Probability | Impact | Score | Mitigation | Owner |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| R-005 | BUS | Contribution and translation docs are incomplete for fork developers | 2 | 2 | 4 | Review content against FR48/FR51 checklist before merge | Dev | 
+| R-005 | BUS | Contribution and translation docs are incomplete for fork developers | 2 | 2 | 4 | Review content against FR48/FR51 checklist before merge | Dev |
 | R-006 | OPS | Daily log discipline starts late or gaps occur after T+0 | 1 | 3 | 3 | Require `log/YYYY-MM-DD.md` creation in Story 1.6 and ongoing routine | Dev |
 | R-007 | TECH | Surfpool spike blocks Epic 2 test strategy due unresolved compatibility | 2 | 2 | 4 | Timebox spike and document LiteSVM fallback clearly | Dev |
 
