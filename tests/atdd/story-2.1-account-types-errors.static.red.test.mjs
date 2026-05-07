@@ -225,6 +225,7 @@ test('[P1] PDA seed literals stay centralized in seeds.rs', async () => {
 test('[P0] IDL exposes Story 2.1 surface while retaining frozen hash behavior', async () => {
   const idlRaw = await readRepoFile('programs/susu/idl/susu.json');
   const freeze = await readRepoFile('IDL_FREEZE.md');
+  const engineeringLog = await readRepoFile('log/2026-05-07.md');
   const idl = JSON.parse(idlRaw);
 
   assert.equal(idl.address, '2f6CBrNHZp8oyXPFRXfzroGx5pZ7WyLA6dUqFFpYsX2N');
@@ -243,6 +244,11 @@ test('[P0] IDL exposes Story 2.1 surface while retaining frozen hash behavior', 
   assert.ok(expectedHash, 'IDL_FREEZE.md must contain a SHA-256 hash');
   const actualHash = createHash('sha256').update(idlRaw).digest('hex');
   assert.equal(actualHash, expectedHash, 'regenerated IDL must still match the frozen preflight hash');
+  assert.match(
+    engineeringLog,
+    new RegExp(actualHash),
+    'IDL hash updates must have a public engineering-log justification',
+  );
 });
 
 test('[P0] IDL account type definitions match Story 2.1 account shapes', async () => {
