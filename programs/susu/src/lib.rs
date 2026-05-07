@@ -11,15 +11,18 @@ pub mod instructions;
 pub mod seeds;
 pub mod state;
 
-pub use instructions::accept_invite::{__client_accounts_accept_invite, __cpi_client_accounts_accept_invite};
-pub use instructions::cancel_group::{__client_accounts_cancel_group, __cpi_client_accounts_cancel_group};
-pub use instructions::claim_payout::{__client_accounts_claim_payout, __cpi_client_accounts_claim_payout};
-pub use instructions::contribute::{__client_accounts_contribute, __cpi_client_accounts_contribute};
-pub use instructions::create_group::{__client_accounts_create_group, __cpi_client_accounts_create_group};
-pub use instructions::post_collateral::{__client_accounts_post_collateral, __cpi_client_accounts_post_collateral};
-pub use instructions::slash_member::{__client_accounts_slash_member, __cpi_client_accounts_slash_member};
-pub use instructions::top_up_collateral::{__client_accounts_top_up_collateral, __cpi_client_accounts_top_up_collateral};
-pub use instructions::withdraw_collateral::{__client_accounts_withdraw_collateral, __cpi_client_accounts_withdraw_collateral};
+#[allow(unused_imports)]
+use instructions::{
+    accept_invite::__client_accounts_accept_invite,
+    cancel_group::__client_accounts_cancel_group,
+    claim_payout::__client_accounts_claim_payout,
+    contribute::__client_accounts_contribute,
+    create_group::__client_accounts_create_group,
+    post_collateral::__client_accounts_post_collateral,
+    slash_member::__client_accounts_slash_member,
+    top_up_collateral::__client_accounts_top_up_collateral,
+    withdraw_collateral::__client_accounts_withdraw_collateral,
+};
 
 declare_id!("11111111111111111111111111111111");
 
