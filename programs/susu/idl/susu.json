@@ -1,37 +1,544 @@
 {
-  "version": "0.1.0",
-  "name": "susu",
+  "address": "2f6CBrNHZp8oyXPFRXfzroGx5pZ7WyLA6dUqFFpYsX2N",
+  "metadata": {
+    "name": "susu",
+    "version": "0.1.0",
+    "spec": "0.1.0"
+  },
   "instructions": [
-    { "name": "create_group" },
-    { "name": "accept_invite" },
-    { "name": "post_collateral" },
-    { "name": "contribute" },
-    { "name": "claim_payout" },
-    { "name": "top_up_collateral" },
-    { "name": "withdraw_collateral" },
-    { "name": "slash_member" },
-    { "name": "cancel_group" }
+    {
+      "name": "accept_invite",
+      "discriminator": [
+        173,
+        11,
+        225,
+        180,
+        81,
+        89,
+        93,
+        138
+      ],
+      "accounts": [
+        {
+          "name": "group"
+        },
+        {
+          "name": "member_position"
+        }
+      ],
+      "args": [
+        {
+          "name": "group_id",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "cancel_group",
+      "discriminator": [
+        219,
+        172,
+        216,
+        128,
+        155,
+        75,
+        12,
+        110
+      ],
+      "accounts": [],
+      "args": [
+        {
+          "name": "group_id",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "claim_payout",
+      "discriminator": [
+        127,
+        240,
+        132,
+        62,
+        227,
+        198,
+        146,
+        133
+      ],
+      "accounts": [
+        {
+          "name": "group"
+        },
+        {
+          "name": "rotation_receipt"
+        }
+      ],
+      "args": [
+        {
+          "name": "group_id",
+          "type": "u64"
+        },
+        {
+          "name": "rotation_index",
+          "type": "u8"
+        }
+      ]
+    },
+    {
+      "name": "contribute",
+      "discriminator": [
+        82,
+        33,
+        68,
+        131,
+        32,
+        0,
+        205,
+        95
+      ],
+      "accounts": [],
+      "args": [
+        {
+          "name": "group_id",
+          "type": "u64"
+        },
+        {
+          "name": "amount",
+          "type": "u64"
+        },
+        {
+          "name": "rotation_index",
+          "type": "u8"
+        }
+      ]
+    },
+    {
+      "name": "create_group",
+      "discriminator": [
+        79,
+        60,
+        158,
+        134,
+        61,
+        199,
+        56,
+        248
+      ],
+      "accounts": [
+        {
+          "name": "group"
+        }
+      ],
+      "args": [
+        {
+          "name": "group_id",
+          "type": "u64"
+        },
+        {
+          "name": "contribution_amount",
+          "type": "u64"
+        },
+        {
+          "name": "member_count",
+          "type": "u8"
+        },
+        {
+          "name": "mint",
+          "type": "pubkey"
+        },
+        {
+          "name": "contribution_period",
+          "type": "i64"
+        }
+      ]
+    },
+    {
+      "name": "post_collateral",
+      "discriminator": [
+        124,
+        252,
+        97,
+        53,
+        118,
+        194,
+        88,
+        112
+      ],
+      "accounts": [],
+      "args": [
+        {
+          "name": "group_id",
+          "type": "u64"
+        },
+        {
+          "name": "amount",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "slash_member",
+      "discriminator": [
+        141,
+        55,
+        175,
+        207,
+        197,
+        58,
+        106,
+        186
+      ],
+      "accounts": [],
+      "args": [
+        {
+          "name": "group_id",
+          "type": "u64"
+        },
+        {
+          "name": "member",
+          "type": "pubkey"
+        },
+        {
+          "name": "penalty_amount",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "top_up_collateral",
+      "discriminator": [
+        199,
+        253,
+        247,
+        165,
+        20,
+        10,
+        127,
+        243
+      ],
+      "accounts": [],
+      "args": [
+        {
+          "name": "group_id",
+          "type": "u64"
+        },
+        {
+          "name": "amount",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "withdraw_collateral",
+      "discriminator": [
+        115,
+        135,
+        168,
+        106,
+        139,
+        214,
+        138,
+        150
+      ],
+      "accounts": [],
+      "args": [
+        {
+          "name": "group_id",
+          "type": "u64"
+        },
+        {
+          "name": "amount",
+          "type": "u64"
+        }
+      ]
+    }
   ],
   "accounts": [
-    { "name": "Group" },
-    { "name": "MemberPosition" },
-    { "name": "RotationReceipt" }
+    {
+      "name": "Group",
+      "discriminator": [
+        209,
+        249,
+        208,
+        63,
+        182,
+        89,
+        186,
+        254
+      ]
+    },
+    {
+      "name": "MemberPosition",
+      "discriminator": [
+        88,
+        118,
+        224,
+        251,
+        240,
+        186,
+        123,
+        175
+      ]
+    },
+    {
+      "name": "RotationReceipt",
+      "discriminator": [
+        56,
+        72,
+        219,
+        143,
+        49,
+        229,
+        111,
+        208
+      ]
+    }
   ],
   "errors": [
     {
-      "code": 0,
-      "name": "Unimplemented",
-      "msg": "Unimplemented (placeholder)"
+      "code": 6000,
+      "name": "GroupFull",
+      "msg": "The group has reached its maximum member count."
+    },
+    {
+      "code": 6001,
+      "name": "GroupAlreadyStarted",
+      "msg": "The group has already started and no longer accepts lifecycle changes."
+    },
+    {
+      "code": 6002,
+      "name": "MemberNotInvited",
+      "msg": "The signer is not invited to this group."
+    },
+    {
+      "code": 6003,
+      "name": "InvalidMemberCount",
+      "msg": "The requested member count is outside the supported range."
+    },
+    {
+      "code": 6004,
+      "name": "MintNotSupported",
+      "msg": "The supplied mint is not supported by this group."
+    },
+    {
+      "code": 6005,
+      "name": "GroupCancelled",
+      "msg": "The group has been cancelled."
+    },
+    {
+      "code": 6006,
+      "name": "AlreadyAccepted",
+      "msg": "This member has already accepted the invite."
     }
   ],
-  "metadata": {
-    "story": "1.3-codama-codegen",
-    "fallbackGenerated": true,
-    "seeds": {
-      "GROUP_SEED": "group",
-      "MEMBER_SEED": "member",
-      "VAULT_SEED": "vault",
-      "ROTATION_SEED": "rotation"
+  "types": [
+    {
+      "name": "ContributionRecord",
+      "type": {
+        "kind": "struct",
+        "fields": []
+      }
+    },
+    {
+      "name": "CurveParams",
+      "type": {
+        "kind": "struct",
+        "fields": []
+      }
+    },
+    {
+      "name": "Group",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "mint",
+            "type": "pubkey"
+          },
+          {
+            "name": "contribution_amount",
+            "type": "u64"
+          },
+          {
+            "name": "contribution_period",
+            "type": "i64"
+          },
+          {
+            "name": "n",
+            "type": "u8"
+          },
+          {
+            "name": "curve_params",
+            "type": {
+              "defined": {
+                "name": "CurveParams"
+              }
+            }
+          },
+          {
+            "name": "members",
+            "type": {
+              "vec": {
+                "defined": {
+                  "name": "MemberSlot"
+                }
+              }
+            }
+          },
+          {
+            "name": "status",
+            "type": {
+              "defined": {
+                "name": "GroupStatus"
+              }
+            }
+          },
+          {
+            "name": "created_at",
+            "type": "i64"
+          },
+          {
+            "name": "creator",
+            "type": "pubkey"
+          },
+          {
+            "name": "group_id",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "GroupStatus",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "Forming"
+          },
+          {
+            "name": "Active"
+          },
+          {
+            "name": "Cancelled"
+          },
+          {
+            "name": "Completed"
+          }
+        ]
+      }
+    },
+    {
+      "name": "MemberPosition",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "group",
+            "docs": [
+              "PDA account derived from MEMBER_SEED, the group PDA, and member pubkey."
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "member_pubkey",
+            "type": "pubkey"
+          },
+          {
+            "name": "rotation_slot",
+            "docs": [
+              "Placeholder set to u8::MAX until Epic 4 assigns deterministic rotation slots."
+            ],
+            "type": "u8"
+          },
+          {
+            "name": "contribution_history",
+            "type": {
+              "vec": {
+                "defined": {
+                  "name": "ContributionRecord"
+                }
+              }
+            }
+          },
+          {
+            "name": "collateral_posted",
+            "type": "u64"
+          },
+          {
+            "name": "slash_status",
+            "type": {
+              "defined": {
+                "name": "SlashStatus"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "MemberSlot",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "pubkey",
+            "type": "pubkey"
+          },
+          {
+            "name": "accepted",
+            "type": "bool"
+          }
+        ]
+      }
+    },
+    {
+      "name": "RotationReceipt",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "group",
+            "docs": [
+              "PDA account derived from ROTATION_SEED, the group PDA, and rotation index bytes."
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "rotation_index",
+            "type": "u8"
+          },
+          {
+            "name": "amount",
+            "type": "u64"
+          },
+          {
+            "name": "recipient",
+            "type": "pubkey"
+          },
+          {
+            "name": "claimed_at",
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "SlashStatus",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "None"
+          },
+          {
+            "name": "Slashed"
+          },
+          {
+            "name": "Refunded"
+          }
+        ]
+      }
     }
-  }
+  ]
 }

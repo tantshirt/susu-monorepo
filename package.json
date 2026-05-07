@@ -7,6 +7,7 @@
   "scripts": {
     "susu:demo": "echo \"susu demo placeholder\"",
     "verify": "echo \"verify placeholder\"",
-    "sdk:codegen": "node codama.config.mjs"
+    "sdk:codegen": "node codama.config.mjs",
+    "test:atdd": "node --test tests/atdd/*.red.test.mjs"
   }
 }

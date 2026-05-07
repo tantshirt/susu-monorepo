@@ -2,9 +2,10 @@
 
 - Freeze Date: 2026-05-06
 - Program: susu
-- Program ID: 11111111111111111111111111111111
+- Program ID: 2f6CBrNHZp8oyXPFRXfzroGx5pZ7WyLA6dUqFFpYsX2N
 - IDL Path: programs/susu/idl/susu.json
-- SHA-256: b9ed05783e57c462bfc65a6420a03be926230137aac8b6fd102ff66a0b8af49e
+- SHA-256: ee0df6d2e8f6fb49f42cea48181dbd729b53e8d2c1f3ea671f11b8e83f18036d
+- Justification: Story 2.1 finalized the account/error IDL surface and logged the hash update in `log/2026-05-07.md`.
 
 ## Freeze Policy
 

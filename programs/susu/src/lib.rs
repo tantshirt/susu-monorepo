@@ -1,3 +1,6 @@
+#![allow(unexpected_cfgs)]
+#![allow(clippy::diverging_sub_expression)]
+
 use anchor_lang::prelude::*;
 use instructions::{
     accept_invite::AcceptInvite, cancel_group::CancelGroup, claim_payout::ClaimPayout,
@@ -24,7 +27,7 @@ use instructions::{
     withdraw_collateral::__client_accounts_withdraw_collateral,
 };
 
-declare_id!("11111111111111111111111111111111");
+declare_id!("2f6CBrNHZp8oyXPFRXfzroGx5pZ7WyLA6dUqFFpYsX2N");
 
 #[program]
 pub mod susu {
@@ -36,8 +39,7 @@ pub mod susu {
         contribution_amount: u64,
         member_count: u8,
         mint: Pubkey,
-        contribution_period_slots: u64,
-        grace_period_slots: u64,
+        contribution_period: i64,
     ) -> Result<()> {
         instructions::create_group::handler(
             ctx,
@@ -45,8 +47,7 @@ pub mod susu {
             contribution_amount,
             member_count,
             mint,
-            contribution_period_slots,
-            grace_period_slots,
+            contribution_period,
         )
     }
 
