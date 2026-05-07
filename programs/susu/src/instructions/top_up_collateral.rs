@@ -75,8 +75,7 @@ pub fn handler(ctx: Context<TopUpCollateral>, _group_id: u64, amount: u64) -> Re
             to: ctx.accounts.vault.to_account_info(),
             authority: ctx.accounts.member.to_account_info(),
         };
-        let cpi_ctx =
-            CpiContext::new(ctx.accounts.token_program.to_account_info(), cpi_accounts);
+        let cpi_ctx = CpiContext::new(ctx.accounts.token_program.key(), cpi_accounts);
         token::transfer(cpi_ctx, amount)?; // member -> vault (collateral)
     }
 
