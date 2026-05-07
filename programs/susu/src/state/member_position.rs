@@ -15,9 +15,13 @@ pub struct MemberPosition {
 }
 
 #[derive(AnchorSerialize, AnchorDeserialize, Clone, Copy, Debug, Default, InitSpace)]
-pub struct ContributionRecord {}
+pub struct ContributionRecord {
+    pub rotation_index: u8,
+    pub amount: u64,
+    pub paid_at: i64,
+}
 
-#[derive(AnchorSerialize, AnchorDeserialize, Clone, Copy, Debug, Default, InitSpace)]
+#[derive(AnchorSerialize, AnchorDeserialize, Clone, Copy, Debug, Default, Eq, InitSpace, PartialEq)]
 pub enum SlashStatus {
     #[default]
     None,

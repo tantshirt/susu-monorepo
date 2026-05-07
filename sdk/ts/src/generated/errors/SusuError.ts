@@ -7,4 +7,10 @@ export enum SusuError {
   MintNotSupported = 'MintNotSupported',
   GroupCancelled = 'GroupCancelled',
   AlreadyAccepted = 'AlreadyAccepted',
+  GroupNotActive = 'GroupNotActive',
+  OutsideContributionWindow = 'OutsideContributionWindow',
+  ContributionAmountMismatch = 'ContributionAmountMismatch',
+  MemberSlashedCannotContribute = 'MemberSlashedCannotContribute',
+  ContributionAlreadyRecorded = 'ContributionAlreadyRecorded',
+  InvalidContributionRotation = 'InvalidContributionRotation',
 }

@@ -15,6 +15,10 @@ pub struct Group {
     pub creator: Pubkey,
     pub group_id: u64,
     pub bump: u8,
+    /// Epoch for rotation window math (set equal to `created_at` at group creation).
+    pub start_timestamp: i64,
+    /// Inclusive contribution window length for each rotation (seconds).
+    pub contribution_window_duration: i64,
 }
 
 #[derive(AnchorSerialize, AnchorDeserialize, Clone, Debug, Default, InitSpace)]

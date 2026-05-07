@@ -49,6 +49,8 @@ pub fn handler(
     group.creator = ctx.accounts.creator.key();
     group.group_id = group_id;
     group.bump = ctx.bumps.group;
+    group.start_timestamp = group.created_at;
+    group.contribution_window_duration = contribution_period;
 
     msg!(
         "group_created group_pda={} creator={} n={} mint={} group_id={}",

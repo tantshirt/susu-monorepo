@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import type { Address } from '@solana/kit';
+import { getAddressEncoder } from '@solana/kit';
 
 type MockAccount = Readonly<{
   exists: boolean;
@@ -8,12 +9,52 @@ type MockAccount = Readonly<{
 
 type MockRpc = ReturnType<typeof createMockRpc>;
 
-const groupPda = 'Group111111111111111111111111111111111111' as Address;
-const memberPositionPda = 'MemberPosition11111111111111111111111111111' as Address;
-const creator = 'Creator1111111111111111111111111111111111' as Address;
-const member = 'Member11111111111111111111111111111111111' as Address;
-const programId = 'Susu1111111111111111111111111111111111111' as Address;
+const groupPda = '11111111111111111111111111111112' as Address;
+/** Valid pubkey distinct from groupPda for member-position PDA key in mocks */
+const memberPositionPda = 'TokenkegQfeZyiNwAJsbNbGKPFXCWuBvf9Ss623VQ5DA' as Address;
+const creator = 'TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb' as Address;
+const member = 'ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL' as Address;
+const programId = '2f6CBrNHZp8oyXPFRXfzroGx5pZ7WyLA6dUqFFpYsX2N' as Address;
 const groupId = 42n;
+
+const RECORD_LEN = 1 + 8 + 8;
+
+function buildMemberPositionAccountData(opts: Readonly<{
+  group: Address;
+  member: Address;
+  rotationSlot: number;
+  contributionRecords: ReadonlyArray<Readonly<{ rotationIndex: number; amount: bigint; paidAt: bigint }>>;
+  collateralPosted: bigint;
+  slashDiscriminant: number;
+}>): Uint8Array {
+  const enc = getAddressEncoder();
+  const groupBytes = enc.encode(opts.group);
+  const memberBytes = enc.encode(opts.member);
+  const vecLen = opts.contributionRecords.length;
+  const out = new Uint8Array(8 + 32 + 32 + 1 + 4 + vecLen * RECORD_LEN + 8 + 1);
+  const dv = new DataView(out.buffer);
+  let o = 8;
+  out.set(groupBytes, o);
+  o += 32;
+  out.set(memberBytes, o);
+  o += 32;
+  out[o] = opts.rotationSlot;
+  o += 1;
+  dv.setUint32(o, vecLen, true);
+  o += 4;
+  for (const rec of opts.contributionRecords) {
+    out[o] = rec.rotationIndex;
+    o += 1;
+    dv.setBigUint64(o, rec.amount, true);
+    o += 8;
+    dv.setBigInt64(o, rec.paidAt, true);
+    o += 8;
+  }
+  dv.setBigUint64(o, opts.collateralPosted, true);
+  o += 8;
+  out[o] = opts.slashDiscriminant;
+  return out;
+}
 
 const groupFixture = {
   mint: 'Mint1111111111111111111111111111111111111',
@@ -25,15 +66,6 @@ const groupFixture = {
   groupId,
   createdAt: 1_768_000_000n,
   curveParams: {},
-};
-
-const memberPositionFixture = {
-  group: groupPda,
-  memberPubkey: member,
-  rotationSlot: 3,
-  contributionHistory: [{ rotationIndex: 0, paidAt: 1_768_000_100n }],
-  collateralPosted: 100_000_000n,
-  slashStatus: { __kind: 'None' },
 };
 
 function createMockRpc(accounts: Record<string, MockAccount> = {}) {
@@ -70,8 +102,8 @@ async function loadQueriesWithGeneratedDecoderMocks() {
     decodeGroup: vi.fn(() => groupFixture),
   }));
   vi.doMock('../src/generated/accounts/MemberPosition.js', () => ({
-    getMemberPositionDecoder: vi.fn(() => ({ decode: vi.fn(() => memberPositionFixture) })),
-    decodeMemberPosition: vi.fn(() => memberPositionFixture),
+    getMemberPositionDecoder: vi.fn(() => ({ decode: vi.fn((data: Uint8Array) => ({ raw: data })) })),
+    decodeMemberPosition: vi.fn((data: Uint8Array) => ({ raw: data })),
   }));
 
   const deriveGroupPda = vi.fn(async () => groupPda);
@@ -115,19 +147,28 @@ describe('Story 2.6 query helpers', () => {
   });
 
   it('getMemberPosition returns decoded MemberPosition and undefined when missing', async () => {
+    const raw = new Uint8Array([7, 8, 9]);
     const rpc = createMockRpc({
-      [memberPositionPda]: { exists: true, data: new Uint8Array([7, 8, 9]) },
+      [memberPositionPda]: { exists: true, data: raw },
     });
     const { getMemberPosition, deriveMemberPositionPda } = await loadQueriesWithGeneratedDecoderMocks();
 
-    await expect(getMemberPosition(rpc as MockRpc, programId, groupPda, member)).resolves.toEqual(memberPositionFixture);
+    await expect(getMemberPosition(rpc as MockRpc, programId, groupPda, member)).resolves.toEqual({ raw });
     await expect(getMemberPosition(createMockRpc() as MockRpc, programId, groupPda, member)).resolves.toBeUndefined();
     expect(deriveMemberPositionPda).toHaveBeenCalledWith(programId, groupPda, member);
   });
 
   it('queryParticipationHistory uses a MemberPosition.member_pubkey memcmp filter at offset 40', async () => {
+    const positionData = buildMemberPositionAccountData({
+      group: groupPda,
+      member,
+      rotationSlot: 3,
+      contributionRecords: [{ rotationIndex: 0, amount: 50_000_000n, paidAt: 1_768_000_100n }],
+      collateralPosted: 100_000_000n,
+      slashDiscriminant: 0,
+    });
     const rpc = createMockRpc({
-      [memberPositionPda]: { exists: true, data: new Uint8Array([10, 11, 12]) },
+      [memberPositionPda]: { exists: true, data: positionData },
     });
     const { queryParticipationHistory } = await loadQueriesWithGeneratedDecoderMocks();
 

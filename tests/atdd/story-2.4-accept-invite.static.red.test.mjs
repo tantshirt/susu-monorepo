@@ -135,7 +135,10 @@ test('[P0] accept_invite flips only the invited signer slot and initializes plac
   assert.ok(normalized.includes('member_position.member_pubkey=ctx.accounts.member.key();'), 'MemberPosition.member_pubkey must be the signer');
   assert.ok(normalized.includes('member_position.rotation_slot=u8::MAX;'), 'rotation_slot must be the u8::MAX placeholder');
   assert.ok(normalized.includes('member_position.collateral_posted=0;'), 'collateral_posted must initialize to zero');
-  assert.ok(normalized.includes('member_position.contribution_history=Vec::new();'), 'contribution_history must initialize empty');
+  assert.ok(
+    normalized.includes('member_position.contribution_history=') && normalized.includes('group.n'),
+    'contribution_history must be pre-sized from group.n for rotation-scoped contributions (Story 3.4)',
+  );
   assert.ok(normalized.includes('member_position.slash_status=SlashStatus::None;'), 'slash_status must initialize to None');
 
   assertSourceOrder(normalized, 'SusuError::MemberNotInvited', '.accepted=true;', 'not-invited rejection must happen before accepted mutation');

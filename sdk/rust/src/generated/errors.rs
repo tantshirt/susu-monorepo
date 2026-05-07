@@ -8,4 +8,10 @@ pub enum SusuError {
     MintNotSupported,
     GroupCancelled,
     AlreadyAccepted,
+    GroupNotActive,
+    OutsideContributionWindow,
+    ContributionAmountMismatch,
+    MemberSlashedCannotContribute,
+    ContributionAlreadyRecorded,
+    InvalidContributionRotation,
 }

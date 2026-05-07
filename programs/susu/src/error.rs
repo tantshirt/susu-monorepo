@@ -20,4 +20,20 @@ pub enum SusuError {
     CurveOverflow,
     #[msg("Curve inputs are out of range (n must be 3..=12, slot < n).")]
     InvalidCurveParams,
+    #[msg("The group is not active; contributions are not accepted.")]
+    GroupNotActive,
+    #[msg("The current time is outside this rotation's contribution window.")]
+    OutsideContributionWindow,
+    #[msg("The contribution amount must match the group's scheduled contribution.")]
+    ContributionAmountMismatch,
+    #[msg("Slashed members cannot contribute.")]
+    MemberSlashedCannotContribute,
+    #[msg("A contribution was already recorded for this rotation.")]
+    ContributionAlreadyRecorded,
+    #[msg("The rotation index is invalid for this group.")]
+    InvalidContributionRotation,
+    #[msg("The group_id argument does not match this group account.")]
+    GroupIdMismatch,
+    #[msg("Member position state does not match the group and signer.")]
+    MemberPositionMismatch,
 }

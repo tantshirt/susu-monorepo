@@ -2,7 +2,7 @@ use anchor_lang::prelude::*;
 
 use crate::error::SusuError;
 use crate::seeds::{GROUP_SEED, MEMBER_SEED};
-use crate::state::{Group, GroupStatus, MemberPosition, SlashStatus};
+use crate::state::{ContributionRecord, Group, GroupStatus, MemberPosition, SlashStatus};
 
 #[derive(Accounts)]
 pub struct AcceptInvite<'info> {
@@ -43,7 +43,13 @@ pub fn handler(ctx: Context<AcceptInvite>) -> Result<()> {
     // TODO(epic-4-story-4-1): replace with deterministic slot assignment.
     member_position.rotation_slot = u8::MAX;
     member_position.collateral_posted = 0;
-    member_position.contribution_history = Vec::new();
+    member_position.contribution_history = (0..group.n)
+        .map(|i| ContributionRecord {
+            rotation_index: i,
+            amount: 0,
+            paid_at: 0,
+        })
+        .collect();
     member_position.slash_status = SlashStatus::None;
 
     msg!(

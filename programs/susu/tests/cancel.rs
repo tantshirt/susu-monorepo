@@ -52,6 +52,8 @@ fn group_fixture(status: GroupStatus) -> Group {
         creator: Pubkey::new_unique(),
         group_id: 42,
         bump: 255,
+        start_timestamp: 1,
+        contribution_window_duration: 30,
     }
 }
 

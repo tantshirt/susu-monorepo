@@ -6,6 +6,12 @@
     "InvalidMemberCount": "The member count is outside the supported range. Choose a group size between the configured minimum and maximum.",
     "MintNotSupported": "This token mint is not supported for the group. Select a supported mint before creating or joining.",
     "GroupCancelled": "This group has been cancelled. Wait for the creator to form a new group or select another active invite.",
-    "AlreadyAccepted": "This invite has already been accepted. Continue with the existing member position instead of retrying."
+    "AlreadyAccepted": "This invite has already been accepted. Continue with the existing member position instead of retrying.",
+    "GroupNotActive": "This group is not active yet. Wait until the group activates before sending contributions, or select another active group.",
+    "OutsideContributionWindow": "Contributions are only accepted during the scheduled window for this rotation. Check the group's rotation timing and try again inside the open window.",
+    "ContributionAmountMismatch": "The amount sent does not match this group's fixed contribution. Resubmit using the exact contribution amount configured on the group.",
+    "MemberSlashedCannotContribute": "This member position was slashed and can no longer contribute. Contact the group admin or choose a different wallet or group.",
+    "ContributionAlreadyRecorded": "You already recorded a contribution for this rotation. Wait for the next rotation or verify on-chain history before retrying.",
+    "InvalidContributionRotation": "That rotation index is not valid for this group's size. Use a rotation within the group's member count and try again."
   }
 }
