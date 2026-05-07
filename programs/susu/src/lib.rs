@@ -24,7 +24,7 @@ use instructions::{
     withdraw_collateral::__client_accounts_withdraw_collateral,
 };
 
-declare_id!("11111111111111111111111111111111");
+declare_id!("2f6CBrNHZp8oyXPFRXfzroGx5pZ7WyLA6dUqFFpYsX2N");
 
 #[program]
 pub mod susu {

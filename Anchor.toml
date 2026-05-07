@@ -7,10 +7,10 @@ skip-lint = false
 check_program_id_mismatch = true
 
 [programs.localnet]
-susu = "11111111111111111111111111111111"
+susu = "2f6CBrNHZp8oyXPFRXfzroGx5pZ7WyLA6dUqFFpYsX2N"
 
 [programs.devnet]
-susu = "11111111111111111111111111111111"
+susu = "2f6CBrNHZp8oyXPFRXfzroGx5pZ7WyLA6dUqFFpYsX2N"
 
 [provider]
 cluster = "Localnet"
