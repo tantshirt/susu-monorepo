@@ -9,7 +9,6 @@ use crate::state::{Group, GroupStatus, MemberPosition};
 #[instruction(group_id: u64)]
 pub struct TopUpCollateral<'info> {
     #[account(
-        mut,
         seeds = [GROUP_SEED, group.creator.as_ref(), group_id.to_le_bytes().as_ref()],
         bump = group.bump,
         constraint = group.group_id == group_id @ SusuError::GroupIdMismatch,

@@ -504,7 +504,7 @@
       "accounts": [
         {
           "name": "group",
-          "writable": true,
+          "writable": false,
           "pda": {
             "seeds": [
               {
