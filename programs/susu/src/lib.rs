@@ -55,11 +55,8 @@ pub mod susu {
         )
     }
 
-    pub fn accept_invite(
-        ctx: Context<AcceptInvite>,
-        group_id: u64,
-    ) -> Result<()> {
-        instructions::accept_invite::handler(ctx, group_id)
+    pub fn accept_invite(ctx: Context<AcceptInvite>) -> Result<()> {
+        instructions::accept_invite::handler(ctx)
     }
 
     pub fn invite_members(ctx: Context<InviteMembers>, invitees: Vec<Pubkey>) -> Result<()> {
