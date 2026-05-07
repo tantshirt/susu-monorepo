@@ -1,5 +1,9 @@
+use anchor_lang::error::Error;
 use anchor_lang::prelude::Pubkey;
+use susu::error::SusuError;
+use susu::instructions::cancel_group::apply_cancel_group;
 use susu::seeds::GROUP_SEED;
+use susu::state::{CurveParams, Group, GroupStatus};
 use susu::ID;
 
 const CANCEL_GROUP_SOURCE: &str = include_str!("../src/instructions/cancel_group.rs");
@@ -35,6 +39,42 @@ fn derive_group_pda(creator: Pubkey, group_id: u64) -> Pubkey {
     .0
 }
 
+fn group_fixture(status: GroupStatus) -> Group {
+    Group {
+        mint: Pubkey::new_unique(),
+        contribution_amount: 100,
+        contribution_period: 30,
+        n: 5,
+        curve_params: CurveParams {},
+        members: Vec::new(),
+        status,
+        created_at: 1,
+        creator: Pubkey::new_unique(),
+        group_id: 42,
+        bump: 255,
+    }
+}
+
+fn assert_susu_error(result: anchor_lang::Result<()>, expected: SusuError) {
+    match result {
+        Err(Error::AnchorError(error)) => {
+            assert_eq!(error.error_code_number, u32::from(expected));
+            assert_eq!(error.error_name, expected.name());
+        }
+        other => panic!("expected {expected:?}, got {other:?}"),
+    }
+}
+
+#[test]
+fn test_cancel_group_happy_path() {
+    let mut group = group_fixture(GroupStatus::Forming);
+
+    apply_cancel_group(&mut group).expect("forming group must be cancellable");
+
+    assert_eq!(group.status, GroupStatus::Cancelled);
+    assert_eq!(GROUP_CANCELLED_LOG, "group_cancelled");
+}
+
 #[test]
 fn test_cancel_group_happy_path_contract_proxy() {
     let source = CANCEL_GROUP_SOURCE;
@@ -55,6 +95,32 @@ fn test_cancel_group_happy_path_contract_proxy() {
         source.contains("msg!(\"group_cancelled group_pda={} creator={}\","),
         "cancel_group must emit the group_cancelled log contract"
     );
+}
+
+#[test]
+fn test_cancel_group_already_cancelled() {
+    let mut group = group_fixture(GroupStatus::Forming);
+
+    apply_cancel_group(&mut group).expect("first cancel must pass");
+
+    assert_susu_error(
+        apply_cancel_group(&mut group),
+        SusuError::GroupAlreadyStarted,
+    );
+    assert_eq!(group.status, GroupStatus::Cancelled);
+}
+
+#[test]
+fn test_cancel_group_active_and_completed_rejected() {
+    for status in [GroupStatus::Active, GroupStatus::Completed] {
+        let mut group = group_fixture(status);
+
+        assert_susu_error(
+            apply_cancel_group(&mut group),
+            SusuError::GroupAlreadyStarted,
+        );
+        assert_eq!(group.status, status);
+    }
 }
 
 #[test]
