@@ -1,0 +1,10 @@
+[workspace]
+resolver = "2"
+members = ["programs/susu", "sdk/rust", "crates/*"]
+
+[workspace.dependencies]
+anchor-lang = "~1.0.2"
+anchor-spl = "~1.0.2"
+thiserror = "1"
+borsh = "1"
+proptest = "1"
