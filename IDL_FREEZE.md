@@ -4,7 +4,7 @@
 - Program: susu
 - Program ID: 2f6CBrNHZp8oyXPFRXfzroGx5pZ7WyLA6dUqFFpYsX2N
 - IDL Path: programs/susu/idl/susu.json
-- SHA-256: f0cc53b1c9026073f472dfc511a80653d74108f47d38cfc5ec7b65448d78e1c6
+- SHA-256: 005791e876e7780098f6888751e6af6692943d3ebbcc2ab8c17955b904052b08
 
 ## Freeze Policy
 

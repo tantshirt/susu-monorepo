@@ -1,3 +1,6 @@
+#![allow(unexpected_cfgs)]
+#![allow(clippy::diverging_sub_expression)]
+
 use anchor_lang::prelude::*;
 use instructions::{
     accept_invite::AcceptInvite, cancel_group::CancelGroup, claim_payout::ClaimPayout,

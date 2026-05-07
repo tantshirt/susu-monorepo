@@ -1,0 +1,11 @@
+{
+  "errors": {
+    "GroupFull": "This group has reached its maximum member count. Try a smaller group or wait for a future group.",
+    "GroupAlreadyStarted": "This group has already started. Create a new group or choose one that is still forming.",
+    "MemberNotInvited": "This wallet is not invited to the group. Check the invite address or ask the creator to invite you.",
+    "InvalidMemberCount": "The member count is outside the supported range. Choose a group size between the configured minimum and maximum.",
+    "MintNotSupported": "This token mint is not supported for the group. Select a supported mint before creating or joining.",
+    "GroupCancelled": "This group has been cancelled. Wait for the creator to form a new group or select another active invite.",
+    "AlreadyAccepted": "This invite has already been accepted. Continue with the existing member position instead of retrying."
+  }
+}

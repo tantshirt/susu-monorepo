@@ -18,7 +18,14 @@
         93,
         138
       ],
-      "accounts": [],
+      "accounts": [
+        {
+          "name": "group"
+        },
+        {
+          "name": "member_position"
+        }
+      ],
       "args": [
         {
           "name": "group_id",
@@ -58,7 +65,14 @@
         146,
         133
       ],
-      "accounts": [],
+      "accounts": [
+        {
+          "name": "group"
+        },
+        {
+          "name": "rotation_receipt"
+        }
+      ],
       "args": [
         {
           "name": "group_id",
@@ -110,7 +124,11 @@
         56,
         248
       ],
-      "accounts": [],
+      "accounts": [
+        {
+          "name": "group"
+        }
+      ],
       "args": [
         {
           "name": "group_id",
@@ -239,11 +257,292 @@
       ]
     }
   ],
+  "accounts": [
+    {
+      "name": "Group",
+      "discriminator": [
+        209,
+        249,
+        208,
+        63,
+        182,
+        89,
+        186,
+        254
+      ]
+    },
+    {
+      "name": "MemberPosition",
+      "discriminator": [
+        88,
+        118,
+        224,
+        251,
+        240,
+        186,
+        123,
+        175
+      ]
+    },
+    {
+      "name": "RotationReceipt",
+      "discriminator": [
+        56,
+        72,
+        219,
+        143,
+        49,
+        229,
+        111,
+        208
+      ]
+    }
+  ],
   "errors": [
     {
       "code": 6000,
-      "name": "Unimplemented",
-      "msg": "Unimplemented (placeholder)"
+      "name": "GroupFull",
+      "msg": "The group has reached its maximum member count."
+    },
+    {
+      "code": 6001,
+      "name": "GroupAlreadyStarted",
+      "msg": "The group has already started and no longer accepts lifecycle changes."
+    },
+    {
+      "code": 6002,
+      "name": "MemberNotInvited",
+      "msg": "The signer is not invited to this group."
+    },
+    {
+      "code": 6003,
+      "name": "InvalidMemberCount",
+      "msg": "The requested member count is outside the supported range."
+    },
+    {
+      "code": 6004,
+      "name": "MintNotSupported",
+      "msg": "The supplied mint is not supported by this group."
+    },
+    {
+      "code": 6005,
+      "name": "GroupCancelled",
+      "msg": "The group has been cancelled."
+    },
+    {
+      "code": 6006,
+      "name": "AlreadyAccepted",
+      "msg": "This member has already accepted the invite."
+    }
+  ],
+  "types": [
+    {
+      "name": "ContributionRecord",
+      "type": {
+        "kind": "struct",
+        "fields": []
+      }
+    },
+    {
+      "name": "CurveParams",
+      "type": {
+        "kind": "struct",
+        "fields": []
+      }
+    },
+    {
+      "name": "Group",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "mint",
+            "type": "pubkey"
+          },
+          {
+            "name": "contribution_amount",
+            "type": "u64"
+          },
+          {
+            "name": "contribution_period",
+            "type": "i64"
+          },
+          {
+            "name": "n",
+            "type": "u8"
+          },
+          {
+            "name": "curve_params",
+            "type": {
+              "defined": {
+                "name": "CurveParams"
+              }
+            }
+          },
+          {
+            "name": "members",
+            "type": {
+              "vec": {
+                "defined": {
+                  "name": "MemberSlot"
+                }
+              }
+            }
+          },
+          {
+            "name": "status",
+            "type": {
+              "defined": {
+                "name": "GroupStatus"
+              }
+            }
+          },
+          {
+            "name": "created_at",
+            "type": "i64"
+          },
+          {
+            "name": "creator",
+            "type": "pubkey"
+          },
+          {
+            "name": "group_id",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "GroupStatus",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "Forming"
+          },
+          {
+            "name": "Active"
+          },
+          {
+            "name": "Cancelled"
+          },
+          {
+            "name": "Completed"
+          }
+        ]
+      }
+    },
+    {
+      "name": "MemberPosition",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "group",
+            "docs": [
+              "PDA account derived from MEMBER_SEED, the group PDA, and member pubkey."
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "member_pubkey",
+            "type": "pubkey"
+          },
+          {
+            "name": "rotation_slot",
+            "docs": [
+              "Placeholder set to u8::MAX until Epic 4 assigns deterministic rotation slots."
+            ],
+            "type": "u8"
+          },
+          {
+            "name": "contribution_history",
+            "type": {
+              "vec": {
+                "defined": {
+                  "name": "ContributionRecord"
+                }
+              }
+            }
+          },
+          {
+            "name": "collateral_posted",
+            "type": "u64"
+          },
+          {
+            "name": "slash_status",
+            "type": {
+              "defined": {
+                "name": "SlashStatus"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "MemberSlot",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "pubkey",
+            "type": "pubkey"
+          },
+          {
+            "name": "accepted",
+            "type": "bool"
+          }
+        ]
+      }
+    },
+    {
+      "name": "RotationReceipt",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "group",
+            "docs": [
+              "PDA account derived from ROTATION_SEED, the group PDA, and rotation index bytes."
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "rotation_index",
+            "type": "u8"
+          },
+          {
+            "name": "amount",
+            "type": "u64"
+          },
+          {
+            "name": "recipient",
+            "type": "pubkey"
+          },
+          {
+            "name": "claimed_at",
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "SlashStatus",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "None"
+          },
+          {
+            "name": "Slashed"
+          },
+          {
+            "name": "Refunded"
+          }
+        ]
+      }
     }
   ]
 }
