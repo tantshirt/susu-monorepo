@@ -48,6 +48,8 @@ id.json
 # Coverage / test artifacts (commit canonical adversary artifact under audits/, not coverage)
 coverage/
 .nyc_output/
+!tests/coverage/
+!tests/coverage/.gitkeep
 
 # Submodule / nested unrelated project
 mempalace/

@@ -1,0 +1,12 @@
+{
+  "name": "susu-monorepo",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Susu Protocol monorepo scaffold",
+  "packageManager": "pnpm@9.12.3",
+  "scripts": {
+    "susu:demo": "echo \"susu demo placeholder\"",
+    "verify": "echo \"verify placeholder\"",
+    "sdk:codegen": "echo \"sdk codegen placeholder\""
+  }
+}

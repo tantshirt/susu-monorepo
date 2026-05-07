@@ -1,0 +1,8 @@
+[package]
+name = "susu-adversary"
+version = "0.1.0"
+edition = "2021"
+
+[[bin]]
+name = "susu-adversary"
+path = "src/main.rs"

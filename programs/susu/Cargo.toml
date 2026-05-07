@@ -1,0 +1,13 @@
+[package]
+name = "susu"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+name = "susu"
+crate-type = ["cdylib", "lib"]
+path = "src/lib.rs"
+
+[dependencies]
+anchor-lang = { workspace = true }
+anchor-spl = { workspace = true }
