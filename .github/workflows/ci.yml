@@ -41,8 +41,15 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-cargo-
 
+      - name: Install AVM
+        run: cargo install --git https://github.com/solana-foundation/anchor --tag v1.0.0 avm --locked
+
       - name: Install Anchor CLI
-        run: cargo install --git https://github.com/solana-foundation/anchor --tag v1.0.0 anchor-cli --locked
+        run: |
+          avm install 1.0.2
+          avm use 1.0.2
+          echo "$HOME/.avm/bin" >> "$GITHUB_PATH"
+          anchor --version
 
       - name: Install JS dependencies
         run: |
