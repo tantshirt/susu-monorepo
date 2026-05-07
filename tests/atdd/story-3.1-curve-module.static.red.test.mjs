@@ -79,7 +79,8 @@ function stripRustStrings(source) {
 }
 
 function productionCurveSource(source) {
-  const withoutTests = source.replace(/#\[cfg\s*\(\s*test\s*\)\][\s\S]*?(?=(?:#\[cfg|\z))/g, '');
+  // ECMAScript has no `\z` end anchor; `\z` is a literal `z` and truncated this strip at identifiers like `zero_*`.
+  const withoutTests = source.replace(/#\[cfg\s*\(\s*test\s*\)\][\s\S]*?(?=(?:#\[cfg|$))/g, '');
   return stripRustStrings(stripLineComments(withoutTests));
 }
 
@@ -90,7 +91,7 @@ test('[P0] curve.rs exposes calculate_collateral with Story 3.1 signature', asyn
 
   assert.match(
     prod,
-    /pub\s+fn\s+calculate_collateral\s*\(\s*slot\s*:\s*u8\s*,\s*n\s*:\s*u8\s*,\s*contribution\s*:\s*u64\s*,\s*decimals\s*:\s*u8\s*\)\s*->\s*Result\s*<\s*u64\s*,\s*(?:crate::error::)?SusuError\s*>/,
+    /pub\s+fn\s+calculate_collateral\s*\(\s*slot\s*:\s*u8\s*,\s*n\s*:\s*u8\s*,\s*contribution\s*:\s*u64\s*,\s*decimals\s*:\s*u8,?\s*\)\s*->\s*Result\s*<\s*u64\s*,\s*(?:crate::error::)?SusuError\s*>/,
     'calculate_collateral must use the canonical public signature returning Result<u64, SusuError>',
   );
 
@@ -105,13 +106,13 @@ test('[P0] curve.rs uses checked_add, checked_mul, checked_sub without saturatin
     assert.match(prod, new RegExp(`\\b${op}\\b`), `curve arithmetic must call ${op} in production code`);
   }
   assert.doesNotMatch(
-    /\bsaturating_(?:add|sub|mul|div)\b/,
     source,
+    /\bsaturating_(?:add|sub|mul|div)\b/,
     'curve.rs must not use saturating_* helpers',
   );
   assert.doesNotMatch(
-    /\bwrapping_(?:add|sub|mul)\b/,
     source,
+    /\bwrapping_(?:add|sub|mul)\b/,
     'curve.rs must not use wrapping_* helpers',
   );
 });
@@ -196,7 +197,11 @@ test('[P0] SusuError defines CurveOverflow and InvalidCurveParams', async () => 
   const err = await readRepoFile('programs/susu/src/error.rs');
 
   assert.match(err, /\bCurveOverflow\b[\s\S]*?\#\[msg\("[^"]+"\)\]/, 'CurveOverflow variant with message required');
-  assert.match(err, /\bInvalidCurveParams\b[\s\S]*?\#\[msg\("[^"]+"\)\]/, 'InvalidCurveParams variant with message required');
+  assert.ok(
+    /InvalidCurveParams\b[\s\S]*?#\[msg\("[^"]+"\)\]/.test(err) ||
+      /#\[msg\("[^"]+"\)\][\s\S]*?InvalidCurveParams\b/.test(err),
+    'InvalidCurveParams must carry an Anchor #[msg(...)] attribute (before or after the variant)',
+  );
 });
 
 test('[P0] curve-golden.json fixture matches parity contract schema', async () => {

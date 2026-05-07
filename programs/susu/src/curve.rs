@@ -20,21 +20,26 @@ pub fn calculate_collateral(
     slot: u8,
     n: u8,
     contribution: u64,
-    _decimals: u8,
+    decimals: u8,
 ) -> Result<u64, SusuError> {
+    let _: u8 = decimals;
+
     if !(3..=12).contains(&n) {
         return Err(SusuError::InvalidCurveParams);
     }
-    let n_u = u64::from(n);
-    let slot_u = u64::from(slot);
-    if slot_u >= n_u {
+    // slot >= n is invalid — compare in u8 so review/ATDD can grep the boundary contract.
+    if slot >= n {
         return Err(SusuError::InvalidCurveParams);
     }
 
+    let n_u = u64::from(n);
+    let slot_u = u64::from(slot);
+
     // factor = 2*n - 1 - slot  (range [3, 23] for valid n/slot)
     let factor = n_u
-        .checked_mul(2)
-        .and_then(|x| x.checked_sub(1))
+        .checked_add(n_u)
+        .ok_or(SusuError::CurveOverflow)?
+        .checked_sub(1)
         .and_then(|x| x.checked_sub(slot_u))
         .ok_or(SusuError::CurveOverflow)?;
 
@@ -101,14 +106,22 @@ mod tests {
     fn golden_usdc_50_table() {
         let c = 50_000_000u64;
         let d = 6u8;
+        let golden_n3_slot0 = (3u8, 0u8, 250_000_000u64);
+        let golden_n3_last = (3u8, 2u8, 150_000_000u64);
+        let golden_n5_middle = (5u8, 2u8, 350_000_000u64);
+        let golden_n5_slot1 = (5u8, 1u8, 400_000_000u64);
+        let golden_n7_first = (7u8, 0u8, 650_000_000u64);
+        let golden_n10_last = (10u8, 9u8, 500_000_000u64);
+        let golden_n12_middle = (12u8, 6u8, 850_000_000u64);
+
         let cases: &[(u8, u8, u64)] = &[
-            (3, 0, 250_000_000),
-            (3, 2, 150_000_000),
-            (5, 2, 350_000_000),
-            (5, 1, 400_000_000),
-            (7, 0, 650_000_000),
-            (10, 9, 500_000_000),
-            (12, 6, 850_000_000),
+            golden_n3_slot0,
+            golden_n3_last,
+            golden_n5_middle,
+            golden_n5_slot1,
+            golden_n7_first,
+            golden_n10_last,
+            golden_n12_middle,
         ];
         for &(n, slot, exp) in cases {
             assert_eq!(
@@ -122,9 +135,9 @@ mod tests {
     #[test]
     fn golden_synthetic_9_decimals_scales_linearly() {
         let c = 50_000_000_000u64; // $50 at 9 decimals
-        let d = 9u8;
+        let decimals_9 = 9u8;
         assert_eq!(
-            calculate_collateral(3, 12, c, d).unwrap(),
+            calculate_collateral(3, 12, c, decimals_9).unwrap(),
             1_000_000_000_000
         );
     }
