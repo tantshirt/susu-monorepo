@@ -1,0 +1,16 @@
+# Default fallback owner for the repository.
+* @tantshirt
+
+# Protected protocol-critical files.
+/programs/susu/src/curve.rs @tantshirt
+/programs/susu/src/seeds.rs @tantshirt
+/programs/susu/src/error.rs @tantshirt
+/IDL_FREEZE.md @tantshirt
+
+# Locale ownership (fallback until locale maintainers are added).
+/apps/reference/messages/en.json @tantshirt
+/apps/reference/messages/vi.json @tantshirt
+/apps/reference/messages/ar.json @tantshirt
+/apps/reference/messages/es.json @tantshirt
+/apps/reference/messages/yo.json @tantshirt
+/apps/reference/messages/ht-kreyol.json @tantshirt
