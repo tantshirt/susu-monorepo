@@ -7,6 +7,12 @@
   "scripts": {
     "susu:demo": "echo \"susu demo placeholder\"",
     "verify": "echo \"verify placeholder\"",
-    "sdk:codegen": "echo \"sdk codegen placeholder\""
+    "sdk:codegen": "node codama.config.mjs"
+  },
+  "devDependencies": {
+    "codama": "0.5.0",
+    "@codama/nodes-from-anchor": "0.5.0",
+    "@codama/renderers-js": "0.5.0",
+    "@codama/renderers-rust": "0.5.0"
   }
 }

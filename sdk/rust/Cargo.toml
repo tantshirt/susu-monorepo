@@ -1,6 +1,6 @@
 [package]
 name = "susu-client"
-version = "0.1.0"
+version = "0.0.1"
 edition = "2021"
 
 [lib]
@@ -8,5 +8,3 @@ name = "susu_client"
 path = "src/lib.rs"
 
 [dependencies]
-solana-sdk = "3"
-solana-client = "3"
