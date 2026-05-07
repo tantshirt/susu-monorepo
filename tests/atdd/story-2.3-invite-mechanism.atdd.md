@@ -55,7 +55,7 @@ AI generation, backend/static mode. Browser recording is not applicable for an A
 2. Add `programs/susu/src/instructions/invite_members.rs`, wire it through `instructions/mod.rs` and `lib.rs`, and regenerate IDL.
 3. Keep invites in `Group.members`; do not introduce an Invite PDA, server dependency, token account, custody path, fee, yield, transfer, or CPI.
 4. Add `docs/architecture-notes.md` with `ADR-001: Invite via Group roster, not separate Invite PDA`.
-5. Add or replace these static tests with LiteSVM runtime tests once the shared runtime fixture exists. Required fixture capabilities: program loader, funded creator/non-creator signers, create-group setup, signed `invite_members` transaction construction, account decode for `Group.members`, direct Group status mutation for non-Forming rejection, log capture, and exact error extraction.
+5. Add or replace these static/proxy tests with LiteSVM runtime tests once the shared runtime fixture exists. Required fixture capabilities: load the compiled `susu` SBF artifact, fund creator and non-creator signers, create or seed an Anchor-compatible `Group` account, build and sign real `invite_members` instructions, execute against LiteSVM, decode `Group.members` after execution, directly write a non-Forming `Group.status` for negative setup, capture `members_invited` logs, and extract exact Anchor constraint and `SusuError` failures.
 6. Keep Surfpool out of the Epic 2 critical path until repo docs prove it is ready.
 
 ## Validation
@@ -66,4 +66,4 @@ AI generation, backend/static mode. Browser recording is not applicable for an A
 
 ## Runtime Fixture Gap
 
-LiteSVM is the intended runtime layer for Story 2.3, but the repo currently has only compile/unit proxy coverage in `programs/susu/tests/happy_path.rs`. That proxy does not execute Anchor instructions as transactions, does not capture runtime logs, and cannot prove account mutation atomicity through the Solana runtime. This ATDD output records the gap explicitly so Step 3 can either introduce the runtime fixture or keep these static red tests as the acceptance proxy with a documented waiver.
+LiteSVM is the intended runtime layer for Story 2.3, but the repo currently has only static ATDD plus compile/unit proxy coverage in `programs/susu/tests/invite.rs`. The proxy tests preserve a pre-existing roster on wrong-count and non-Forming rejection and pin the expected v0.1.0 duplicate-invitee policy, but they do not execute Anchor instructions as transactions, capture runtime logs, prove Solana transaction rollback, or exercise Anchor account-constraint failures through the runtime. This ATDD output records the gap explicitly so a later fixture task can replace the acceptance proxy with true LiteSVM coverage.
