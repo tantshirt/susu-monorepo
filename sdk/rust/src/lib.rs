@@ -1,1 +1,2 @@
-// Story 1.1 skeleton placeholder. Rust SDK implementation starts in later stories.
+// Story 1.3 generated surface; helpers are added in later stories.
+pub mod generated;
