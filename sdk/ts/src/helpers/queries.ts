@@ -1,9 +1,11 @@
-import { type Address, getAddressEncoder } from '@solana/kit';
+import { type Address, getAddressDecoder } from '@solana/kit';
 
 import { decodeGroup, type Group } from '../generated/accounts/Group.js';
 import { decodeMemberPosition, type MemberPosition } from '../generated/accounts/MemberPosition.js';
 import { GROUP_SEED_BYTES, MEMBER_SEED_BYTES } from '../generated/seeds.js';
 import { deriveGroupPda, deriveMemberPositionPda } from './pdas.js';
+
+const addressDecoder = getAddressDecoder();
 
 export type ParticipationRecord = Readonly<{
   group: Address;
@@ -70,8 +72,6 @@ export async function queryParticipationHistory(
   const accounts = Array.isArray(response.value) ? response.value : [];
   const records: ParticipationRecord[] = [];
 
-  const addressEncoder = getAddressEncoder();
-
   for (const account of accounts) {
     const accountData = normalizeAccountData(account.account);
     if (!accountData) {
@@ -79,7 +79,7 @@ export async function queryParticipationHistory(
     }
 
     const decoded = decodeMemberPosition(accountData) as MemberPosition & Record<string, unknown>;
-    const fromRaw = isRawOnlyAccount(decoded) ? parseMemberPositionLayout(accountData, addressEncoder) : null;
+    const fromRaw = isRawOnlyAccount(decoded) ? parseMemberPositionLayout(accountData) : null;
     const group = fromRaw?.group ?? asAddress(decoded.group) ?? account.pubkey;
     const rotationSlot = fromRaw ? fromRaw.rotationSlot : asNumber(decoded.rotationSlot);
     const contributions = fromRaw
@@ -173,20 +173,34 @@ function isRawOnlyAccount(
   return keys.length === 1 && keys[0] === 'raw' && decoded.raw instanceof Uint8Array;
 }
 
+/** Account layout after 8-byte discriminator: group (32), member_pubkey (32), rotation_slot (1), contribution_history (u32 len + records), collateral_posted (u64), slash_status (u8). */
+const MEMBER_POSITION_CONTRIBUTION_RECORD_LEN = 1 + 8 + 8;
+
 /** Layout mirrors on-chain MemberPosition bytes (8-byte discriminator + fields). */
 function parseMemberPositionLayout(
   data: Uint8Array,
-  addressEncoder: ReturnType<typeof getAddressEncoder>,
-):
-  | Readonly<{ group: Address; rotationSlot: number; contributions: number; slashed: boolean }>
-  | undefined {
-  if (data.length < 86) {
+): Readonly<{ group: Address; rotationSlot: number; contributions: number; slashed: boolean }> | undefined {
+  const minWithEmptyHistory = 8 + 32 + 32 + 1 + 4 + 8 + 1;
+  if (data.length < minWithEmptyHistory) {
     return undefined;
   }
-  const group = addressEncoder.encode(data.subarray(8, 40)) as Address;
+  const group = addressDecoder.decode(data.subarray(8, 40)) as Address;
   const rotationSlot = data[72] ?? 0;
-  const contributions = readU32LE(data, 73);
-  const slashByte = data[85] ?? 0;
+  const vecLen = readU32LE(data, 73);
+  const vecByteLen = vecLen * MEMBER_POSITION_CONTRIBUTION_RECORD_LEN;
+  const afterVec = 77 + vecByteLen;
+  if (data.length < afterVec + 8 + 1) {
+    return undefined;
+  }
+  let contributions = 0;
+  for (let i = 0; i < vecLen; i += 1) {
+    const off = 77 + i * MEMBER_POSITION_CONTRIBUTION_RECORD_LEN;
+    const amount = readU64LE(data, off + 1);
+    if (amount > 0n) {
+      contributions += 1;
+    }
+  }
+  const slashByte = data[afterVec + 8] ?? 0;
   const slashed = slashByte === 1;
   return { group, rotationSlot, contributions, slashed };
 }
@@ -194,6 +208,11 @@ function parseMemberPositionLayout(
 function readU32LE(data: Uint8Array, offset: number): number {
   const view = new DataView(data.buffer, data.byteOffset + offset, 4);
   return view.getUint32(0, true);
+}
+
+function readU64LE(data: Uint8Array, offset: number): bigint {
+  const view = new DataView(data.buffer, data.byteOffset + offset, 8);
+  return view.getBigUint64(0, true);
 }
 
 function asNumber(value: unknown): number {
