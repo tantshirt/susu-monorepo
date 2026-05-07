@@ -10,7 +10,10 @@ const repoRootPath = fileURLToPath(repoRoot);
 
 async function commandExists(command) {
   try {
-    await execFileAsync('which', [command]);
+    await execFileAsync(command, ['--version'], {
+      cwd: repoRootPath,
+      timeout: 15000,
+    });
     return true;
   } catch {
     return false;
