@@ -9,6 +9,7 @@ type MockAccount = Readonly<{
 type MockRpc = ReturnType<typeof createMockRpc>;
 
 const groupPda = 'Group111111111111111111111111111111111111' as Address;
+const memberPositionPda = 'MemberPosition11111111111111111111111111111' as Address;
 const creator = 'Creator1111111111111111111111111111111111' as Address;
 const member = 'Member11111111111111111111111111111111111' as Address;
 const programId = 'Susu1111111111111111111111111111111111111' as Address;
@@ -45,7 +46,7 @@ function createMockRpc(accounts: Record<string, MockAccount> = {}) {
       return {
         send: vi.fn(async () => {
           const account = accounts[address];
-          return account?.exists ? { value: account } : { value: null };
+          return { value: account ?? null };
         }),
       };
     }),
@@ -55,7 +56,7 @@ function createMockRpc(accounts: Record<string, MockAccount> = {}) {
         send: vi.fn(async () => ({
           value: Object.entries(accounts)
             .filter(([, account]) => account.exists)
-            .map(([pubkey, account]) => ({ pubkey, account })),
+            .map(([pubkey, account]) => ({ pubkey: pubkey as Address, account })),
         })),
       };
     }),
@@ -65,18 +66,26 @@ function createMockRpc(accounts: Record<string, MockAccount> = {}) {
 async function loadQueriesWithGeneratedDecoderMocks() {
   vi.resetModules();
   vi.doMock('../src/generated/accounts/Group.js', () => ({
-    getGroupDecoder: () => ({ decode: vi.fn(() => groupFixture) }),
+    getGroupDecoder: vi.fn(() => ({ decode: vi.fn(() => groupFixture) })),
     decodeGroup: vi.fn(() => groupFixture),
   }));
   vi.doMock('../src/generated/accounts/MemberPosition.js', () => ({
-    getMemberPositionDecoder: () => ({ decode: vi.fn(() => memberPositionFixture) }),
+    getMemberPositionDecoder: vi.fn(() => ({ decode: vi.fn(() => memberPositionFixture) })),
     decodeMemberPosition: vi.fn(() => memberPositionFixture),
   }));
 
-  return import('../src/helpers/queries.js');
+  const deriveGroupPda = vi.fn(async () => groupPda);
+  const deriveMemberPositionPda = vi.fn(async () => memberPositionPda);
+  vi.doMock('../src/helpers/pdas.js', () => ({
+    deriveGroupPda,
+    deriveMemberPositionPda,
+  }));
+
+  const queries = await import('../src/helpers/queries.js');
+  return { ...queries, deriveGroupPda, deriveMemberPositionPda };
 }
 
-describe.skip('Story 2.6 query helpers ATDD red scaffold', () => {
+describe('Story 2.6 query helpers', () => {
   it('getGroup returns decoded Group when account exists', async () => {
     const rpc = createMockRpc({
       [groupPda]: { exists: true, data: new Uint8Array([1, 2, 3]) },
@@ -98,25 +107,27 @@ describe.skip('Story 2.6 query helpers ATDD red scaffold', () => {
     const rpc = createMockRpc({
       [groupPda]: { exists: true, data: new Uint8Array([4, 5, 6]) },
     });
-    const { getGroupByCreator } = await loadQueriesWithGeneratedDecoderMocks();
+    const { getGroupByCreator, deriveGroupPda } = await loadQueriesWithGeneratedDecoderMocks();
 
     await expect(getGroupByCreator(rpc as MockRpc, programId, creator, groupId)).resolves.toEqual(groupFixture);
+    expect(deriveGroupPda).toHaveBeenCalledWith(programId, creator, groupId);
     expect(rpc.getAccountInfo).toHaveBeenCalledTimes(1);
   });
 
   it('getMemberPosition returns decoded MemberPosition and undefined when missing', async () => {
     const rpc = createMockRpc({
-      [member]: { exists: true, data: new Uint8Array([7, 8, 9]) },
+      [memberPositionPda]: { exists: true, data: new Uint8Array([7, 8, 9]) },
     });
-    const { getMemberPosition } = await loadQueriesWithGeneratedDecoderMocks();
+    const { getMemberPosition, deriveMemberPositionPda } = await loadQueriesWithGeneratedDecoderMocks();
 
-    await expect(getMemberPosition(rpc as MockRpc, groupPda, member)).resolves.toEqual(memberPositionFixture);
-    await expect(getMemberPosition(createMockRpc() as MockRpc, groupPda, member)).resolves.toBeUndefined();
+    await expect(getMemberPosition(rpc as MockRpc, programId, groupPda, member)).resolves.toEqual(memberPositionFixture);
+    await expect(getMemberPosition(createMockRpc() as MockRpc, programId, groupPda, member)).resolves.toBeUndefined();
+    expect(deriveMemberPositionPda).toHaveBeenCalledWith(programId, groupPda, member);
   });
 
   it('queryParticipationHistory uses a MemberPosition.member_pubkey memcmp filter at offset 40', async () => {
     const rpc = createMockRpc({
-      [member]: { exists: true, data: new Uint8Array([10, 11, 12]) },
+      [memberPositionPda]: { exists: true, data: new Uint8Array([10, 11, 12]) },
     });
     const { queryParticipationHistory } = await loadQueriesWithGeneratedDecoderMocks();
 
@@ -135,7 +146,7 @@ describe.skip('Story 2.6 query helpers ATDD red scaffold', () => {
         expect.objectContaining({
           filters: expect.arrayContaining([
             expect.objectContaining({
-              memcmp: expect.objectContaining({ offset: 40 }),
+              memcmp: expect.objectContaining({ offset: 40, bytes: member }),
             }),
           ]),
         }),

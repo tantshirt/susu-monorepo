@@ -8,5 +8,8 @@ name = "susu_client"
 path = "src/lib.rs"
 
 [dependencies]
+anchor-lang = { workspace = true }
 solana-sdk = "4"
 solana-client = "3"
+solana-commitment-config = "3.1"
+susu = { path = "../../programs/susu", features = ["no-entrypoint"] }
