@@ -129,6 +129,7 @@ test('[P0] accept_invite flips only the invited signer slot and initializes plac
   assert.match(source, /SusuError::MemberNotInvited\b/, 'non-invited signer must return MemberNotInvited');
   assert.match(source, /SusuError::AlreadyAccepted\b/, 'already-accepted signer should return AlreadyAccepted before mutation when possible');
   assert.match(source, /\.accepted\s*=\s*true\s*;/, 'matched member slot must flip accepted to true');
+  assert.match(source, /validate_accept_invite_group\s*\(\s*group\s*\)\s*\?/, 'handler must validate group lifecycle before member mutation');
 
   assert.ok(normalized.includes('member_position.group=group.key();'), 'MemberPosition.group must be the Group PDA');
   assert.ok(normalized.includes('member_position.member_pubkey=ctx.accounts.member.key();'), 'MemberPosition.member_pubkey must be the signer');
@@ -139,12 +140,18 @@ test('[P0] accept_invite flips only the invited signer slot and initializes plac
 
   assertSourceOrder(normalized, 'SusuError::MemberNotInvited', '.accepted=true;', 'not-invited rejection must happen before accepted mutation');
   assertSourceOrder(normalized, 'SusuError::AlreadyAccepted', '.accepted=true;', 'double-accept rejection must happen before accepted mutation when the handler runs');
+  assertSourceOrder(normalized, 'validate_accept_invite_group(group)?;', '.iter_mut()', 'group lifecycle validation must happen before member lookup or mutation');
 });
 
 test('[P0] accept_invite rejects non-invited and double-accept paths without activating the group', async () => {
   const source = await readRepoFile('programs/susu/src/instructions/accept_invite.rs');
   const normalized = compact(source);
 
+  assert.match(source, /fn\s+validate_accept_invite_group\s*\(\s*group\s*:\s*&Group\s*\)\s*->\s*Result\s*<\s*\(\)\s*>/s, 'accept_invite must centralize the Forming/non-cancelled guard');
+  assert.match(source, /matches!\s*\(\s*group\.status\s*,\s*GroupStatus::Cancelled\s*\)/, 'cancelled groups must be rejected explicitly');
+  assert.match(source, /SusuError::GroupCancelled\b/, 'cancelled groups must use GroupCancelled');
+  assert.match(source, /matches!\s*\(\s*group\.status\s*,\s*GroupStatus::Forming\s*\)/, 'only Forming groups may accept invites');
+  assert.match(source, /SusuError::GroupAlreadyStarted\b/, 'post-forming groups must use GroupAlreadyStarted');
   assert.match(source, /SusuError::MemberNotInvited\b/, 'non-invited signer rejection must use MemberNotInvited');
   assert.ok(
     /SusuError::AlreadyAccepted\b/.test(source) || /AccountAlreadyInitialized\b/.test(source),
@@ -200,6 +207,7 @@ test('[P1] Story 2.4 runtime or proxy coverage is present for Step 3 development
     'test_accept_invite_happy_path',
     'test_accept_invite_not_invited',
     'test_accept_invite_double_accept',
+    'test_accept_invite_rejects_non_forming_and_cancelled_groups',
     'test_accept_invite_member_pays_rent',
     'test_accept_invite_no_activation_or_token_side_effects',
   ]) {
@@ -213,8 +221,13 @@ test('[P1] Story 2.4 runtime or proxy coverage is present for Step 3 development
     'contribution_history',
     'SlashStatus::None',
     'MemberNotInvited',
+    'GroupAlreadyStarted',
+    'GroupCancelled',
     'member_accepted',
     'GroupStatus::Forming',
+    'GroupStatus::Active',
+    'GroupStatus::Completed',
+    'GroupStatus::Cancelled',
   ]) {
     assert.match(source, new RegExp(`\\b${expected.replace('::', '::')}\\b`), `${path} must assert ${expected}`);
   }

@@ -109,6 +109,8 @@ fn test_accept_invite_happy_path() {
     assert_ne!(member_position_pda, group_pda);
     assert!(group.members[0].accepted);
     assert_eq!(group.members[0].pubkey, invitee);
+    assert!(!group.members[1].accepted);
+    assert!(!group.members[2].accepted);
     assert_eq!(member_position.group, group_pda);
     assert_eq!(member_position.member_pubkey, invitee);
     assert_eq!(member_position.rotation_slot, u8::MAX);
@@ -146,6 +148,25 @@ fn test_accept_invite_double_accept() {
     );
     assert_eq!(ACCOUNT_ALREADY_INITIALIZED, "AccountAlreadyInitialized");
     assert_eq!(member_snapshot(&group), accepted_snapshot);
+}
+
+#[test]
+fn test_accept_invite_rejects_non_forming_and_cancelled_groups() {
+    let invitee = Pubkey::new_unique();
+
+    for (status, expected_error) in [
+        (GroupStatus::Active, SusuError::GroupAlreadyStarted),
+        (GroupStatus::Completed, SusuError::GroupAlreadyStarted),
+        (GroupStatus::Cancelled, SusuError::GroupCancelled),
+    ] {
+        let mut group = group_fixture(3, status, vec![member_slot(invitee, false)]);
+        let original_status = group.status;
+        let original_snapshot = member_snapshot(&group);
+
+        assert_susu_error(apply_accept_invite(&mut group, invitee), expected_error);
+        assert_eq!(group.status, original_status);
+        assert_eq!(member_snapshot(&group), original_snapshot);
+    }
 }
 
 #[test]
