@@ -39,6 +39,8 @@ fn group_fixture(n: u8, status: GroupStatus, members: Vec<MemberSlot>) -> Group 
         creator: Pubkey::new_unique(),
         group_id: 42,
         bump: 255,
+        start_timestamp: 1,
+        contribution_window_duration: 30,
     }
 }
 
@@ -67,12 +69,18 @@ fn derive_member_position_pda(group: Pubkey, member: Pubkey) -> Pubkey {
     Pubkey::find_program_address(&[MEMBER_SEED, group.as_ref(), member.as_ref()], &ID).0
 }
 
-fn new_member_position(group: Pubkey, member_pubkey: Pubkey) -> MemberPosition {
+fn expected_member_position_template(group: &Group, group_pda: Pubkey, member_pubkey: Pubkey) -> MemberPosition {
     MemberPosition {
-        group,
+        group: group_pda,
         member_pubkey,
         rotation_slot: u8::MAX,
-        contribution_history: Vec::<ContributionRecord>::new(),
+        contribution_history: (0..group.n)
+            .map(|i| ContributionRecord {
+                rotation_index: i,
+                amount: 0,
+                paid_at: 0,
+            })
+            .collect(),
         collateral_posted: 0,
         slash_status: SlashStatus::None,
     }
@@ -104,7 +112,7 @@ fn test_accept_invite_happy_path() {
     let member_position_pda = derive_member_position_pda(group_pda, invitee);
 
     apply_accept_invite(&mut group, invitee).expect("invited forming member can accept");
-    let member_position = new_member_position(group_pda, invitee);
+    let member_position = expected_member_position_template(&group, group_pda, invitee);
 
     assert_ne!(member_position_pda, group_pda);
     assert!(group.members[0].accepted);
@@ -115,7 +123,11 @@ fn test_accept_invite_happy_path() {
     assert_eq!(member_position.member_pubkey, invitee);
     assert_eq!(member_position.rotation_slot, u8::MAX);
     assert_eq!(member_position.collateral_posted, 0);
-    assert!(member_position.contribution_history.is_empty());
+    assert_eq!(member_position.contribution_history.len(), 3);
+    assert!(member_position
+        .contribution_history
+        .iter()
+        .all(|r| r.amount == 0 && r.paid_at == 0));
     assert!(matches!(member_position.slash_status, SlashStatus::None));
     assert_eq!(MEMBER_ACCEPTED_LOG, "member_accepted");
 }

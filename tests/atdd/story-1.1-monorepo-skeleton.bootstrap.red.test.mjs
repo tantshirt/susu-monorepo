@@ -41,6 +41,7 @@ test('[P0] cargo metadata resolves workspace', async (t) => {
   const { stdout } = await execFileAsync('cargo', ['metadata', '--format-version', '1'], {
     cwd: repoRootPath,
     timeout: 120000,
+    maxBuffer: 16 * 1024 * 1024,
   });
 
   assert.match(stdout, /"workspace_members"/);

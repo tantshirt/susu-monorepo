@@ -85,7 +85,8 @@ export async function queryParticipationHistory(
     const contributions = fromRaw
       ? fromRaw.contributions
       : Array.isArray(decoded.contributionHistory)
-        ? decoded.contributionHistory.length
+      ? decoded.contributionHistory.filter((entry: { amount?: bigint }) => (entry.amount ?? 0n) > 0n)
+          .length
         : 0;
     const slashed = fromRaw ? fromRaw.slashed : isSlashed(decoded as Record<string, unknown>);
     const completed = await isGroupCompleted(rpc, group);
@@ -172,7 +173,7 @@ function isRawOnlyAccount(
   return keys.length === 1 && keys[0] === 'raw' && decoded.raw instanceof Uint8Array;
 }
 
-/** Layout mirrors on-chain `MemberPosition` (anchor + borsh). Offsets include 8-byte account discriminator. */
+/** Layout mirrors on-chain MemberPosition bytes (8-byte discriminator + fields). */
 function parseMemberPositionLayout(
   data: Uint8Array,
   addressEncoder: ReturnType<typeof getAddressEncoder>,

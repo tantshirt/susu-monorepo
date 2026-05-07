@@ -1,11 +1,11 @@
 # IDL Freeze
 
-- Freeze Date: 2026-05-06
+- Freeze Date: 2026-05-08
 - Program: susu
 - Program ID: 2f6CBrNHZp8oyXPFRXfzroGx5pZ7WyLA6dUqFFpYsX2N
 - IDL Path: programs/susu/idl/susu.json
-- SHA-256: c861cbcdd660bd0796acb66e918d8c3dff61c4709fe08b44013d920498fcdf5c
-- Justification: Story 2.5 finalized the production `cancel_group` instruction surface on top of merged Story 2.4 `accept_invite`; the update is logged in `log/2026-05-07.md`.
+- SHA-256: c18e27587ee22ac2b35453325912dd24f0cbec586729ced96b73a5ef88fd590f
+- Justification: Story 3.4 implemented `contribute` with vault PDA wiring, SPL token CPI, `ContributionRecord` participation fields, rotation/window validation, group lifecycle gates, and expanded SusuError variants; `Group` gained rotation-window metadata fields; IDL and Codama outputs were regenerated after `anchor build --ignore-keys` and `pnpm sdk:codegen`.
 
 ## Freeze Policy
 

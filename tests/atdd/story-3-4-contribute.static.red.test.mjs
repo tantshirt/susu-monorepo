@@ -93,8 +93,12 @@ test('[P0] contribute account struct wires group, signer, vault, SPL token inter
     /anchor_spl\s*::\s*(token(::Program)?|associated_token\b|token_interface\b)/,
     'must use anchor_spl token or associated-token surface',
   );
-  assert.match(source, /\b#\[\s*derive\s*\(\s*Accounts\s*\)\s*\]/s, 'Contribute must derive Accounts');
-  assert.match(source, /#\[\s*instruction\s*\(\s*group_id\s*,\s*amount\s*,\s*rotation_index\s*\)\s*\]/s, 'Contribute accounts must bind instruction args');
+  assert.match(source, /#\[\s*derive\s*\(\s*Accounts\s*\)\s*\]/s, 'Contribute must derive Accounts');
+  assert.match(
+    source,
+    /#\[\s*instruction\s*\(\s*group_id[^)]*amount[^)]*rotation_index[^)]*\)\s*\]/s,
+    'Contribute accounts must bind instruction args',
+  );
   assert.match(source, /pub\s+struct\s+Contribute\s*<\s*'info\s*>/, 'Contribute must be lifetime-scoped Accounts struct');
 
   assert.match(source, /\bmember\s*:\s*Signer\s*<\s*'info\s*>/, 'member must sign');
@@ -105,10 +109,14 @@ test('[P0] contribute account struct wires group, signer, vault, SPL token inter
     /\b(member_position|position)\s*:\s*(Account\s*<\s*'info\s*,\s*MemberPosition\s*>|Box\s*<\s*Account\s*<\s*'info\s*,\s*MemberPosition\s*>\s*>)/,
     'must constrain MemberPosition PDA',
   );
-  assert.match(source, /\b(Mint\s*<\s*'info\s*>|InterfaceAccount\s*<\s*'info\s*,\s*Mint\s*>)/, 'mint account must enforce SPL mint interface');
   assert.match(
     source,
-    /\b(InterfaceAccount\s*<\s*'info\s*,\s*TokenAccount\s*>|Account\s*<\s*'info\s*,\s*TokenAccount\s*>)\b/,
+    /\b(Account\s*<\s*'info\s*,\s*Mint\s*>|Mint\s*<\s*'info\s*>|InterfaceAccount\s*<\s*'info\s*,\s*Mint\s*>)/,
+    'mint account must enforce SPL mint interface',
+  );
+  assert.match(
+    source,
+    /(InterfaceAccount\s*<\s*'info\s*,\s*TokenAccount\s*>|Account\s*<\s*'info\s*,\s*TokenAccount\s*>)/,
     'must constrain SPL TokenAccount structs for vault and member ATA',
   );
   assert.match(source, /\btoken_program\s*:\s*(Program|Interface)\s*<\s*'info\s*,\s*(Token|Token2022)\s*>/, 'must wire Token / Token2022 program account');

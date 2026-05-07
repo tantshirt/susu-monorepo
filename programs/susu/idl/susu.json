@@ -184,7 +184,107 @@
         205,
         95
       ],
-      "accounts": [],
+      "accounts": [
+        {
+          "name": "group",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  103,
+                  114,
+                  111,
+                  117,
+                  112
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "group.creator",
+                "account": "Group"
+              },
+              {
+                "kind": "arg",
+                "path": "group_id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "member_position",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  109,
+                  101,
+                  109,
+                  98,
+                  101,
+                  114
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "group"
+              },
+              {
+                "kind": "account",
+                "path": "member"
+              }
+            ]
+          }
+        },
+        {
+          "name": "member",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "member_token_account",
+          "writable": true
+        },
+        {
+          "name": "vault",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  118,
+                  97,
+                  117,
+                  108,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "group"
+              }
+            ]
+          }
+        },
+        {
+          "name": "mint",
+          "relations": [
+            "group"
+          ]
+        },
+        {
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "name": "clock",
+          "address": "SysvarC1ock11111111111111111111111111111111"
+        }
+      ],
       "args": [
         {
           "name": "group_id",
@@ -514,6 +614,36 @@
       "code": 6006,
       "name": "AlreadyAccepted",
       "msg": "This member has already accepted the invite."
+    },
+    {
+      "code": 6007,
+      "name": "GroupNotActive",
+      "msg": "The group is not active; contributions are not accepted."
+    },
+    {
+      "code": 6008,
+      "name": "OutsideContributionWindow",
+      "msg": "The current time is outside this rotation's contribution window."
+    },
+    {
+      "code": 6009,
+      "name": "ContributionAmountMismatch",
+      "msg": "The contribution amount must match the group's scheduled contribution."
+    },
+    {
+      "code": 6010,
+      "name": "MemberSlashedCannotContribute",
+      "msg": "Slashed members cannot contribute."
+    },
+    {
+      "code": 6011,
+      "name": "ContributionAlreadyRecorded",
+      "msg": "A contribution was already recorded for this rotation."
+    },
+    {
+      "code": 6012,
+      "name": "InvalidContributionRotation",
+      "msg": "The rotation index is invalid for this group."
     }
   ],
   "types": [
@@ -521,7 +651,20 @@
       "name": "ContributionRecord",
       "type": {
         "kind": "struct",
-        "fields": []
+        "fields": [
+          {
+            "name": "rotation_index",
+            "type": "u8"
+          },
+          {
+            "name": "amount",
+            "type": "u64"
+          },
+          {
+            "name": "paid_at",
+            "type": "i64"
+          }
+        ]
       }
     },
     {
@@ -593,6 +736,20 @@
           {
             "name": "bump",
             "type": "u8"
+          },
+          {
+            "name": "start_timestamp",
+            "docs": [
+              "Epoch for rotation window math (set equal to `created_at` at group creation)."
+            ],
+            "type": "i64"
+          },
+          {
+            "name": "contribution_window_duration",
+            "docs": [
+              "Inclusive contribution window length for each rotation (seconds)."
+            ],
+            "type": "i64"
           }
         ]
       }

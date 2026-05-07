@@ -33,7 +33,7 @@ async function runRepoCommand(command, args) {
     await execFileAsync(command, args, {
       cwd: repoRootPath,
       env: process.env,
-      maxBuffer: 1024 * 1024 * 8,
+      maxBuffer: 16 * 1024 * 1024,
       timeout: 120_000,
     });
   } catch (error) {
@@ -120,6 +120,9 @@ test('[P0] Group account locks the Story 2.1 state shape', async () => {
   assertRustField(source, 'created_at', 'i64');
   assertRustField(source, 'creator', 'Pubkey');
   assertRustField(source, 'group_id', 'u64');
+  assertRustField(source, 'bump', 'u8');
+  assertRustField(source, 'start_timestamp', 'i64');
+  assertRustField(source, 'contribution_window_duration', 'i64');
 
   for (const variant of ['Forming', 'Active', 'Cancelled', 'Completed']) {
     assert.match(source, new RegExp(`\\b${variant}\\b`), `missing GroupStatus.${variant}`);
@@ -146,6 +149,9 @@ test('[P0] MemberPosition account locks PDA-owned member state shape', async () 
   assertRustField(source, 'collateral_posted', 'u64');
   assertRustField(source, 'slash_status', 'SlashStatus');
   assert.match(source, /pub\s+struct\s+ContributionRecord\b/);
+  assertRustField(source, 'rotation_index', 'u8');
+  assertRustField(source, 'amount', 'u64');
+  assertRustField(source, 'paid_at', 'i64');
 
   for (const variant of ['None', 'Slashed', 'Refunded']) {
     assert.match(source, new RegExp(`\\b${variant}\\b`), `missing SlashStatus.${variant}`);
@@ -281,6 +287,9 @@ test('[P0] IDL account type definitions match Story 2.1 account shapes', async (
     ['created_at', 'i64'],
     ['creator', 'pubkey'],
     ['group_id', 'u64'],
+    ['bump', 'u8'],
+    ['start_timestamp', 'i64'],
+    ['contribution_window_duration', 'i64'],
   ]);
   assertIdlStructFields(idl, 'MemberSlot', [
     ['pubkey', 'pubkey'],
@@ -297,7 +306,11 @@ test('[P0] IDL account type definitions match Story 2.1 account shapes', async (
     ['collateral_posted', 'u64'],
     ['slash_status', 'SlashStatus'],
   ]);
-  assertIdlStructFields(idl, 'ContributionRecord', []);
+  assertIdlStructFields(idl, 'ContributionRecord', [
+    ['rotation_index', 'u8'],
+    ['amount', 'u64'],
+    ['paid_at', 'i64'],
+  ]);
   assertIdlEnumVariants(idl, 'SlashStatus', ['None', 'Slashed', 'Refunded']);
 
   assertIdlStructFields(idl, 'RotationReceipt', [
