@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "description": "Cross-language golden vectors for susu::curve::calculate_collateral. Replace null expected values with exact u64 totals in the Story 3.1 implementation PR (hand-computed from the closed-form in code).",
+  "cases": [
+    { "label": "n3_slot0_usdc6", "n": 3, "slot": 0, "contribution_base_units": 50000000, "decimals": 6, "expected_required_collateral_base_units": null },
+    { "label": "n3_last_slot_usdc6", "n": 3, "slot": 2, "contribution_base_units": 50000000, "decimals": 6, "expected_required_collateral_base_units": null },
+    { "label": "n5_middle_slot_usdc6", "n": 5, "slot": 2, "contribution_base_units": 50000000, "decimals": 6, "expected_required_collateral_base_units": null },
+    { "label": "n5_usdt6_mirror", "n": 5, "slot": 1, "contribution_base_units": 50000000, "decimals": 6, "expected_required_collateral_base_units": null },
+    { "label": "n7_first_slot_usdc6", "n": 7, "slot": 0, "contribution_base_units": 50000000, "decimals": 6, "expected_required_collateral_base_units": null },
+    { "label": "n10_last_slot_usdc6", "n": 10, "slot": 9, "contribution_base_units": 50000000, "decimals": 6, "expected_required_collateral_base_units": null },
+    { "label": "n12_middle_usdc6", "n": 12, "slot": 6, "contribution_base_units": 50000000, "decimals": 6, "expected_required_collateral_base_units": null },
+    { "label": "n12_decimals9_synthetic", "n": 12, "slot": 3, "contribution_base_units": 50000000000, "decimals": 9, "expected_required_collateral_base_units": null }
+  ]
+}
