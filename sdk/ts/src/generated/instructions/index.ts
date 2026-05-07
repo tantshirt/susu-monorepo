@@ -4,6 +4,7 @@ export * from './cancelGroup.js';
 export * from './claimPayout.js';
 export * from './contribute.js';
 export * from './createGroup.js';
+export * from './inviteMembers.js';
 export * from './postCollateral.js';
 export * from './slashMember.js';
 export * from './topUpCollateral.js';
