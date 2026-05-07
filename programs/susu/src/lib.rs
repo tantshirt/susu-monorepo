@@ -12,78 +12,86 @@ pub mod susu {
     use super::*;
 
     pub fn create_group(
-        _ctx: Context<instructions::create_group::CreateGroup>,
-        _group_id: u64,
-        _contribution_amount: u64,
-        _member_count: u8,
-        _mint: Pubkey,
-        _contribution_period_slots: u64,
-        _grace_period_slots: u64,
+        ctx: Context<instructions::create_group::CreateGroup>,
+        group_id: u64,
+        contribution_amount: u64,
+        member_count: u8,
+        mint: Pubkey,
+        contribution_period_slots: u64,
+        grace_period_slots: u64,
     ) -> Result<()> {
-        Ok(())
+        instructions::create_group::handler(
+            ctx,
+            group_id,
+            contribution_amount,
+            member_count,
+            mint,
+            contribution_period_slots,
+            grace_period_slots,
+        )
     }
 
     pub fn accept_invite(
-        _ctx: Context<instructions::accept_invite::AcceptInvite>,
-        _group_id: u64,
+        ctx: Context<instructions::accept_invite::AcceptInvite>,
+        group_id: u64,
     ) -> Result<()> {
-        Ok(())
+        instructions::accept_invite::handler(ctx, group_id)
     }
 
     pub fn post_collateral(
-        _ctx: Context<instructions::post_collateral::PostCollateral>,
-        _group_id: u64,
-        _amount: u64,
+        ctx: Context<instructions::post_collateral::PostCollateral>,
+        group_id: u64,
+        amount: u64,
     ) -> Result<()> {
-        Ok(())
+        instructions::post_collateral::handler(ctx, group_id, amount)
     }
 
     pub fn contribute(
-        _ctx: Context<instructions::contribute::Contribute>,
-        _group_id: u64,
-        _amount: u64,
-        _rotation_index: u8,
+        ctx: Context<instructions::contribute::Contribute>,
+        group_id: u64,
+        amount: u64,
+        rotation_index: u8,
     ) -> Result<()> {
-        Ok(())
+        instructions::contribute::handler(ctx, group_id, amount, rotation_index)
     }
 
     pub fn claim_payout(
-        _ctx: Context<instructions::claim_payout::ClaimPayout>,
-        _group_id: u64,
-        _rotation_index: u8,
+        ctx: Context<instructions::claim_payout::ClaimPayout>,
+        group_id: u64,
+        rotation_index: u8,
     ) -> Result<()> {
-        Ok(())
+        instructions::claim_payout::handler(ctx, group_id, rotation_index)
     }
 
     pub fn top_up_collateral(
-        _ctx: Context<instructions::top_up_collateral::TopUpCollateral>,
-        _group_id: u64,
-        _amount: u64,
+        ctx: Context<instructions::top_up_collateral::TopUpCollateral>,
+        group_id: u64,
+        amount: u64,
     ) -> Result<()> {
-        Ok(())
+        instructions::top_up_collateral::handler(ctx, group_id, amount)
     }
 
     pub fn withdraw_collateral(
-        _ctx: Context<instructions::withdraw_collateral::WithdrawCollateral>,
-        _group_id: u64,
-        _amount: u64,
+        ctx: Context<instructions::withdraw_collateral::WithdrawCollateral>,
+        group_id: u64,
+        amount: u64,
     ) -> Result<()> {
-        Ok(())
+        instructions::withdraw_collateral::handler(ctx, group_id, amount)
     }
 
     pub fn slash_member(
-        _ctx: Context<instructions::slash_member::SlashMember>,
-        _group_id: u64,
-        _member: Pubkey,
-        _penalty_amount: u64,
+        ctx: Context<instructions::slash_member::SlashMember>,
+        group_id: u64,
+        member: Pubkey,
+        penalty_amount: u64,
     ) -> Result<()> {
-        Ok(())
+        instructions::slash_member::handler(ctx, group_id, member, penalty_amount)
     }
 
     pub fn cancel_group(
-        _ctx: Context<instructions::cancel_group::CancelGroup>,
-        _group_id: u64,
+        ctx: Context<instructions::cancel_group::CancelGroup>,
+        group_id: u64,
     ) -> Result<()> {
-        Ok(())
+        instructions::cancel_group::handler(ctx, group_id)
     }
 }
