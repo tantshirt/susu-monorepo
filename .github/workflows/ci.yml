@@ -28,7 +28,7 @@ jobs:
       - name: Setup Rust toolchain
         uses: dtolnay/rust-toolchain@master
         with:
-          toolchain: 1.79.0
+          toolchain: stable
 
       - name: Cache Cargo registry + target
         uses: actions/cache@v4
@@ -68,10 +68,10 @@ jobs:
           fi
 
       - name: Anchor build
-        run: anchor build --ignore-keys
+        run: RUSTUP_TOOLCHAIN=stable anchor build --ignore-keys
 
       - name: Cargo test (workspace)
-        run: cargo test --workspace
+        run: RUSTUP_TOOLCHAIN=stable cargo test --workspace
 
       - name: pnpm test
         run: pnpm test
