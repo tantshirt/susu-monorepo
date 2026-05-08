@@ -62,4 +62,6 @@ pub enum SusuError {
     NotRotationRecipient,
     #[msg("This rotation's contribution period has not closed yet.")]
     RotationNotClosed,
+    #[msg("Rotation has already been claimed.")]
+    AlreadyClaimed,
 }
