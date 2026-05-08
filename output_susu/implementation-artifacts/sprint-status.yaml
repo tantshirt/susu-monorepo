@@ -85,12 +85,12 @@ development_status:
   epic-4-retrospective: done
 
   # Epic 5: Curve Verification, Adversary Simulation & Public Documentation
-  epic-5: backlog
+  epic-5: done
   5-1-no-strategic-default-proptest: done # PR #168 CI + Cursor Bugbot clean on 2026-05-08
   5-2-adversary-cli-skeleton: done
   5-3-thirty-percent-cartel-scenario: done # PR #172 merged by user-approved manual override on 2026-05-08; Cursor remained queued/ambiguous
   5-4-deterministic-adversary-report: done
-  5-5-collateral-curve-doc: review
+  5-5-collateral-curve-doc: done
   5-6-threat-model-doc: done
   5-7-fincen-cvc-framing-doc: done
   5-8-audit-engagement: done

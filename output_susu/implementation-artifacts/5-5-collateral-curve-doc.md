@@ -2,7 +2,7 @@
 
 ## Status
 
-review
+done
 
 ## Story
 
@@ -93,6 +93,7 @@ GPT-5 Codex
 - `RUSTUP_TOOLCHAIN=stable cargo test --workspace` passed after implementation.
 - Local static checks passed: `bash scripts/check-idl-hash.sh`, `bash scripts/check-patterns.sh`, `bash scripts/check-sdk-parity.sh`, `pnpm exec tsx scripts/check-i18n-parity.ts`, `bash scripts/check-fincen-posture.sh`, `bash scripts/check-bad-skill-sync.sh`, and `pnpm test --if-present`.
 - Test review reran `node --test tests/atdd/story-5-5-collateral-curve-doc.static.red.test.mjs` and `pnpm test:atdd` after tightening the Story 5.5 static guard.
+- PR #175 gates passed: `lint-and-build` and Cursor Bug Bot both completed successfully on 2026-05-08.
 
 ### Completion Notes List
 
@@ -127,3 +128,4 @@ GPT-5 Codex
 - 2026-05-08: Implemented `docs/collateral-curve.md`, recorded comprehension review evidence, and moved story to review.
 - 2026-05-08: Completed test-review workflow and fixed all findings.
 - 2026-05-08: Completed code-review workflow and fixed all findings.
+- 2026-05-08: Marked Story 5.5 done after PR #175 CI and Cursor Bug Bot passed.
