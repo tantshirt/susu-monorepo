@@ -1,6 +1,6 @@
 'use client';
 
-import { type KeyboardEvent, useEffect } from 'react';
+import { type KeyboardEvent } from 'react';
 
 import { type Skin } from '../../lib/skin';
 import { useSkinStore } from '../../lib/stores/skin';
@@ -13,10 +13,6 @@ const OPTIONS: ReadonlyArray<{ label: string; value: Skin }> = [
 export function SkinToggle() {
   const skin = useSkinStore((state) => state.skin);
   const setSkin = useSkinStore((state) => state.setSkin);
-
-  useEffect(() => {
-    useSkinStore.getState().syncFromCookie();
-  }, []);
 
   const focusOption = (value: Skin) => {
     if (typeof document === 'undefined') {

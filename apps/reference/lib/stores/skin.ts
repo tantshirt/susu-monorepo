@@ -39,19 +39,15 @@ function persistStorageSkin(skin: Skin): void {
 
 function persistSkin(skin: Skin): void {
   if (typeof document !== 'undefined') {
-    document.cookie = `${SKIN_COOKIE_NAME}=${skin}; path=/; max-age=${SKIN_COOKIE_MAX_AGE_SECONDS}; samesite=lax`;
+    const secure = document.location.protocol === 'https:' ? '; secure' : '';
+    document.cookie = `${SKIN_COOKIE_NAME}=${skin}; path=/; max-age=${SKIN_COOKIE_MAX_AGE_SECONDS}; samesite=lax${secure}`;
   }
   persistStorageSkin(skin);
 }
 
-function getInitialSkin(): Skin {
+function readDomOrStorageSkin(): Skin | null {
   if (typeof document === 'undefined') {
-    return FALLBACK_SKIN;
-  }
-
-  const fromCookie = readCookieSkin();
-  if (fromCookie) {
-    return fromCookie;
+    return null;
   }
 
   const fromDom = document.documentElement.dataset.skin;
@@ -59,18 +55,25 @@ function getInitialSkin(): Skin {
     return fromDom;
   }
 
-  const fromStorage = typeof window === 'undefined' ? null : window.localStorage.getItem(SKIN_LOCAL_STORAGE_KEY);
-  if (isSkin(fromStorage)) {
-    return fromStorage;
+  if (typeof window === 'undefined') {
+    return null;
+  }
+  const fromStorage = window.localStorage.getItem(SKIN_LOCAL_STORAGE_KEY);
+  return isSkin(fromStorage) ? fromStorage : null;
+}
+
+function getInitialSkin(): Skin {
+  const fromCookie = readCookieSkin();
+  if (fromCookie) {
+    return fromCookie;
   }
 
-  return FALLBACK_SKIN;
+  return readDomOrStorageSkin() ?? FALLBACK_SKIN;
 }
 
 type SkinStore = {
   skin: Skin;
   setSkin: (skin: Skin) => void;
-  syncFromCookie: () => void;
 };
 
 export const useSkinStore = create<SkinStore>((set) => ({
@@ -79,11 +82,5 @@ export const useSkinStore = create<SkinStore>((set) => ({
     applySkinToDom(skin);
     persistSkin(skin);
     set({ skin });
-  },
-  syncFromCookie: () => {
-    const cookieSkin = readCookieSkin() ?? FALLBACK_SKIN;
-    applySkinToDom(cookieSkin);
-    persistStorageSkin(cookieSkin);
-    set({ skin: cookieSkin });
   },
 }));

@@ -15,7 +15,8 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
           :root {
             --bg: #ffffff;
             --fg: #141414;
-            transition: background-color 300ms ease, color 300ms ease;
+            --skin-transition-duration: 300ms;
+            transition: background-color var(--skin-transition-duration) ease, color var(--skin-transition-duration) ease;
           }
 
           html[data-skin='heritage'] {
@@ -47,7 +48,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
             border-radius: 999px;
             background: color-mix(in srgb, var(--bg) 92%, var(--fg) 8%);
             transform: translateX(0);
-            transition: transform 300ms ease;
+            transition: transform var(--skin-transition-duration) ease;
           }
 
           .skin-toggle__thumb--heritage {
@@ -74,7 +75,8 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
           @media (prefers-reduced-motion: reduce) {
             :root,
             .skin-toggle__thumb {
-              transition-duration: 0ms;
+              --skin-transition-duration: 0ms;
+              transition-duration: var(--skin-transition-duration);
             }
           }
         `}</style>
