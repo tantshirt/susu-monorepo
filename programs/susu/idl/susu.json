@@ -1327,6 +1327,11 @@
       "code": 6030,
       "name": "AlreadyClaimed",
       "msg": "Rotation has already been claimed."
+    },
+    {
+      "code": 6031,
+      "name": "ContributionPeriodOpen",
+      "msg": "This rotation's contribution period is still open."
     }
   ],
   "types": [
