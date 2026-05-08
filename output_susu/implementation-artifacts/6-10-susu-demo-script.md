@@ -132,6 +132,7 @@ GPT-5 Codex
 - Cursor follow-up recovery moved classifier logic into `scripts/susu-demo-classify.mjs` so shell and runner share the same buckets, and kept RPC HTTP 429 under `rpc-reachability`.
 - Cursor follow-up recovery added `.susu-demo/` to `.gitignore` and stopped hardcoding the SDK client cluster to devnet.
 - Cursor follow-up recovery preserved non-mainnet clusters in Solscan links instead of mapping every non-mainnet cluster to devnet.
+- Cursor follow-up recovery fixed dependency-classifier spacing so `anchor mismatch` and `solana required` stay in the dependency bucket.
 
 ### File List
 

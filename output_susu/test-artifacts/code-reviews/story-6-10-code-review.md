@@ -30,6 +30,10 @@ Cursor Bugbot flagged unignored `.susu-demo/` keypair output and a hardcoded dev
 
 Cursor Bugbot flagged that Solscan links still mapped every non-mainnet cluster to devnet. The link helper now preserves the configured cluster and only maps `mainnet-beta` to Solscan's `mainnet` label.
 
+### Fixed: Dependency Classifier Spacing
+
+Cursor Bugbot flagged unreachable dependency-classifier alternatives for `required`, `requires`, and `mismatch`. The classifier now requires whitespace after the tool name for those phrases, and ATDD covers `anchor mismatch` and `solana required`.
+
 ## Evidence
 
 - `node --test tests/atdd/story-6-10-susu-demo-script.static.red.test.mjs`

@@ -118,6 +118,16 @@ test('Story 6.10 keeps RPC failures out of the dependency bucket', async () => {
     'dependency-mismatch',
     'actual module resolution failures must still be dependency failures',
   );
+  assert.equal(
+    classifyDemoError(new Error('anchor mismatch')).bucket,
+    'dependency-mismatch',
+    'tool mismatch phrases must remain dependency failures',
+  );
+  assert.equal(
+    classifyDemoError(new Error('solana required')).bucket,
+    'dependency-mismatch',
+    'tool required phrases must remain dependency failures',
+  );
 });
 
 test('Story 6.10 adds a Surfpool-backed main-branch CI smoke job', () => {

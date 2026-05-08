@@ -35,7 +35,7 @@ function isDependencyMismatch(text) {
     /ERR_MODULE_NOT_FOUND|Cannot find (module|package)|module not found|Package subpath .* is not defined|workspace package|ERR_PNPM|pnpm (install|build).*failed/i.test(
       text,
     ) ||
-    /(^|[\s/])(anchor|solana|solana-keygen|node|pnpm)(: command not found|: not found| not found| is not installed| unsupported|required|requires|mismatch)/i.test(
+    /(^|[\s/])(anchor|solana|solana-keygen|node|pnpm)(: command not found|: not found|\s+(not found|is not installed|unsupported|required|requires|mismatch))/i.test(
       text,
     ) ||
     /(unsupported|required|requires|mismatch) (Node\.js|node|pnpm|anchor|solana)|(Node\.js|node|pnpm|anchor|solana) version (mismatch|unsupported|required)/i.test(
