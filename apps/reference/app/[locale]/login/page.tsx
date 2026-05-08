@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 
 import { getPrivySigner, getPrivyState } from '../../../lib/auth/privy.js';
 import { useWalletStandardSigner } from '../../../lib/auth/wallet-standard.js';
@@ -12,12 +12,6 @@ export default function LoginPage() {
   const [selectedPath, setSelectedPath] = useState<'privy' | 'wallet-standard'>(
     privyState.available ? 'privy' : 'wallet-standard',
   );
-
-  useEffect(() => {
-    if (!privyState.available) {
-      setSelectedPath('wallet-standard');
-    }
-  }, [privyState.available]);
 
   const signer = useMemo(() => {
     if (selectedPath === 'privy') {
