@@ -1,6 +1,6 @@
 # Story 4.2: Implement `claim_payout` instruction
 
-Status: atdd-done
+Status: review
 Issue: #39
 
 ## Story
@@ -26,3 +26,8 @@ so that I can collect my pot after my rotation contribution period closes withou
 - `tests/atdd/story-4-2-claim-payout.static.red.test.mjs`
 - `programs/susu/tests/claim_payout.rs`
 
+## Implementation Notes
+
+- `claim_payout` initializes `RotationReceipt` with canonical rotation PDA seeds.
+- Vault transfer uses `transfer_checked` with the group PDA signer.
+- Payout amount and close timestamp use checked arithmetic and return `ArithmeticOverflow`.

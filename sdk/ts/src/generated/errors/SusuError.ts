@@ -27,4 +27,7 @@ export enum SusuError {
   NotAllCollateralized = 'NotAllCollateralized',
   InvalidStatusTransition = 'InvalidStatusTransition',
   InvalidMemberPositionList = 'InvalidMemberPositionList',
+  ArithmeticOverflow = 'ArithmeticOverflow',
+  NotRotationRecipient = 'NotRotationRecipient',
+  RotationNotClosed = 'RotationNotClosed',
 }

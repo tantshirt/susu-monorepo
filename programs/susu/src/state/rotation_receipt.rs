@@ -9,4 +9,5 @@ pub struct RotationReceipt {
     pub amount: u64,
     pub recipient: Pubkey,
     pub claimed_at: i64,
+    pub bump: u8,
 }

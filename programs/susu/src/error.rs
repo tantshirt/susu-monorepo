@@ -56,4 +56,10 @@ pub enum SusuError {
     InvalidStatusTransition,
     #[msg("Provided member positions do not match ordered roster.")]
     InvalidMemberPositionList,
+    #[msg("Arithmetic overflow while calculating payout state.")]
+    ArithmeticOverflow,
+    #[msg("The signer is not the recipient for this rotation.")]
+    NotRotationRecipient,
+    #[msg("This rotation's contribution period has not closed yet.")]
+    RotationNotClosed,
 }

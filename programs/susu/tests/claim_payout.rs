@@ -24,7 +24,11 @@ fn compact(source: &str) -> String {
 
 fn derive_group_pda(creator: Pubkey, group_id: u64) -> Pubkey {
     Pubkey::find_program_address(
-        &[GROUP_SEED, creator.as_ref(), group_id.to_le_bytes().as_ref()],
+        &[
+            GROUP_SEED,
+            creator.as_ref(),
+            group_id.to_le_bytes().as_ref(),
+        ],
         &ID,
     )
     .0
