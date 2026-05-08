@@ -1,3 +1,5 @@
+import { useId } from 'react';
+
 export type MemberAvatarTint = 'neutral' | 'diaspora';
 
 export type MemberAvatarProps = Readonly<{
@@ -45,6 +47,7 @@ export function MemberAvatar({
   tint = 'neutral',
   isCurrentRecipient = false,
 }: MemberAvatarProps) {
+  const clipId = useId().replace(/:/g, '');
   const hash = hashWallet(walletPubkey);
   const colors = BASE_COLORS[tint];
   const eyeY = toPct(hash >> 3, 38, 46);
@@ -67,12 +70,12 @@ export function MemberAvatar({
       data-current-recipient={isCurrentRecipient ? 'true' : undefined}
     >
       <defs>
-        <clipPath id={`avatar-clip-${hash}`}>
+        <clipPath id={`avatar-clip-${hash}-${clipId}`}>
           <circle cx="50" cy="50" r="46" />
         </clipPath>
       </defs>
       <circle cx="50" cy="50" r="48" fill={isCurrentRecipient ? colors.ring : '#d4dbd7'} />
-      <g clipPath={`url(#avatar-clip-${hash})`}>
+      <g clipPath={`url(#avatar-clip-${hash}-${clipId})`}>
         <rect x="4" y="4" width="92" height="92" fill={colors.accentA} />
         <circle cx={patternX} cy={patternY} r={patternRadius} fill={colors.accentB} opacity="0.9" />
         <circle cx="50" cy="54" r="26" fill={colors.skin} />

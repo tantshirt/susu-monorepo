@@ -124,7 +124,22 @@ export function RotationCard({
         <div style={{ fontSize: 13, display: 'flex', alignItems: 'center', gap: 6 }}>
           Curve collateral: <strong>{collateralRequiredLabel}</strong>
           <a href={curvePlotHref} aria-label="Open static SVG curve plot" title="See the static SVG collateral curve">
-            ⓘ
+            <span aria-hidden="true">ⓘ</span>
+            <span
+              style={{
+                position: 'absolute',
+                width: 1,
+                height: 1,
+                padding: 0,
+                margin: -1,
+                overflow: 'hidden',
+                clip: 'rect(0 0 0 0)',
+                whiteSpace: 'nowrap',
+                border: 0,
+              }}
+            >
+              Open static SVG curve plot
+            </span>
           </a>
         </div>
       </section>

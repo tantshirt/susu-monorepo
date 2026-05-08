@@ -38,16 +38,13 @@ function toPoints(data: ReadonlyArray<CurvePoint>, width: number, height: number
   if (data.length === 0) {
     return '';
   }
-  if (data.length === 1) {
-    return `${width / 2},${height / 2}`;
-  }
   const maxCollateral = Math.max(...data.map((point) => point.collateral));
   const minCollateral = Math.min(...data.map((point) => point.collateral));
   const span = Math.max(1, maxCollateral - minCollateral);
 
   return data
     .map((point, index) => {
-      const x = (index / (data.length - 1)) * (width - 40) + 20;
+      const x = data.length > 1 ? (index / (data.length - 1)) * (width - 40) + 20 : width / 2;
       const normalized = (point.collateral - minCollateral) / span;
       const y = height - 20 - normalized * (height - 40);
       return `${x},${y}`;
@@ -56,12 +53,14 @@ function toPoints(data: ReadonlyArray<CurvePoint>, width: number, height: number
 }
 
 function toArea(points: string, height: number): string {
-  const [first] = points.split(' ');
-  const last = points.trim().split(' ').pop();
-  if (!first || !last) {
+  const pointList = points.trim().split(' ').filter(Boolean);
+  const [first] = pointList;
+  const last = pointList[pointList.length - 1];
+  const coordPattern = /^-?\d+(\.\d+)?,-?\d+(\.\d+)?$/;
+  if (!first || !last || !coordPattern.test(first) || !coordPattern.test(last)) {
     return '';
   }
-  return `M ${first} L ${points.split(' ').slice(1).join(' L ')} L ${last.split(',')[0]},${height - 20} L ${first.split(',')[0]},${height - 20} Z`;
+  return `M ${first} L ${pointList.slice(1).join(' L ')} L ${last.split(',')[0]},${height - 20} L ${first.split(',')[0]},${height - 20} Z`;
 }
 
 export function CurveVisualizer({ size = 'md', variant = 'default', ariaLabel, data = DEFAULT_DATA }: CurveVisualizerProps) {
@@ -84,7 +83,7 @@ export function CurveVisualizer({ size = 'md', variant = 'default', ariaLabel, d
       >
         <title>{label}</title>
         <style>
-          {`.curve-line { stroke-dasharray: 1000; stroke-dashoffset: 1000; }
+          {`.curve-line { stroke-dasharray: 10000; stroke-dashoffset: 10000; }
             @supports (animation-timeline: view()) {
               .curve-line.scroll-animate {
                 animation: draw 1.2s ease-out both;
@@ -110,7 +109,7 @@ export function CurveVisualizer({ size = 'md', variant = 'default', ariaLabel, d
         />
         {points.split(' ').map((point, index) => {
           const [cx, cy] = point.split(',');
-          return <circle key={`${point}-${index}`} cx={cx} cy={cy} r="3" fill={palette.dot} />;
+          return <circle key={index} cx={cx} cy={cy} r="3" fill={palette.dot} />;
         })}
       </svg>
       <table
