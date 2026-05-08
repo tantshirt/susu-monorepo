@@ -1,6 +1,6 @@
 # Story 5.8: Audit firm engagement + report linking (FR57, NFR-S1)
 
-Status: review
+Status: done
 
 ## Story
 
@@ -118,3 +118,4 @@ GPT-5 Codex
 - 2026-05-08: Implemented audit engagement docs, handoff tooling, citation check, fixtures, and validation record.
 - 2026-05-08: Addressed BMad test-review findings for maintainability and deterministic scratch output.
 - 2026-05-08: Completed clean BMad code review; status remains `review` pending PR CI and Cursor gates.
+- 2026-05-08: CI and Cursor Bugbot passed on PR #169; marked Story 5.8 done.
