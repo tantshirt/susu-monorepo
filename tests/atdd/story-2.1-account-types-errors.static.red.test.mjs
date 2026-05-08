@@ -239,7 +239,10 @@ test('[P1] PDA seed literals stay centralized in seeds.rs', async () => {
 test('[P0] IDL exposes Story 2.1 surface while retaining frozen hash behavior', async () => {
   const idlRaw = await readRepoFile('programs/susu/idl/susu.json');
   const freeze = await readRepoFile('IDL_FREEZE.md');
-  const engineeringLog = await readRepoFile('log/2026-05-07.md');
+  const engineeringLog = [
+    await readRepoFile('log/2026-05-07.md'),
+    await readRepoFile('log/2026-05-08.md'),
+  ].join('\n');
   const idl = JSON.parse(idlRaw);
 
   assert.equal(idl.address, '2f6CBrNHZp8oyXPFRXfzroGx5pZ7WyLA6dUqFFpYsX2N');
@@ -321,6 +324,7 @@ test('[P0] IDL account type definitions match Story 2.1 account shapes', async (
     ['amount', 'u64'],
     ['recipient', 'pubkey'],
     ['claimed_at', 'i64'],
+    ['bump', 'u8'],
   ]);
 });
 

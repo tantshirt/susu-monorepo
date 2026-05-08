@@ -28,4 +28,7 @@ pub enum SusuError {
     NotAllCollateralized,
     InvalidStatusTransition,
     InvalidMemberPositionList,
+    ArithmeticOverflow,
+    NotRotationRecipient,
+    RotationNotClosed,
 }
