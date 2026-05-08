@@ -23,5 +23,5 @@ export function useWalletStandardWallets(): ReadonlyArray<BrowserWallet> {
 
 export function useWalletStandardSigner() {
   const wallets = useWalletStandardWallets();
-  return useMemo(() => signerFromWalletStandard(wallets[0] ?? {}), [wallets]);
+  return useMemo(() => signerFromWalletStandard(wallets[0]), [wallets]);
 }
