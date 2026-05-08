@@ -71,6 +71,9 @@ jobs:
       - name: Cargo test (workspace)
         run: RUSTUP_TOOLCHAIN=stable cargo test --workspace
 
+      - name: Cargo invariant proof (no strategic default)
+        run: RUSTUP_TOOLCHAIN=stable cargo test --test no_strategic_default --release
+
       - name: pnpm test
         run: pnpm test --if-present
 

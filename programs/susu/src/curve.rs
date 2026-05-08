@@ -48,6 +48,33 @@ pub fn calculate_collateral(
         .ok_or(SusuError::CurveOverflow)
 }
 
+/// Returns the expected payoff from receiving a payout at `slot` and then defaulting.
+///
+/// A negative result means strategic default is unprofitable. The calculation intentionally
+/// derives collateral through `calculate_collateral` so the invariant follows the canonical
+/// curve implementation instead of duplicating its closed form.
+pub fn expected_default_payoff(
+    slot: u8,
+    n: u8,
+    contribution: u64,
+    decimals: u8,
+) -> Result<i128, SusuError> {
+    let collateral = i128::from(calculate_collateral(slot, n, contribution, decimals)?);
+    let contribution_i = i128::from(contribution);
+
+    let payout = i128::from(n.checked_sub(1).ok_or(SusuError::InvalidCurveParams)?)
+        .checked_mul(contribution_i)
+        .ok_or(SusuError::CurveOverflow)?;
+    let paid_before_payout = i128::from(slot)
+        .checked_mul(contribution_i)
+        .ok_or(SusuError::CurveOverflow)?;
+
+    payout
+        .checked_sub(paid_before_payout)
+        .and_then(|net_before_collateral| net_before_collateral.checked_sub(collateral))
+        .ok_or(SusuError::CurveOverflow)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -140,5 +167,28 @@ mod tests {
             calculate_collateral(3, 12, c, decimals_9).unwrap(),
             1_000_000_000_000
         );
+    }
+
+    #[test]
+    fn expected_default_payoff_is_negative_and_slot_independent_under_current_curve() {
+        let n = 5u8;
+        let contribution = 50_000_000u64;
+        let expected = -i128::from(n) * i128::from(contribution);
+
+        for slot in 0..n {
+            assert_eq!(
+                expected_default_payoff(slot, n, contribution, 6).unwrap(),
+                expected,
+                "slot={slot}"
+            );
+        }
+    }
+
+    #[test]
+    fn expected_default_payoff_rejects_invalid_curve_params() {
+        assert!(matches!(
+            expected_default_payoff(3, 3, 50_000_000, 6),
+            Err(SusuError::InvalidCurveParams)
+        ));
     }
 }
