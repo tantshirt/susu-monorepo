@@ -1,6 +1,6 @@
 # Story 6.7: examples/with-squads (~200 LOC)
 
-Status: review
+Status: done
 
 ## Story
 
