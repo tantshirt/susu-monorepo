@@ -117,7 +117,7 @@ GPT-5 Codex
 - `pnpm --filter @susu/sdk test`
 - `bash scripts/check-patterns.sh`
 - `bash scripts/check-sdk-parity.sh`
-- Cursor Bugbot PR #184 reviews: fixed budget-breach classification, moved shell/JS failure classification to one shared module, narrowed dependency mismatch and airdrop-rate matching, gitignored generated demo keypairs, aligned SDK client cluster with `SUSU_DEMO_CLUSTER`, and exported the Surfpool install PATH before the same-step version check.
+- Cursor Bugbot PR #184 reviews: fixed budget-breach classification, moved shell/JS failure classification to one shared module, narrowed dependency mismatch and airdrop-rate matching, gitignored generated demo keypairs, aligned SDK client and Solscan clusters with `SUSU_DEMO_CLUSTER`, and exported the Surfpool install PATH before the same-step version check.
 
 ### Completion Notes List
 
@@ -131,6 +131,7 @@ GPT-5 Codex
 - Cursor follow-up recovery exported `$HOME/.local/bin` and `$HOME/.cargo/bin` during the Surfpool install step before running `surfpool --version`.
 - Cursor follow-up recovery moved classifier logic into `scripts/susu-demo-classify.mjs` so shell and runner share the same buckets, and kept RPC HTTP 429 under `rpc-reachability`.
 - Cursor follow-up recovery added `.susu-demo/` to `.gitignore` and stopped hardcoding the SDK client cluster to devnet.
+- Cursor follow-up recovery preserved non-mainnet clusters in Solscan links instead of mapping every non-mainnet cluster to devnet.
 
 ### File List
 

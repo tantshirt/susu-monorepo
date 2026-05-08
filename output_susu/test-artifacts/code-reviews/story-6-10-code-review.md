@@ -26,6 +26,10 @@ Cursor Bugbot flagged that RPC HTTP 429 was classified as `devnet-airdrop-limit`
 
 Cursor Bugbot flagged unignored `.susu-demo/` keypair output and a hardcoded devnet client cluster. The generated demo keypair directory is now gitignored, and `createSusuClient` receives the same `SUSU_DEMO_CLUSTER` value used for Solscan output.
 
+### Fixed: Solscan Cluster Mapping
+
+Cursor Bugbot flagged that Solscan links still mapped every non-mainnet cluster to devnet. The link helper now preserves the configured cluster and only maps `mainnet-beta` to Solscan's `mainnet` label.
+
 ## Evidence
 
 - `node --test tests/atdd/story-6-10-susu-demo-script.static.red.test.mjs`

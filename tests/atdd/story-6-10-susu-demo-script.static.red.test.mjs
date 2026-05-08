@@ -62,6 +62,7 @@ test('Story 6.10 runner drives the 5-member ROSCA lifecycle via @susu/sdk', () =
   assert.match(runner, /Promise\.all[\s\S]*contribute/, 'round contributions must be parallelized');
   assert.match(runner, /for\s*\([^)]*round[\s\S]*<\s*5|rounds\s*=\s*5/, 'runner must execute 5 rounds');
   assert.match(runner, /solscan\.io\/tx\/[\s\S]*cluster=/, 'runner must print cluster-aware Solscan links');
+  assert.match(runner, /cluster\s*===\s*['"]mainnet-beta['"]\s*\?\s*['"]mainnet['"]\s*:\s*cluster/, 'Solscan links must preserve configured non-mainnet clusters');
   assert.match(runner, /commitment:\s*['"]confirmed['"]|confirmedCommitment|SUSU_DEMO_COMMITMENT/, 'runner must use confirmed commitment for waits');
 
   assert.equal(spawnSync('node', ['--check', runnerPath], { encoding: 'utf8' }).status, 0, 'runner must parse');

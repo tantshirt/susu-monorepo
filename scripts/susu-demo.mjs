@@ -162,7 +162,7 @@ function tx(label, signature) {
 }
 
 function solscanLink(signature) {
-  const solscanCluster = cluster === 'mainnet-beta' ? 'mainnet' : 'devnet';
+  const solscanCluster = cluster === 'mainnet-beta' ? 'mainnet' : cluster;
   return `https://solscan.io/tx/${signature}?cluster=${solscanCluster}`;
 }
 
