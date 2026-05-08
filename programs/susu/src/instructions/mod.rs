@@ -1,6 +1,7 @@
 pub mod accept_invite;
 pub mod cancel_group;
 pub mod claim_payout;
+pub mod complete_group;
 pub mod contribute;
 pub mod create_group;
 pub mod invite_members;

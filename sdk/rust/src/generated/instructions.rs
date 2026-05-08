@@ -4,6 +4,7 @@ pub enum SusuInstructionKind {
     AcceptInvite,
     CancelGroup,
     ClaimPayout,
+    CompleteGroup,
     Contribute,
     CreateGroup,
     InviteMembers,
@@ -24,6 +25,10 @@ pub fn cancel_group() -> SusuInstructionKind {
 
 pub fn claim_payout() -> SusuInstructionKind {
     SusuInstructionKind::ClaimPayout
+}
+
+pub fn complete_group() -> SusuInstructionKind {
+    SusuInstructionKind::CompleteGroup
 }
 
 pub fn contribute() -> SusuInstructionKind {

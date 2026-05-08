@@ -4,15 +4,15 @@
 use anchor_lang::prelude::*;
 use instructions::{
     accept_invite::AcceptInvite, cancel_group::CancelGroup, claim_payout::ClaimPayout,
-    contribute::Contribute, create_group::CreateGroup, post_collateral::PostCollateral,
-    invite_members::InviteMembers, slash_member::SlashMember,
+    complete_group::CompleteGroup, contribute::Contribute, create_group::CreateGroup,
+    invite_members::InviteMembers, post_collateral::PostCollateral, slash_member::SlashMember,
     start_contributions::StartContributions, top_up_collateral::TopUpCollateral,
     withdraw_collateral::WithdrawCollateral,
 };
 
-pub mod error;
-pub mod curve;
 pub mod constants;
+pub mod curve;
+pub mod error;
 pub mod instructions;
 pub mod rotation;
 pub mod seeds;
@@ -20,11 +20,9 @@ pub mod state;
 
 #[allow(unused_imports)]
 use instructions::{
-    accept_invite::__client_accounts_accept_invite,
-    cancel_group::__client_accounts_cancel_group,
-    claim_payout::__client_accounts_claim_payout,
-    contribute::__client_accounts_contribute,
-    create_group::__client_accounts_create_group,
+    accept_invite::__client_accounts_accept_invite, cancel_group::__client_accounts_cancel_group,
+    claim_payout::__client_accounts_claim_payout, complete_group::__client_accounts_complete_group,
+    contribute::__client_accounts_contribute, create_group::__client_accounts_create_group,
     invite_members::__client_accounts_invite_members,
     post_collateral::__client_accounts_post_collateral,
     slash_member::__client_accounts_slash_member,
@@ -93,6 +91,10 @@ pub mod susu {
         instructions::claim_payout::handler(ctx, group_id, rotation_index)
     }
 
+    pub fn complete_group(ctx: Context<CompleteGroup>, group_id: u64) -> Result<()> {
+        instructions::complete_group::handler(ctx, group_id)
+    }
+
     pub fn top_up_collateral(
         ctx: Context<TopUpCollateral>,
         group_id: u64,
@@ -122,10 +124,7 @@ pub mod susu {
         instructions::start_contributions::handler(ctx)
     }
 
-    pub fn cancel_group(
-        ctx: Context<CancelGroup>,
-        group_id: u64,
-    ) -> Result<()> {
+    pub fn cancel_group(ctx: Context<CancelGroup>, group_id: u64) -> Result<()> {
         instructions::cancel_group::handler(ctx, group_id)
     }
 }
