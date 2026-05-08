@@ -47,6 +47,10 @@ Cursor Bugbot reported two issues on PR #177 commit `c9b1152cb60e75bcabee0f7eb7f
 - Corrected `queryHistory(..., { before })` to return entries before the cursor instead of after it.
 - Removed the unused exported `prependComputeBudgetInstructions` helper while keeping compute-budget prepending inside `sendInstructions`.
 
+Cursor Bugbot reported one issue on PR #177 commit `cd85ce6194a88cc4cb87b25c552429c78268309f`; it was fixed during the second recovery pass:
+
+- Changed the `queryHistory` limit check to treat `limit: 0` as an empty page instead of falling through to no-limit behavior.
+
 ## Validation Evidence
 
 - `git diff --check` passed.
@@ -58,6 +62,7 @@ Cursor Bugbot reported two issues on PR #177 commit `c9b1152cb60e75bcabee0f7eb7f
 - `bash scripts/check-sdk-parity.sh` passed and did not modify generated files.
 - `node --input-type=module -e "const sdk = await import('./sdk/ts/dist/index.js'); ..."` verified the built package exports `createSusuClient`, `contribute`, `getGroup`, and `queries`.
 - Recovery rerun after Cursor fixes passed `git diff --check`, `pnpm --filter @susu/sdk build`, `pnpm --filter @susu/sdk test`, `pnpm test:atdd`, `bash scripts/check-patterns.sh`, and `bash scripts/check-sdk-parity.sh`.
+- Second recovery rerun after the zero-limit fix passed `git diff --check`, `pnpm --filter @susu/sdk build`, `pnpm --filter @susu/sdk test`, `pnpm test:atdd`, `bash scripts/check-patterns.sh`, and `bash scripts/check-sdk-parity.sh`.
 
 ## Outcome
 

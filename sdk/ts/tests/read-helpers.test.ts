@@ -56,6 +56,7 @@ describe('client read helper wrappers', () => {
     await expect(queryHistory(client, { wallet: member as never, before: 'c' as never, limit: 1 })).resolves.toEqual([
       { group: 'a', rotationSlot: 0, contributions: 1, slashed: false, completed: false },
     ]);
+    await expect(queryHistory(client, { wallet: member as never, limit: 0 })).resolves.toEqual([]);
     expect(queryMocks.queryParticipationHistory).toHaveBeenCalledWith(rpc, programId, member);
   });
 });

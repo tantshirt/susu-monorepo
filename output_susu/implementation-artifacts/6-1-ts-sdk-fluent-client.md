@@ -143,6 +143,8 @@ GPT-5 Codex
 - Code review completed with no remaining findings.
 - Cursor Bugbot findings on PR #177 were fixed during recovery: `queryHistory(..., { before })` now returns entries before the cursor, and the unused exported `prependComputeBudgetInstructions` helper was removed.
 - Recovery validation after Cursor fixes passed `git diff --check`, `pnpm --filter @susu/sdk build`, `pnpm --filter @susu/sdk test` (20 passed, 1 todo), `pnpm test:atdd` (151 passed), `bash scripts/check-patterns.sh`, and `bash scripts/check-sdk-parity.sh`.
+- Cursor Bugbot follow-up finding on PR #177 was fixed during second recovery: `queryHistory(..., { limit: 0 })` now returns an empty page.
+- Second recovery validation after the zero-limit fix passed `git diff --check`, `pnpm --filter @susu/sdk build`, `pnpm --filter @susu/sdk test` (20 passed, 1 todo), `pnpm test:atdd` (151 passed), `bash scripts/check-patterns.sh`, and `bash scripts/check-sdk-parity.sh`.
 
 ### Completion Notes List
 
@@ -153,7 +155,7 @@ GPT-5 Codex
 - Added package-local README, dist export map, and mocked Vitest coverage for client, state helpers, and read helpers.
 - Test review completed with no remaining findings; strengthened state-helper tests to assert per-helper generated-builder argument bags.
 - Code review completed clean; no patch, decision, or deferred findings remain.
-- Recovery pass fixed all Cursor Bugbot findings before rerunning PR gates.
+- Recovery passes fixed all Cursor Bugbot findings observed before rerunning PR gates.
 
 ### File List
 
@@ -190,3 +192,4 @@ GPT-5 Codex
 - 2026-05-08: Ran test review, fixed the only cleanup item, and recorded no remaining test-review findings.
 - 2026-05-08: Ran code review and recorded no remaining findings.
 - 2026-05-08: Recovered PR #177, fixed Cursor Bugbot findings, and reran story-local validation.
+- 2026-05-08: Fixed Cursor Bugbot zero-limit pagination follow-up and reran story-local validation.
