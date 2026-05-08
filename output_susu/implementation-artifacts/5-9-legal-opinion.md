@@ -1,6 +1,6 @@
 # Story 5.9: Legal opinion engagement + docs/legal-opinion.pdf publication
 
-Status: review
+Status: done
 Issue: #52
 
 ## Story
@@ -84,6 +84,7 @@ GPT-5 Codex
 - Story implementation is complete and ready for review; all local acceptance and ATDD checks passed.
 - Test review tightened placeholder-PDF and SOW tracker assertions; no open test-quality findings remain.
 - Code review fixed whitespace-check failures in the placeholder PDF generator/output and test-review report; no open code-review findings remain.
+- PR #171 passed `lint-and-build` and Cursor Bugbot on the review head before the final done-status update.
 
 ### File List
 
@@ -109,3 +110,4 @@ GPT-5 Codex
 - 2026-05-08: Implemented legal engagement docs, handoff tooling, placeholder publication, links, and transparency log.
 - 2026-05-08: Addressed test-review findings and recorded Story 5.9 test-quality review.
 - 2026-05-08: Addressed code-review whitespace findings and recorded Story 5.9 code review.
+- 2026-05-08: Marked Story 5.9 done after PR #171 CI and Cursor Bugbot passed.
