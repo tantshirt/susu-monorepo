@@ -1,6 +1,6 @@
 # Story 5.3: 30% Cartel scenario named as headline test (FR23)
 
-Status: review
+Status: done
 
 ## Story
 
@@ -136,3 +136,4 @@ GPT-5 Codex
 - 2026-05-08: Added ATDD red artifacts for Story 5.3.
 - 2026-05-08: Implemented the named 30% Cartel scenario, registry/report wiring, README handoff, and scenario tests; marked story ready for review.
 - 2026-05-08: Addressed code review finding by adding per-defector net P&L values to the per-scenario report projection.
+- 2026-05-08: PR #172 was externally merged at `b86ab2143dcbd29d27d402b7965b08d3fa063cd4` by user-approved manual override after CI passed; Cursor/Bug Bot remained queued/ambiguous, so Story 5.3 was marked done by explicit override.
