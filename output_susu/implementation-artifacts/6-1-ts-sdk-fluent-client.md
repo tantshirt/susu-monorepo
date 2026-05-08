@@ -145,6 +145,8 @@ GPT-5 Codex
 - Recovery validation after Cursor fixes passed `git diff --check`, `pnpm --filter @susu/sdk build`, `pnpm --filter @susu/sdk test` (20 passed, 1 todo), `pnpm test:atdd` (151 passed), `bash scripts/check-patterns.sh`, and `bash scripts/check-sdk-parity.sh`.
 - Cursor Bugbot follow-up finding on PR #177 was fixed during second recovery: `queryHistory(..., { limit: 0 })` now returns an empty page.
 - Second recovery validation after the zero-limit fix passed `git diff --check`, `pnpm --filter @susu/sdk build`, `pnpm --filter @susu/sdk test` (20 passed, 1 todo), `pnpm test:atdd` (151 passed), `bash scripts/check-patterns.sh`, and `bash scripts/check-sdk-parity.sh`.
+- Cursor Bugbot follow-up finding on PR #177 was fixed during third recovery: `sendInstructions` now only accepts explicit own RPC send hooks, so standard kit RPC proxy methods do not bypass `SusuTransactionSendError`.
+- Third recovery validation after the proxy send-hook fix passed `git diff --check`, `pnpm --filter @susu/sdk build`, `pnpm --filter @susu/sdk test` (21 passed, 1 todo), `pnpm test:atdd` (151 passed), `bash scripts/check-patterns.sh`, and `bash scripts/check-sdk-parity.sh`.
 
 ### Completion Notes List
 
@@ -193,3 +195,4 @@ GPT-5 Codex
 - 2026-05-08: Ran code review and recorded no remaining findings.
 - 2026-05-08: Recovered PR #177, fixed Cursor Bugbot findings, and reran story-local validation.
 - 2026-05-08: Fixed Cursor Bugbot zero-limit pagination follow-up and reran story-local validation.
+- 2026-05-08: Fixed Cursor Bugbot standard-RPC-proxy send-hook follow-up and reran story-local validation.

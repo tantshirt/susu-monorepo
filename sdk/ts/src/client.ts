@@ -220,12 +220,12 @@ export async function sendInstructions(
     priorityFee,
   };
 
-  const sendInstructionsMethod = client.rpc.sendInstructions;
+  const sendInstructionsMethod = getOwnRpcMethod(client.rpc, 'sendInstructions');
   if (sendInstructionsMethod) {
     return normalizeSignature(await resolveSendable(sendInstructionsMethod(budgetedInstructions, sendContext)));
   }
 
-  const sendTransactionMethod = client.rpc.sendTransaction;
+  const sendTransactionMethod = getOwnRpcMethod(client.rpc, 'sendTransaction');
   if (sendTransactionMethod) {
     return normalizeSignature(await resolveSendable(sendTransactionMethod({ instructions: budgetedInstructions, context: sendContext })));
   }
@@ -245,7 +245,7 @@ async function resolvePriorityFee(
     return BigInt(client.priorityFee);
   }
 
-  const estimator = client.rpc.getPriorityFeeEstimate;
+  const estimator = getOwnRpcMethod(client.rpc, 'getPriorityFeeEstimate');
   if (!estimator) {
     return 0n;
   }
@@ -269,6 +269,18 @@ async function resolveSendable<T>(value: RpcSendable<T>): Promise<T> {
 
 function isSendable<T>(value: T | Readonly<{ send: () => Promise<T> }>): value is Readonly<{ send: () => Promise<T> }> {
   return typeof value === 'object' && value !== null && 'send' in value && typeof value.send === 'function';
+}
+
+function getOwnRpcMethod<K extends 'getPriorityFeeEstimate' | 'sendInstructions' | 'sendTransaction'>(
+  rpc: SusuRpc,
+  method: K,
+): NonNullable<SusuRpc[K]> | undefined {
+  if (!Object.prototype.hasOwnProperty.call(rpc, method)) {
+    return undefined;
+  }
+
+  const value = rpc[method];
+  return typeof value === 'function' ? (value as NonNullable<SusuRpc[K]>) : undefined;
 }
 
 function normalizeSignature(

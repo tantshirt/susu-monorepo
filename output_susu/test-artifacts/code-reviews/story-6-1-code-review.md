@@ -51,6 +51,10 @@ Cursor Bugbot reported one issue on PR #177 commit `cd85ce6194a88cc4cb87b25c5524
 
 - Changed the `queryHistory` limit check to treat `limit: 0` as an empty page instead of falling through to no-limit behavior.
 
+Cursor Bugbot reported one issue on PR #177 commit `7346b15b8f1876b3325f17ac3156befbf209425c`; it was fixed during the third recovery pass:
+
+- Changed priority-fee/send hook detection to require explicit own RPC methods, so standard `@solana/kit` RPC proxies cannot bypass `SusuTransactionSendError` with generated method wrappers.
+
 ## Validation Evidence
 
 - `git diff --check` passed.
@@ -63,6 +67,7 @@ Cursor Bugbot reported one issue on PR #177 commit `cd85ce6194a88cc4cb87b25c5524
 - `node --input-type=module -e "const sdk = await import('./sdk/ts/dist/index.js'); ..."` verified the built package exports `createSusuClient`, `contribute`, `getGroup`, and `queries`.
 - Recovery rerun after Cursor fixes passed `git diff --check`, `pnpm --filter @susu/sdk build`, `pnpm --filter @susu/sdk test`, `pnpm test:atdd`, `bash scripts/check-patterns.sh`, and `bash scripts/check-sdk-parity.sh`.
 - Second recovery rerun after the zero-limit fix passed `git diff --check`, `pnpm --filter @susu/sdk build`, `pnpm --filter @susu/sdk test`, `pnpm test:atdd`, `bash scripts/check-patterns.sh`, and `bash scripts/check-sdk-parity.sh`.
+- Third recovery rerun after the proxy send-hook fix passed `git diff --check`, `pnpm --filter @susu/sdk build`, `pnpm --filter @susu/sdk test`, `pnpm test:atdd`, `bash scripts/check-patterns.sh`, and `bash scripts/check-sdk-parity.sh`.
 
 ## Outcome
 

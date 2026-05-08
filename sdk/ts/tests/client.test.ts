@@ -1,6 +1,15 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import { cluster, createSusuClient, DEFAULT_COMPUTE_UNITS, signer, solanaDevnetRpc, SusuClientConfigError } from '../src/client.js';
+import {
+  cluster,
+  createSusuClient,
+  DEFAULT_COMPUTE_UNITS,
+  sendInstructions,
+  signer,
+  solanaDevnetRpc,
+  SusuClientConfigError,
+  SusuTransactionSendError,
+} from '../src/client.js';
 
 const mockSigner = { address: '11111111111111111111111111111111' };
 
@@ -36,5 +45,25 @@ describe('Susu fluent client', () => {
     await expect(contribute(createSusuClient({ cluster: 'devnet' }), { amount: 1n })).rejects.toBeInstanceOf(
       SusuClientConfigError,
     );
+  });
+
+  it('rejects standard RPC proxy methods that are not explicit Susu send hooks', async () => {
+    const proxyMethod = vi.fn();
+    const proxyRpc = new Proxy(
+      {},
+      {
+        get: () => proxyMethod,
+      },
+    );
+    const client = createSusuClient({ cluster: 'devnet', rpc: proxyRpc });
+
+    await expect(
+      sendInstructions(client, [{ programAddress: 'test' }], {
+        helperName: 'testHelper',
+        accounts: {},
+        args: {},
+      }),
+    ).rejects.toBeInstanceOf(SusuTransactionSendError);
+    expect(proxyMethod).not.toHaveBeenCalled();
   });
 });
