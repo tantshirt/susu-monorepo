@@ -87,7 +87,7 @@ development_status:
   # Epic 5: Curve Verification, Adversary Simulation & Public Documentation
   epic-5: backlog
   5-1-no-strategic-default-proptest: done # PR #168 CI + Cursor Bugbot clean on 2026-05-08
-  5-2-adversary-cli-skeleton: ready-for-dev
+  5-2-adversary-cli-skeleton: review
   5-3-thirty-percent-cartel-scenario: ready-for-dev
   5-4-deterministic-adversary-report: ready-for-dev
   5-5-collateral-curve-doc: ready-for-dev

@@ -2,7 +2,17 @@
 name = "susu-adversary"
 version = "0.1.0"
 edition = "2021"
+build = "build.rs"
 
 [[bin]]
 name = "susu-adversary"
 path = "src/main.rs"
+
+[dependencies]
+clap = { version = "4", features = ["derive"] }
+rand = "0.8"
+rand_chacha = "0.3"
+serde = { workspace = true }
+serde_json = { workspace = true }
+solana-sdk = "4"
+susu-client = { path = "../../sdk/rust" }
