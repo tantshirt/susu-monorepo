@@ -16,10 +16,7 @@ export function LocaleDropdown() {
     const segments = pathname.split('/').filter(Boolean);
     const hasLocalePrefix = locales.includes(segments[0] as (typeof locales)[number]);
     const rest = hasLocalePrefix ? segments.slice(1) : segments;
-    let currentPathWithoutLocale = pathname;
-    if (hasLocalePrefix) {
-      currentPathWithoutLocale = rest.length > 0 ? `/${rest.join('/')}` : '';
-    }
+    const currentPathWithoutLocale = hasLocalePrefix ? (rest.length > 0 ? `/${rest.join('/')}` : '') : pathname;
     router.replace(`/${nextLocale}${currentPathWithoutLocale}`);
   }
 

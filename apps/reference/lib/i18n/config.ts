@@ -8,11 +8,11 @@ export const defaultLocale: AppLocale = 'en';
 
 export const rtlLocales = ['ar'] as const;
 
-const STANDARD_YEAR_IN_SECONDS = 365 * 24 * 60 * 60;
+const COOKIE_MAX_AGE_SECONDS = 365 * 24 * 60 * 60;
 
 export const localeCookie = {
   name: 'NEXT_LOCALE',
-  maxAge: STANDARD_YEAR_IN_SECONDS,
+  maxAge: COOKIE_MAX_AGE_SECONDS,
   sameSite: 'lax' as const,
 };
 
