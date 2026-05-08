@@ -38,11 +38,13 @@ test('Story 4.4 exposes ContributionPeriodOpen as the pre-deadline error', () =>
 test('4.4-INT-001/002 rejects deadline - 1 and deadline before receipt writes and transfer CPI', () => {
   const handler = compact(handlerBody());
   const deadlineGuard = handler.indexOf('assert_rotation_closed(');
+  const fundingGuard = handler.indexOf('verify_rotation_funded(');
   const receiptWrite = handler.indexOf('letreceipt=&mutctx.accounts.rotation_receipt');
   const cpi = handler.indexOf('CpiContext::new_with_signer');
 
   assert.notEqual(deadlineGuard, -1, 'handler must use a testable assert_rotation_closed helper');
   assert.ok(claimSource.includes('SusuError::ContributionPeriodOpen'), 'deadline guard must reject with ContributionPeriodOpen');
+  assert.ok(deadlineGuard < fundingGuard, 'pre-deadline rejection must take precedence over underfunded-rotation checks');
   assert.ok(deadlineGuard < receiptWrite, 'pre-deadline rejection must happen before receipt field writes');
   assert.ok(deadlineGuard < cpi, 'pre-deadline rejection must happen before token transfer');
 });

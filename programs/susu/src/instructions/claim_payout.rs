@@ -67,19 +67,18 @@ pub fn handler(ctx: Context<ClaimPayout>, group_id: u64, rotation_index: u8) -> 
         SusuError::InvalidContributionRotation
     );
     assert_rotation_recipient(&ctx.accounts.member_position, rotation_index)?;
-    verify_rotation_funded(
-        ctx.accounts.group.key(),
-        group,
-        rotation_index,
-        ctx.remaining_accounts,
-    )?;
-
     let close_timestamp = rotation_close_timestamp(
         group.start_timestamp,
         group.contribution_period,
         rotation_index,
     )?;
     assert_rotation_closed(ctx.accounts.clock.unix_timestamp, close_timestamp)?;
+    verify_rotation_funded(
+        ctx.accounts.group.key(),
+        group,
+        rotation_index,
+        ctx.remaining_accounts,
+    )?;
 
     let amount = calculate_payout_amount(group.n, group.contribution_amount)?;
     let decimals = ctx.accounts.mint.decimals;

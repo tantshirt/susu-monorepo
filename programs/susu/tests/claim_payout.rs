@@ -248,6 +248,10 @@ fn claim_payout_source_orders_guards_before_vault_transfer() {
 
     assert!(active < cpi, "active guard must precede CPI");
     assert!(recipient < cpi, "recipient guard must precede CPI");
+    assert!(
+        closed < funded,
+        "deadline guard must precede funding checks so open rotations return ContributionPeriodOpen"
+    );
     assert!(funded < cpi, "funding guard must precede CPI");
     assert!(closed < cpi, "closed-period guard must precede CPI");
 }
