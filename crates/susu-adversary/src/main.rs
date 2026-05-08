@@ -49,12 +49,11 @@ fn run() -> Result<i64, Box<dyn Error>> {
     let args = Args::parse();
     let seed_bytes = parse_seed_bytes(&args.seed)?;
     let mut rng = ChaCha20Rng::from_seed(seed_bytes);
-    let commit_sha = env!("SUSU_ADVERSARY_BUILD_COMMIT").to_string();
 
     let config = SimulationConfig {
         circles: args.circles,
+        commit_sha: args.seed.clone(),
         seed: args.seed,
-        commit_sha,
         cluster: args.cluster,
     };
 
@@ -75,13 +74,34 @@ fn run() -> Result<i64, Box<dyn Error>> {
 }
 
 fn parse_seed_bytes(seed: &str) -> Result<[u8; 32], String> {
-    if seed.len() != 64 {
-        return Err("seed must be exactly 64 hexadecimal characters".to_string());
-    }
     if !seed.is_ascii() {
         return Err("seed must contain only ASCII hexadecimal characters".to_string());
     }
 
+    if seed.len() != 40 && seed.len() != 64 {
+        return Err("seed must be exactly 40 or 64 hexadecimal characters".to_string());
+    }
+
+    if seed.len() == 40 {
+        validate_hex(seed)?;
+        return Ok(solana_sdk::hash::hash(seed.as_bytes()).to_bytes());
+    }
+
+    parse_64_hex_seed(seed)
+}
+
+fn validate_hex(seed: &str) -> Result<(), String> {
+    for chunk in seed.as_bytes().chunks_exact(2) {
+        let pair = std::str::from_utf8(chunk)
+            .map_err(|_| "seed must contain only ASCII hexadecimal characters".to_string())?;
+        let _ = u8::from_str_radix(pair, 16)
+            .map_err(|_| "seed must contain only hexadecimal characters".to_string())?;
+    }
+
+    Ok(())
+}
+
+fn parse_64_hex_seed(seed: &str) -> Result<[u8; 32], String> {
     let mut bytes = [0_u8; 32];
     for (index, chunk) in seed.as_bytes().chunks_exact(2).enumerate() {
         let pair = std::str::from_utf8(chunk)
@@ -100,6 +120,14 @@ mod tests {
     #[test]
     fn parse_seed_bytes_accepts_64_hex_chars() {
         assert_eq!(parse_seed_bytes(&"0".repeat(64)).unwrap(), [0_u8; 32]);
+    }
+
+    #[test]
+    fn parse_seed_bytes_accepts_40_hex_commit_sha() {
+        let seed = "205fe882bdb66d3f484f8e8fa4e36507e6f46483";
+        let parsed = parse_seed_bytes(seed).unwrap();
+
+        assert_eq!(parsed, solana_sdk::hash::hash(seed.as_bytes()).to_bytes());
     }
 
     #[test]

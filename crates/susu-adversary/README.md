@@ -2,7 +2,7 @@
 
 `susu-adversary` is the deterministic adversarial simulation binary for Susu Protocol.
 
-Story 5.2 ships the CLI skeleton, seeded RNG plumbing, report schema, and smoke harness. Later Epic 5 stories wire the full Surfpool lifecycle runner, the named 30% Cartel scenario, and the byte-deterministic canonical report.
+Story 5.2 ships the CLI skeleton, seeded RNG plumbing, report schema, and smoke harness. Story 5.3 wires the named 30% Cartel scenario. Story 5.4 owns the byte-deterministic canonical report.
 
 ## Usage
 
@@ -20,7 +20,7 @@ For smoke tests or local experiments, pass `--output <path>` to avoid overwritin
 
 ## Seed Convention
 
-Use `--seed $COMMIT_SHA` with a 64-character hexadecimal commit SHA. The binary decodes that value into 32 bytes and constructs `ChaCha20Rng::from_seed(seed_bytes)`. All randomized lifecycle helpers receive the same mutable RNG handle and must not reseed.
+Use `--seed $COMMIT_SHA`. Git SHA-1 style 40-character commit IDs are accepted and deterministically expanded to the 32-byte ChaCha20 seed. A 64-character hexadecimal seed remains supported for direct 32-byte seed input. All randomized lifecycle helpers receive the same mutable RNG handle and must not reseed.
 
 ## Report Fields
 
@@ -32,7 +32,7 @@ The CLI exits `0` when `summary.max_defector_profit_lamports == 0`. It exits `1`
 
 ## Determinism Boundary
 
-Story 5.2 uses a deterministic localnet skeleton so the CLI contract can be tested without Surfpool being available on every developer machine. Story 5.4 owns the byte-deterministic guarantee for the canonical 10,000-circle report at `audits/adversary/adversary-report.json`.
+Story 5.4 makes the canonical 10,000-circle report at `audits/adversary/adversary-report.json` byte-deterministic for the same explicit CLI inputs. The report uses deterministic metadata markers, sorted scenario arrays, pretty JSON, and a trailing newline.
 
 TODO: Epic 8 / Story 8.x must add a `30% Cartel` link in the root README badge cluster pointing to `crates/susu-adversary/src/scenarios/thirty_percent_cartel.rs`.
 

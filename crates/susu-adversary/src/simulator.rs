@@ -72,6 +72,8 @@ pub fn run_simulation(
         scenarios_covered.push(scenario.name.to_string());
         per_scenario_results.push(per_scenario_result(result));
     }
+    scenarios_covered.sort();
+    per_scenario_results.sort_by(|left, right| left.name.cmp(&right.name));
 
     Ok(AdversaryReport {
         run_metadata: RunMetadata {

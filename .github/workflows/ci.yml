@@ -74,6 +74,9 @@ jobs:
       - name: Cargo invariant proof (no strategic default)
         run: RUSTUP_TOOLCHAIN=stable cargo test --test no_strategic_default --release
 
+      - name: Check adversary report determinism
+        run: RUSTUP_TOOLCHAIN=stable bash scripts/check-adversary-determinism.sh
+
       - name: pnpm test
         run: pnpm test --if-present
 

@@ -1,0 +1,43 @@
+{
+  "run_metadata": {
+    "seed": "7438e04cd157a6a76a1d50296ced47cf9a545790",
+    "commit_sha": "7438e04cd157a6a76a1d50296ced47cf9a545790",
+    "circles": 10000,
+    "started_at": "started-deterministic-circles-10000",
+    "finished_at": "finished-deterministic-circles-10000",
+    "cluster": "localnet"
+  },
+  "summary": {
+    "total_runs": 10000,
+    "max_defector_profit_lamports": 0,
+    "scenarios_covered": [
+      "30_percent_cartel",
+      "scenario_skeleton"
+    ]
+  },
+  "per_scenario_results": [
+    {
+      "name": "30_percent_cartel",
+      "runs": 1,
+      "max_defector_profit_lamports": -400000000,
+      "defector_net_pnl_lamports": [
+        -400000000,
+        -400000000,
+        -400000000
+      ],
+      "min_group_size": 10,
+      "max_group_size": 10,
+      "max_contribution_lamports": 100000000,
+      "counterexample": "none"
+    },
+    {
+      "name": "scenario_skeleton",
+      "runs": 10000,
+      "max_defector_profit_lamports": 0,
+      "min_group_size": 3,
+      "max_group_size": 12,
+      "max_contribution_lamports": 9998710272,
+      "counterexample": "none"
+    }
+  ]
+}

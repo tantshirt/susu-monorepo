@@ -1,6 +1,6 @@
 # Story 5.4: Byte-deterministic adversary-report.json from --seed $COMMIT_SHA (FR22 part 2 + NFR-Re1)
 
-Status: ready-for-dev
+Status: review
 
 ## Story
 
@@ -19,23 +19,23 @@ So that the adversary evidence can be independently reproduced from a clean chec
 
 ## Tasks / Subtasks
 
-- [ ] ATDD red-phase artifacts (AC: 1-6)
-  - [ ] Add BDD checklist for Story 5.4
-  - [ ] Add static red tests for report determinism, docs, and CI hooks
-- [ ] Seed and metadata determinism (AC: 1, 2, 4)
-  - [ ] Accept Git commit SHA seeds used by `$COMMIT_SHA` while preserving 64-hex seed support
-  - [ ] Ensure `run_metadata.commit_sha` is derived from the explicit seed input, not ambient build/runtime environment
-  - [ ] Ensure report-affecting code has no wall-clock, unseeded RNG, process/thread/host, unordered map iteration, or float dependency
-- [ ] Stable report contract (AC: 1, 6)
-  - [ ] Sort `summary.scenarios_covered` and `per_scenario_results` by stable names before serialization
-  - [ ] Keep pretty JSON serialization and a single trailing newline
-  - [ ] Add tests that run the binary twice with the same seed and compare bytes
-- [ ] Canonical artifact and docs (AC: 2, 5)
-  - [ ] Generate `audits/adversary/adversary-report.json`
-  - [ ] Add `audits/adversary/README.md` with the reproduction command and verification notes
-- [ ] CI/performance guard (AC: 1, 3, 4)
-  - [ ] Add a deterministic report check script
-  - [ ] Wire the check into CI with a 10-minute budget and cross-run byte comparison
+- [x] ATDD red-phase artifacts (AC: 1-6)
+  - [x] Add BDD checklist for Story 5.4
+  - [x] Add static red tests for report determinism, docs, and CI hooks
+- [x] Seed and metadata determinism (AC: 1, 2, 4)
+  - [x] Accept Git commit SHA seeds used by `$COMMIT_SHA` while preserving 64-hex seed support
+  - [x] Ensure `run_metadata.commit_sha` is derived from the explicit seed input, not ambient build/runtime environment
+  - [x] Ensure report-affecting code has no wall-clock, unseeded RNG, process/thread/host, unordered map iteration, or float dependency
+- [x] Stable report contract (AC: 1, 6)
+  - [x] Sort `summary.scenarios_covered` and `per_scenario_results` by stable names before serialization
+  - [x] Keep pretty JSON serialization and a single trailing newline
+  - [x] Add tests that run the binary twice with the same seed and compare bytes
+- [x] Canonical artifact and docs (AC: 2, 5)
+  - [x] Generate `audits/adversary/adversary-report.json`
+  - [x] Add `audits/adversary/README.md` with the reproduction command and verification notes
+- [x] CI/performance guard (AC: 1, 3, 4)
+  - [x] Add a deterministic report check script
+  - [x] Wire the check into CI with a 10-minute budget and cross-run byte comparison
 
 ## Dev Notes
 
@@ -50,7 +50,7 @@ So that the adversary evidence can be independently reproduced from a clean chec
 
 - `node --test tests/atdd/story-5-4-deterministic-adversary-report.static.red.test.mjs` captures Story 5.4 acceptance expectations.
 - `cargo test --package susu-adversary` must include a byte comparison test that shells out to the binary twice with the same seed.
-- CI should run the deterministic report check with `--circles 10000` or a documented bounded fallback only if the full run becomes unavailable.
+- CI runs the deterministic report check with `--circles 10000` and a 600-second budget.
 
 ### ATDD Artifacts
 
@@ -73,9 +73,36 @@ GPT-5 Codex
 
 ### Debug Log References
 
+- `node --test tests/atdd/story-5-4-deterministic-adversary-report.static.red.test.mjs` failed in red phase before implementation on missing 40-character seed support, report sorting, deterministic regression test, canonical audit docs/report, and CI guard.
+- `node --test tests/atdd/story-5-4-deterministic-adversary-report.static.red.test.mjs` passed after implementation: 5 tests.
+- `cargo test --package susu-adversary` passed after implementation.
+- `CIRCLES=100 bash scripts/check-adversary-determinism.sh` passed locally; CI runs the same script with the default 10,000 circles.
+- `cargo run --bin susu-adversary --release -- --circles 10000 --seed 7438e04cd157a6a76a1d50296ced47cf9a545790 --cluster localnet --output audits/adversary/adversary-report.json` generated the canonical report with `max_defector_profit_lamports == 0`.
+
 ### Completion Notes List
+
+- Added commit-style 40-character seed support by validating the hex commit ID and deterministically expanding it to a 32-byte ChaCha20 seed with Solana's stable hash function; 64-hex direct seed input remains supported.
+- Changed report `commit_sha` metadata to come from the explicit `--seed` input so canonical report bytes do not depend on build environment state.
+- Sorted scenario coverage and per-scenario result arrays by stable names before serialization.
+- Added a Rust integration test that shells out to the binary twice with the same commit-style seed and compares report bytes.
+- Added audit reproduction docs, committed the canonical adversary report, and wired a CI determinism script with a 10-minute budget.
 
 ### File List
 
+- `.github/workflows/ci.yml`
+- `audits/adversary/README.md`
+- `audits/adversary/adversary-report.json`
+- `crates/susu-adversary/README.md`
+- `crates/susu-adversary/src/main.rs`
+- `crates/susu-adversary/src/simulator.rs`
+- `crates/susu-adversary/tests/deterministic_report.rs`
+- `output_susu/implementation-artifacts/5-4-deterministic-adversary-report.md`
+- `output_susu/test-artifacts/atdd-checklist-5-4-deterministic-adversary-report.md`
+- `scripts/check-adversary-determinism.sh`
+- `tests/atdd/story-5-4-deterministic-adversary-report.atdd.md`
+- `tests/atdd/story-5-4-deterministic-adversary-report.static.red.test.mjs`
+
 ### Change Log
 
+- 2026-05-08: Added ATDD red artifacts for Story 5.4.
+- 2026-05-08: Implemented byte-deterministic adversary report generation, canonical audit artifact/docs, deterministic regression tests, and CI guard; marked story ready for review.
