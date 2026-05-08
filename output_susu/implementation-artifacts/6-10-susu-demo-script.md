@@ -1,6 +1,6 @@
 # Story 6.10: pnpm susu:demo orchestrator hitting NFR-P2 <=60s
 
-Status: ready-for-dev
+Status: review
 
 ## Story
 
@@ -18,37 +18,37 @@ so that the "60-second demo" promise is structural and CI verifies it on every m
 
 ## Tasks / Subtasks
 
-- [ ] Author `scripts/susu-demo.sh` (AC: 1, 2, 3)
-  - [ ] Bash strict mode (`set -euo pipefail`)
-  - [ ] Phase 0: pre-flight checks (anchor, solana CLI, node, pnpm versions; devnet RPC reachable; keypair funded >=0.5 SOL)
-  - [ ] Phase 1: airdrop-or-reuse 5 mock keypairs; print derived addresses
-  - [ ] Phase 2: invoke `node scripts/susu-demo.mjs` (TS-compiled or `tsx`-driven runner that uses `@susu/sdk`)
-  - [ ] Runner: `createGroup` -> 5x `acceptInvite` + `postCollateral` -> 5 rotation rounds (`contribute` x 5 members per round, `claimPayout` for the round's recipient)
-  - [ ] Each phase prints structured colored output (cyan headers, green checkmarks, red errors) matching UX-DR50 mock
-  - [ ] Final line: `Demo complete. Wall-clock: Xs.`
-- [ ] Wire the runner into `scripts/susu-demo.mjs` (AC: 1, 3)
-  - [ ] Uses `@susu/sdk` (workspace:* in dev, `@susu/sdk@latest` post-publish)
-  - [ ] Parallelizes member joins where possible (different members can `acceptInvite` concurrently)
-  - [ ] Each round: 5 contributions in parallel, then 1 payout
-  - [ ] Logs each tx signature + Solscan link
-- [ ] Performance budget engineering (AC: 3)
-  - [ ] Target <=60s on devnet with Helius RPC (typical confirmation ~400-800ms)
-  - [ ] Use `commitment: 'confirmed'` (not `'finalized'`) for in-demo waits
-  - [ ] Batch parallelizable txs; avoid serializing what can be concurrent
-  - [ ] If budget cannot be met without Surfpool fork, document the gap in `log/` and adjust target - but devnet target is the headline NFR-P2 promise
-- [ ] Failure-path classification (AC: 4)
-  - [ ] Wrap the runner in a top-level try/catch that classifies errors into 3 buckets:
-    - [ ] RPC reachability (timeouts, 5xx) -> "Helius/Solana devnet RPC unreachable. See docs/troubleshooting.md#rpc"
-    - [ ] Devnet airdrop limit (`Airdrop request failed` patterns) -> "Devnet airdrop rate limit. Run `solana airdrop 2` manually or wait 24h."
-    - [ ] Dependency mismatch (anchor/solana CLI version mismatch) -> "Toolchain mismatch. Run `nvm use && rustup show`."
-  - [ ] Each error message ends with a docs link
-- [ ] Wire `pnpm susu:demo` script in root `package.json` (AC: 1)
-  - [ ] `"susu:demo": "bash scripts/susu-demo.sh"`
-- [ ] CI integration (AC: 5)
-  - [ ] `.github/workflows/ci.yml` adds `susu-demo-smoke` job triggered on `main` push
-  - [ ] Job spins up Surfpool fork (forked devnet), runs `pnpm susu:demo` against the fork's RPC URL
-  - [ ] Asserts wall-clock <= 60 (read from final `Wall-clock: Xs` line)
-  - [ ] >60s = workflow failure (release-blocker)
+- [x] Author `scripts/susu-demo.sh` (AC: 1, 2, 3)
+  - [x] Bash strict mode (`set -euo pipefail`)
+  - [x] Phase 0: pre-flight checks (anchor, solana CLI, node, pnpm versions; devnet RPC reachable; keypair funded >=0.5 SOL)
+  - [x] Phase 1: airdrop-or-reuse 5 mock keypairs; print derived addresses
+  - [x] Phase 2: invoke `node scripts/susu-demo.mjs` (TS-compiled or `tsx`-driven runner that uses `@susu/sdk`)
+  - [x] Runner: `createGroup` -> 5x `acceptInvite` + `postCollateral` -> 5 rotation rounds (`contribute` x 5 members per round, `claimPayout` for the round's recipient)
+  - [x] Each phase prints structured colored output (cyan headers, green checkmarks, red errors) matching UX-DR50 mock
+  - [x] Final line: `Demo complete. Wall-clock: Xs.`
+- [x] Wire the runner into `scripts/susu-demo.mjs` (AC: 1, 3)
+  - [x] Uses `@susu/sdk` (workspace:* in dev, `@susu/sdk@latest` post-publish)
+  - [x] Parallelizes member joins where possible (different members can `acceptInvite` concurrently)
+  - [x] Each round: 5 contributions in parallel, then 1 payout
+  - [x] Logs each tx signature + Solscan link
+- [x] Performance budget engineering (AC: 3)
+  - [x] Target <=60s on devnet with Helius RPC (typical confirmation ~400-800ms)
+  - [x] Use `commitment: 'confirmed'` (not `'finalized'`) for in-demo waits
+  - [x] Batch parallelizable txs; avoid serializing what can be concurrent
+  - [x] If budget cannot be met without Surfpool fork, document the gap in `log/` and adjust target - but devnet target is the headline NFR-P2 promise
+- [x] Failure-path classification (AC: 4)
+  - [x] Wrap the runner in a top-level try/catch that classifies errors into 3 buckets:
+    - [x] RPC reachability (timeouts, 5xx) -> "Helius/Solana devnet RPC unreachable. See docs/troubleshooting.md#rpc"
+    - [x] Devnet airdrop limit (`Airdrop request failed` patterns) -> "Devnet airdrop rate limit. Run `solana airdrop 2` manually or wait 24h."
+    - [x] Dependency mismatch (anchor/solana CLI version mismatch) -> "Toolchain mismatch. Run `nvm use && rustup show`."
+  - [x] Each error message ends with a docs link
+- [x] Wire `pnpm susu:demo` script in root `package.json` (AC: 1)
+  - [x] `"susu:demo": "bash scripts/susu-demo.sh"`
+- [x] CI integration (AC: 5)
+  - [x] `.github/workflows/ci.yml` adds `susu-demo-smoke` job triggered on `main` push
+  - [x] Job spins up Surfpool fork (forked devnet), runs `pnpm susu:demo` against the fork's RPC URL
+  - [x] Asserts wall-clock <= 60 (read from final `Wall-clock: Xs` line)
+  - [x] >60s = workflow failure (release-blocker)
 
 ## Dev Notes
 
@@ -106,10 +106,30 @@ docs/
 
 ### Agent Model Used
 
-_TBD_
+GPT-5 Codex
 
 ### Debug Log References
 
+- `node --test tests/atdd/story-6-10-susu-demo-script.static.red.test.mjs` (red before implementation; green after implementation)
+- `pnpm install --frozen-lockfile`
+- `SUSU_DEMO_SKIP_PREFLIGHT=1 SUSU_DEMO_MAX_SECONDS=60 pnpm susu:demo`
+
 ### Completion Notes List
 
+- Added the `pnpm susu:demo` shell orchestrator with strict preflight, colored structured output, keypair funding/airdrop handling, failure buckets, and <=60s wall-clock assertion.
+- Added the SDK-backed mock ROSCA runner using `@susu/sdk` helpers for group create, member join/collateral, 5 contribution rounds, and 5 payouts with cluster-aware Solscan links.
+- Documented RPC, airdrop, and dependency mismatch recovery paths in `docs/troubleshooting.md`.
+- Added a `susu-demo-smoke` GitHub Actions job for main-branch Surfpool devnet-fork execution and wall-clock parsing.
+
 ### File List
+
+- `.github/workflows/ci.yml`
+- `docs/troubleshooting.md`
+- `package.json`
+- `pnpm-lock.yaml`
+- `scripts/susu-demo.mjs`
+- `scripts/susu-demo.sh`
+- `tests/atdd/story-6-10-susu-demo-script.atdd.md`
+- `tests/atdd/story-6-10-susu-demo-script.static.red.test.mjs`
+- `output_susu/implementation-artifacts/6-10-susu-demo-script.md`
+- `output_susu/test-artifacts/atdd-checklist-6-10-susu-demo-script.md`

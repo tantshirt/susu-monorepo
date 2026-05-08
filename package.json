@@ -5,10 +5,13 @@
   "description": "Susu Protocol monorepo scaffold",
   "packageManager": "pnpm@9.12.3",
   "scripts": {
-    "susu:demo": "echo \"susu demo placeholder\"",
+    "susu:demo": "bash scripts/susu-demo.sh",
     "verify": "echo \"verify placeholder\"",
     "sdk:codegen": "node codama.config.mjs",
     "test:atdd": "node --test tests/atdd/*.red.test.mjs"
+  },
+  "dependencies": {
+    "@susu/sdk": "workspace:*"
   },
   "devDependencies": {
     "tsx": "^4.21.0"
