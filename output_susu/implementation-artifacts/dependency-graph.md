@@ -1,5 +1,5 @@
 # Story Dependency Graph
-_Last updated: 2026-05-08T04:38:13Z_
+_Last updated: 2026-05-08T05:18:48Z_
 
 ## Epic Readiness Summary
 
@@ -8,7 +8,7 @@ _Last updated: 2026-05-08T04:38:13Z_
 | 1 | `sprint-status.yaml` marks `epic-1` and stories 1.1-1.6 `done`; `epic-1-retrospective` is `done`. | Merged PRs found for Epic 1 story branches: #1, #2, #3, #4, #7, #8, #9, #10, #11. | Complete |
 | 2 | `sprint-status.yaml` marks `epic-2` and stories 2.1-2.6 `done`; `epic-2-retrospective` is `done`. | Merged PRs #12-#17. | Complete |
 | 3 | `sprint-status.yaml` marks `epic-3` and stories 3.1-3.8 `done`; retrospective remains optional. | Merged PRs #94, #95, #96, and #153. | Complete |
-| 4 | `sprint-status.yaml` marks `epic-4` `in-progress`; Stories 4.1, 4.2, and 4.3 are `done`; Story 4.4 is `ready-for-dev`; Story 4.5 is `done`; Story 4.6 is `ready-for-dev`. | Story 4.1 merged via PR #157; Story 4.2 merged via PR #158; Story 4.3 merged via PR #159; Story 4.5 merged via PR #160. | Ready to continue at 4.4 |
+| 4 | `sprint-status.yaml` marks `epic-4` `in-progress`; Stories 4.1, 4.2, 4.3, 4.4, and 4.5 are `done`; Story 4.6 is `ready-for-dev`. | Story 4.1 merged via PR #157; Story 4.2 merged via PR #158; Story 4.3 merged via PR #159; Story 4.4 merged via PR #161; Story 4.5 merged via PR #160. | Ready to continue at 4.6 |
 
 ## Stories
 
@@ -37,9 +37,9 @@ _Last updated: 2026-05-08T04:38:13Z_
 | 4.1 | 4 | Deterministic on-chain rotation-slot assignment algorithm | done | #38 | #157 | merged | 3.8 | ✅ Done |
 | 4.2 | 4 | Implement claim_payout instruction | done | #39 | #158 | merged | 4.1 | — |
 | 4.3 | 4 | claim_payout guard — non-recipient rejection | done | #40 | #159 | merged | 4.2 | ✅ Done |
-| 4.4 | 4 | claim_payout guard — pre-deadline rejection | ready-for-dev | #41 | — | — | 4.3 | ✅ Yes |
+| 4.4 | 4 | claim_payout guard — pre-deadline rejection | done | #41 | #161 | merged | 4.3 | ✅ Done |
 | 4.5 | 4 | claim_payout guard — double-claim rejection via RotationReceipt PDA | done | #42 | #160 | merged | 4.2 | ✅ Done |
-| 4.6 | 4 | End-to-end full ROSCA lifecycle integration test on Surfpool | ready-for-dev | #43 | — | — | 4.1, 4.2, 4.3, 4.4, 4.5 | ❌ No (4.4 not merged) |
+| 4.6 | 4 | End-to-end full ROSCA lifecycle integration test on Surfpool | ready-for-dev | #43 | — | — | 4.1, 4.2, 4.3, 4.4, 4.5 | ✅ Yes |
 | 5.1 | 5 | tests/invariants/no_strategic_default.rs proptest (FR21) | ready-for-dev | — | — | — | 3.1 | ❌ No (Epic 4 not complete) |
 | 5.2 | 5 | susu-adversary CLI binary skeleton (FR22 part 1) | ready-for-dev | — | — | — | none | ❌ No (Epic 4 not complete) |
 | 5.3 | 5 | 30% Cartel scenario named as headline test (FR23) | ready-for-dev | — | — | — | 5.2 | ❌ No (Epic 4 not complete) |
@@ -163,6 +163,6 @@ _Last updated: 2026-05-08T04:38:13Z_
 
 ## Notes
 - GitHub was reconciled on 2026-05-08: Epics 1-3 are complete on `main` through PR #153 (`feat(program): Epic 3 collateral lifecycle (Stories 3.2-3.8)`). Story 4.1 merged via PR #157 (`feat(epic4): implement rotation slot algorithm`).
-- **Ready to Work** for Epic 4 now points to 4.4; 4.1 merged via PR #157, 4.2 via PR #158, 4.3 via PR #159, and 4.5 via PR #160. 4.6 remains blocked until 4.4 is merged.
+- **Ready to Work** for Epic 4 now points to 4.6; 4.1 merged via PR #157, 4.2 via PR #158, 4.3 via PR #159, 4.4 via PR #161, and 4.5 via PR #160. 4.6 is unblocked.
 - **Ready to Work** for Epic 5+ remains blocked by epic ordering until Epic 4 is `done`.
 - Re-run this reconciliation after each Epic 4 story PR merges so BAD can select the next unblocked story batch.
