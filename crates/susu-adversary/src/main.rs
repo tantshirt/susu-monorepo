@@ -52,9 +52,7 @@ fn run() -> Result<i64, Box<dyn Error>> {
     let args = Args::parse();
     let seed_bytes = parse_seed_bytes(&args.seed)?;
     let mut rng = ChaCha20Rng::from_seed(seed_bytes);
-    let commit_sha = option_env!("GIT_COMMIT_SHA")
-        .unwrap_or(env!("SUSU_ADVERSARY_BUILD_COMMIT"))
-        .to_string();
+    let commit_sha = env!("SUSU_ADVERSARY_BUILD_COMMIT").to_string();
 
     let config = SimulationConfig {
         circles: args.circles,
@@ -83,12 +81,15 @@ fn parse_seed_bytes(seed: &str) -> Result<[u8; 32], String> {
     if seed.len() != 64 {
         return Err("seed must be exactly 64 hexadecimal characters".to_string());
     }
+    if !seed.is_ascii() {
+        return Err("seed must contain only ASCII hexadecimal characters".to_string());
+    }
 
     let mut bytes = [0_u8; 32];
-    for index in 0..32 {
-        let start = index * 2;
-        let end = start + 2;
-        bytes[index] = u8::from_str_radix(&seed[start..end], 16)
+    for (index, chunk) in seed.as_bytes().chunks_exact(2).enumerate() {
+        let pair = std::str::from_utf8(chunk)
+            .map_err(|_| "seed must contain only ASCII hexadecimal characters".to_string())?;
+        bytes[index] = u8::from_str_radix(pair, 16)
             .map_err(|_| "seed must contain only hexadecimal characters".to_string())?;
     }
 
@@ -113,6 +114,13 @@ mod tests {
     fn parse_seed_bytes_rejects_non_hex_input() {
         let mut seed = "0".repeat(63);
         seed.push('z');
+        assert!(parse_seed_bytes(&seed).is_err());
+    }
+
+    #[test]
+    fn parse_seed_bytes_rejects_multibyte_without_panicking() {
+        let seed = format!("{}{}0", "0".repeat(61), "é");
+        assert_eq!(seed.len(), 64);
         assert!(parse_seed_bytes(&seed).is_err());
     }
 }
