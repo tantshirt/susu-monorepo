@@ -23,6 +23,8 @@ pub fn run_simulation(
     config: SimulationConfig,
     rng: &mut ChaCha20Rng,
 ) -> Result<AdversaryReport, String> {
+    let _sdk_boundary_marker = sdk_boundary_marker();
+
     if config.cluster != "localnet" {
         return Err(format!(
             "unsupported cluster {}; Story 5.2 skeleton supports localnet",
@@ -96,6 +98,10 @@ fn evaluate_skeleton_profit(sample: &LifecycleSample) -> i64 {
 
 fn deterministic_marker(label: &str, circles: u32) -> String {
     format!("{label}-deterministic-circles-{circles}")
+}
+
+fn sdk_boundary_marker() -> usize {
+    std::mem::size_of::<solana_sdk::pubkey::Pubkey>() + std::mem::size_of::<susu_client::Group>()
 }
 
 #[cfg(test)]

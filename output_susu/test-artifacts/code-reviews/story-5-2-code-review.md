@@ -36,7 +36,12 @@ Reviewed the branch diff against `origin/main`:
 
 ## Findings
 
-No `decision-needed`, `patch`, or `defer` findings remain.
+Cursor Bugbot found two patch items after the initial code-review artifact was written:
+
+- Build script missing `cargo:rerun-if-env-changed=GIT_COMMIT_SHA`.
+- Solana/sdk dependencies were declared but not referenced by the skeleton code.
+
+Both were fixed in the follow-up commit.
 
 ## Validation Evidence
 

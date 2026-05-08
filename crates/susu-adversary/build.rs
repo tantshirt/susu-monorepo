@@ -1,6 +1,8 @@
 use std::process::Command;
 
 fn main() {
+    println!("cargo:rerun-if-env-changed=GIT_COMMIT_SHA");
+
     let commit = std::env::var("GIT_COMMIT_SHA")
         .ok()
         .filter(|value| !value.trim().is_empty())

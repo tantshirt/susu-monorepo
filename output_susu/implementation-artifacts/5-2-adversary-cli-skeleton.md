@@ -160,3 +160,4 @@ GPT-5 Codex
 - 2026-05-08: Implemented deterministic `susu-adversary` CLI skeleton and marked story ready for review.
 - 2026-05-08: Completed test-review cleanup with no remaining findings.
 - 2026-05-08: Completed code review with no remaining findings.
+- 2026-05-08: Addressed Cursor Bugbot findings for build-script reruns and intentional SDK dependency usage.

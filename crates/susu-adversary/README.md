@@ -34,4 +34,6 @@ The CLI exits `0` when `summary.max_defector_profit_lamports == 0`. It exits `1`
 
 Story 5.2 uses a deterministic localnet skeleton so the CLI contract can be tested without Surfpool being available on every developer machine. Story 5.4 owns the byte-deterministic guarantee for the canonical 10,000-circle report at `audits/adversary/adversary-report.json`.
 
+The crate intentionally links `solana-sdk` and `susu-client` in the skeleton so later simulator stories can wire deployed-program lifecycle calls without changing the binary's public crate boundary.
+
 Do not use wall-clock time, unseeded RNG, hostnames, process IDs, thread IDs, floating-point scenario math, or unordered report iteration in any code path that affects report bytes.
