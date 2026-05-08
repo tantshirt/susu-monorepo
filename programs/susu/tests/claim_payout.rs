@@ -161,7 +161,7 @@ fn claim_payout_source_orders_guards_before_vault_transfer() {
 
     let active = source.find("GroupStatus::Active").expect("active guard");
     let recipient = source
-        .find("NotRotationRecipient")
+        .find("assert_rotation_recipient")
         .expect("recipient guard");
     let funded = source
         .find("verify_rotation_funded")
