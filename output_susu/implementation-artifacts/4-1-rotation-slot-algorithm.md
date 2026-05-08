@@ -31,6 +31,7 @@ so that no off-chain randomness or trusted oracle is required and any auditor ca
 
 - `node --test tests/atdd/story-4-1-rotation-slot-algorithm.static.red.test.mjs`
 - `cargo test -p susu --test rotation_assignment`
+- `cargo test -p susu --test start_contributions_rotation`
 
 ## Files
 
@@ -42,6 +43,7 @@ so that no off-chain randomness or trusted oracle is required and any auditor ca
 - `programs/susu/Cargo.toml`
 - `Cargo.lock`
 - `programs/susu/tests/rotation_assignment.rs`
+- `programs/susu/tests/start_contributions_rotation.rs`
 - `tests/atdd/story-4-1-rotation-slot-algorithm.atdd.md`
 - `tests/atdd/story-4-1-rotation-slot-algorithm.static.red.test.mjs`
 - `docs/rotation-assignment.md`

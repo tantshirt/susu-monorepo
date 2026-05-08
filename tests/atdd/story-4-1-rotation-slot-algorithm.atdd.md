@@ -7,6 +7,7 @@ Story source: GitHub issue #38, `output_susu/implementation-artifacts/dependency
 The red phase introduces executable checks before implementation:
 
 - `programs/susu/tests/rotation_assignment.rs` expects a pure rotation assignment module that computes a reproducible hash-rank bijection from `(group_pda, member_pubkey, slot_seed)`.
+- `programs/susu/tests/start_contributions_rotation.rs` proves the start-transition helper serializes final slots back into writable `MemberPosition` account data.
 - `tests/atdd/story-4-1-rotation-slot-algorithm.static.red.test.mjs` expects the implementation module, start transition wiring, the `slots_assigned` log contract, and documentation at `docs/rotation-assignment.md`.
 
 ## Acceptance Criteria Coverage
@@ -16,6 +17,7 @@ The red phase introduces executable checks before implementation:
 | Group transitions from `Forming` to `Active` fires slot assignment | Static check requires `start_contributions.rs` to call `assign_rotation_slots_for_start` before `group.status = GroupStatus::Active`. | E4-001 |
 | Slots `[0..n)` assigned deterministically by `sha256(group_pda || member_pubkey || slot_seed)` ranking | Rust tests require `calculate_rotation_assignments` determinism, group-domain separation, and bijection over `n in {3,5,7,10,12}`; static check requires SHA-256 and canonical input order. | E4-001 |
 | Every `MemberPosition.rotation_slot` moves from `u8::MAX` placeholder to final slot | Static check requires mutable remaining-account serialization and `rotation_slot = assignment.slot`. | E4-001 |
+| Writable account data persists final slot assignments | Rust account-data proxy test deserializes `MemberPosition` accounts after `assign_rotation_slots_for_start` and asserts every placeholder changed to the deterministic slot. | E4-001 |
 | Re-running from identical state produces byte-identical mapping | Rust test calls the pure helper twice and compares exact assignment vectors. | E4-001 |
 | Algorithm documented with worked examples | Static check requires `docs/rotation-assignment.md` to contain the formula and a worked example. | E4-012 |
 | Tests verify determinism and one unique slot per member | Rust tests cover supported `n` matrix and no duplicate/gap invariant. | E4-001 |
@@ -36,4 +38,5 @@ The red phase introduces executable checks before implementation:
 ```bash
 node --test tests/atdd/story-4-1-rotation-slot-algorithm.static.red.test.mjs
 cargo test -p susu --test rotation_assignment
+cargo test -p susu --test start_contributions_rotation
 ```
