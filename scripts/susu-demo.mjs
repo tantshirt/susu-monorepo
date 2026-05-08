@@ -5,7 +5,6 @@ import {
   createGroup,
   createSusuClient,
   postCollateral,
-  solanaDevnetRpc,
 } from '@susu/sdk';
 import { createHash } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
@@ -52,8 +51,7 @@ const colors = process.stdout.isTTY && process.env.NO_COLOR !== '1'
 
 export async function runDemo() {
   const rpc = createDemoRpc(endpoint);
-  const client = createSusuClient({ cluster: 'devnet', rpc, computeUnits: 200_000, priorityFee: 0n })
-    .use(solanaDevnetRpc({ endpoint, rpc }));
+  const client = createSusuClient({ cluster, rpc, computeUnits: 200_000, priorityFee: 0n });
 
   phase('group create');
   const groupSignature = await createGroup(client, {

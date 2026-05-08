@@ -11,6 +11,7 @@ const runnerPath = 'scripts/susu-demo.mjs';
 const classifierPath = 'scripts/susu-demo-classify.mjs';
 const docsPath = 'docs/troubleshooting.md';
 const ciPath = '.github/workflows/ci.yml';
+const gitignorePath = '.gitignore';
 
 function read(path) {
   return readFileSync(path, 'utf8');
@@ -21,7 +22,7 @@ function assertExists(path) {
 }
 
 test('Story 6.10 wires the public demo command to a strict shell orchestrator', () => {
-  for (const path of [storyPath, packagePath, shellPath, runnerPath]) {
+  for (const path of [storyPath, packagePath, shellPath, runnerPath, gitignorePath]) {
     assertExists(path);
   }
 
@@ -37,6 +38,7 @@ test('Story 6.10 wires the public demo command to a strict shell orchestrator', 
   assert.match(shell, /node\s+scripts\/susu-demo\.mjs/, 'shell script must invoke the JS runner');
   assert.match(shell, /SUSU_DEMO_MAX_SECONDS[\s\S]*60/, 'shell script must default the budget to 60 seconds');
   assert.match(shell, /Wall-clock:\s*\$\{?[A-Za-z0-9_]+/, 'shell script must print a final wall-clock line');
+  assert.match(read(gitignorePath), /^\.susu-demo\/$/m, 'generated demo keypair directory must be gitignored');
   assert.ok((statSync(shellPath).mode & 0o111) !== 0, 'shell script must be executable');
 
   assert.equal(spawnSync('bash', ['-n', shellPath], { encoding: 'utf8' }).status, 0, 'shell script must parse');
@@ -52,6 +54,9 @@ test('Story 6.10 runner drives the 5-member ROSCA lifecycle via @susu/sdk', () =
   }
 
   assert.match(runner, /memberCount\s*=\s*5|Array\.from\(\s*\{\s*length:\s*5\s*\}/, 'runner must create a 5-member circle');
+  assert.match(runner, /createSusuClient\(\{\s*cluster,\s*rpc/, 'client cluster must follow SUSU_DEMO_CLUSTER');
+  assert.doesNotMatch(runner, /createSusuClient\(\{\s*cluster:\s*['"]devnet['"]/, 'client cluster must not be hardcoded to devnet');
+  assert.doesNotMatch(runner, /solanaDevnetRpc/, 'runner must not force the devnet RPC plugin when a cluster env is present');
   assert.match(runner, /Promise\.all[\s\S]*acceptInvite/, 'member joins must be parallelized');
   assert.match(runner, /Promise\.all[\s\S]*postCollateral/, 'collateral posts must be parallelized');
   assert.match(runner, /Promise\.all[\s\S]*contribute/, 'round contributions must be parallelized');
