@@ -60,11 +60,23 @@ function stringifyBigInt(_key: string, value: unknown): unknown {
 }
 
 function toSignatureBytes(value: string): SignatureBytes {
-  const decoded = Buffer.from(value, 'base64');
-  if (decoded.length === 64) return signatureBytes(decoded);
-  const base58 = bs58.decode(value);
-  if (base58.length === 64) return signatureBytes(base58);
+  const base58 = decodeBase58Signature(value);
+  if (base58) return signatureBytes(base58);
+  const base64 = decodeBase64Signature(value);
+  if (base64) return signatureBytes(base64);
   throw new Error('Privy signature must decode to 64 bytes');
+}
+
+function decodeBase58Signature(value: string): Uint8Array | undefined {
+  if (!/^[1-9A-HJ-NP-Za-km-z]+$/.test(value)) return undefined;
+  const decoded = bs58.decode(value);
+  return decoded.length === 64 ? decoded : undefined;
+}
+
+function decodeBase64Signature(value: string): Uint8Array | undefined {
+  const decoded = Buffer.from(value, 'base64');
+  const canonical = decoded.toString('base64').replace(/=+$/, '');
+  return decoded.length === 64 && canonical === value.replace(/=+$/, '') ? decoded : undefined;
 }
 
 export function signerAddress(signer: PrivySusuSigner): Address {

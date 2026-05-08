@@ -48,7 +48,7 @@ Review fixes already applied:
 - Fixed Cursor Bugbot findings:
   - Missing `hash`/`signature` from Privy `signAndSendTransaction` now throws instead of returning the encoded payload.
   - `CLUSTER=testnet` now uses Solana testnet CAIP-2, and `localnet` is rejected for this Privy-backed example.
-  - `signAndSendTransactions` decodes 64-byte base64 or base58 signatures as binary data instead of UTF-8 text.
+  - `signAndSendTransactions` decodes valid 64-byte base58 Solana signatures before strict base64 fallback, avoiding Node base64/base58 ambiguity.
 
 ## Validation Evidence
 

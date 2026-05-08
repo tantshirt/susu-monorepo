@@ -1,10 +1,12 @@
 import { describe, expect, it } from 'vitest';
+import bs58 from 'bs58';
 import { createPrivySusuSigner, type PrivySolanaApi } from '../src/privyAdapter.js';
 
 describe('createPrivySusuSigner', () => {
   it('wraps a Privy Solana wallet as a kit TransactionSigner', async () => {
     const calls: unknown[] = [];
-    const privySignature = Buffer.from(new Uint8Array(64).fill(7)).toString('base64');
+    const signatureBytes = new Uint8Array(64).fill(7);
+    const privySignature = bs58.encode(signatureBytes);
     const solana: PrivySolanaApi = {
       signAndSendTransaction: async (walletId, input) => {
         calls.push({ walletId, input });
@@ -25,7 +27,7 @@ describe('createPrivySusuSigner', () => {
     expect(signer.walletId).toBe('wallet-1');
     expect(signer.address).toBe('11111111111111111111111111111111');
     expect(signature).toBe(privySignature);
-    expect(bytes).toHaveLength(64);
+    expect(bytes).toEqual(signatureBytes);
     expect(calls).toHaveLength(2);
   });
 
