@@ -1,5 +1,14 @@
 # Story Dependency Graph
-_Last updated: 2026-05-07T18:30:00Z_
+_Last updated: 2026-05-08T02:54:40Z_
+
+## Epic Readiness Summary
+
+| Epic | Sprint Status Evidence | GitHub Evidence | BAD Readiness |
+|------|------------------------|-----------------|---------------|
+| 1 | `sprint-status.yaml` marks `epic-1` and stories 1.1-1.6 `done`; `epic-1-retrospective` is `done`. | Merged PRs found for Epic 1 story branches: #1, #2, #3, #4, #7, #8, #9, #10, #11. | Complete |
+| 2 | `sprint-status.yaml` marks `epic-2` and stories 2.1-2.6 `done`; `epic-2-retrospective` is `done`. | Merged PRs #12-#17. | Complete |
+| 3 | `sprint-status.yaml` marks `epic-3` and stories 3.1-3.8 `done`; retrospective remains optional. | Merged PRs #94, #95, #96, and #153. | Complete |
+| 4 | `sprint-status.yaml` marks `epic-4` `backlog`; story files 4.1-4.6 are `ready-for-dev`. | No Epic 4 implementation PRs expected yet. | Ready to start at 4.1 |
 
 ## Stories
 
@@ -17,20 +26,20 @@ _Last updated: 2026-05-07T18:30:00Z_
 | 2.4 | 2 | Implement accept_invite instruction (FR3) with rotation-slot placeholder | done | — | #15 | merged | 2.3 | ✅ Done |
 | 2.5 | 2 | Implement cancel_group instruction (FR5) | done | — | #16 | merged | 2.4 | ✅ Done |
 | 2.6 | 2 | Group state + participation history query helpers | done | — | #17 | merged | 2.5 | ✅ Done |
-| 3.1 | 3 | Implement closed-form O(n) dynamic-collateral curve module | ready-for-dev | — | — | — | none | ✅ Yes |
-| 3.2 | 3 | Implement post_collateral instruction | ready-for-dev | — | — | — | 2.4, 3.1 | ❌ No (3.1 not done) |
-| 3.3 | 3 | Initialize PDA Vault accounts | ready-for-dev | — | — | — | 2.2, 3.2 | ❌ No (3.2 not done) |
-| 3.4 | 3 | Implement contribute instruction | ready-for-dev | — | — | — | none | ✅ Yes |
-| 3.5 | 3 | Implement top_up_collateral instruction | ready-for-dev | — | — | — | none | ✅ Yes |
-| 3.6 | 3 | Implement slash_member instruction | ready-for-dev | — | — | — | none | ✅ Yes |
-| 3.7 | 3 | Implement withdraw_collateral instruction | ready-for-dev | — | — | — | 2.5 | ✅ Yes |
-| 3.8 | 3 | Enforce all-collateralized gate before contributions can start | ready-for-dev | — | — | — | 3.4 | ❌ No (3.4 not done) |
-| 4.1 | 4 | Deterministic on-chain rotation-slot assignment algorithm | ready-for-dev | — | — | — | 3.8 | ❌ No (Epic 3 not complete) |
-| 4.2 | 4 | Implement claim_payout instruction | ready-for-dev | — | — | — | none | ❌ No (Epic 3 not complete) |
-| 4.3 | 4 | claim_payout guard — non-recipient rejection | ready-for-dev | — | — | — | none | ❌ No (Epic 3 not complete) |
-| 4.4 | 4 | claim_payout guard — pre-deadline rejection | ready-for-dev | — | — | — | none | ❌ No (Epic 3 not complete) |
-| 4.5 | 4 | claim_payout guard — double-claim rejection via RotationReceipt PDA | ready-for-dev | — | — | — | none | ❌ No (Epic 3 not complete) |
-| 4.6 | 4 | End-to-end full ROSCA lifecycle integration test on Surfpool | ready-for-dev | — | — | — | none | ❌ No (Epic 3 not complete) |
+| 3.1 | 3 | Implement closed-form O(n) dynamic-collateral curve module | done | — | #95 | merged | none | ✅ Done |
+| 3.2 | 3 | Implement post_collateral instruction | done | — | #153 | merged | 2.4, 3.1 | ✅ Done |
+| 3.3 | 3 | Initialize PDA Vault accounts | done | — | #153 | merged | 2.2, 3.2 | ✅ Done |
+| 3.4 | 3 | Implement contribute instruction | done | — | #94 | merged | none | ✅ Done |
+| 3.5 | 3 | Implement top_up_collateral instruction | done | — | #96 | merged | none | ✅ Done |
+| 3.6 | 3 | Implement slash_member instruction | done | — | #153 | merged | none | ✅ Done |
+| 3.7 | 3 | Implement withdraw_collateral instruction | done | — | #153 | merged | 2.5 | ✅ Done |
+| 3.8 | 3 | Enforce all-collateralized gate before contributions can start | done | — | #153 | merged | 3.4 | ✅ Done |
+| 4.1 | 4 | Deterministic on-chain rotation-slot assignment algorithm | ready-for-dev | #38 | — | — | 3.8 | ✅ Yes |
+| 4.2 | 4 | Implement claim_payout instruction | ready-for-dev | #39 | — | — | 4.1 | ❌ No (4.1 not merged) |
+| 4.3 | 4 | claim_payout guard — non-recipient rejection | ready-for-dev | #40 | — | — | 4.2 | ❌ No (4.2 not merged) |
+| 4.4 | 4 | claim_payout guard — pre-deadline rejection | ready-for-dev | #41 | — | — | 4.3 | ❌ No (4.3 not merged) |
+| 4.5 | 4 | claim_payout guard — double-claim rejection via RotationReceipt PDA | ready-for-dev | #42 | — | — | 4.2 | ❌ No (4.2 not merged) |
+| 4.6 | 4 | End-to-end full ROSCA lifecycle integration test on Surfpool | ready-for-dev | #43 | — | — | 4.1, 4.2, 4.3, 4.4, 4.5 | ❌ No (4.1-4.5 not merged) |
 | 5.1 | 5 | tests/invariants/no_strategic_default.rs proptest (FR21) | ready-for-dev | — | — | — | 3.1 | ❌ No (Epic 4 not complete) |
 | 5.2 | 5 | susu-adversary CLI binary skeleton (FR22 part 1) | ready-for-dev | — | — | — | none | ❌ No (Epic 4 not complete) |
 | 5.3 | 5 | 30% Cartel scenario named as headline test (FR23) | ready-for-dev | — | — | — | 5.2 | ❌ No (Epic 4 not complete) |
@@ -100,6 +109,11 @@ _Last updated: 2026-05-07T18:30:00Z_
 - **3.7** depends on: 2.5
 - **3.8** depends on: 3.4
 - **4.1** depends on: 3.8
+- **4.2** depends on: 4.1
+- **4.3** depends on: 4.2
+- **4.4** depends on: 4.3
+- **4.5** depends on: 4.2
+- **4.6** depends on: 4.1, 4.2, 4.3, 4.4, 4.5
 - **5.1** depends on: 3.1
 - **5.3** depends on: 5.2
 - **5.4** depends on: 5.2, 5.3
@@ -148,6 +162,7 @@ _Last updated: 2026-05-07T18:30:00Z_
 - **9.4** depends on: 8.3, 9.2, 9.3
 
 ## Notes
-- GitHub was reconciled on 2026-05-07: Epics 1–2 complete on `main` (through PR #17 for story 2.6); reconcile again before relying on “no open PRs.”
-- **Ready to Work** for Epic 3+: epic ordering — Epic *N* stays blocked until Epic *N−1* is `done` — plus story-level dependencies in the table.
-- Re-run this reconciliation after each epic closes or when sprint-status changes materially.
+- GitHub was reconciled on 2026-05-08: Epics 1-3 are complete on `main` through PR #153 (`feat(program): Epic 3 collateral lifecycle (Stories 3.2-3.8)`).
+- **Ready to Work** for Epic 4 follows the stacked execution chain: 4.1 -> 4.2 -> {4.3, 4.5}; 4.4 depends on 4.3; 4.6 depends on 4.1-4.5 complete/merged.
+- **Ready to Work** for Epic 5+ remains blocked by epic ordering until Epic 4 is `done`.
+- Re-run this reconciliation after each Epic 4 story PR merges so BAD can select the next unblocked story batch.
