@@ -38,8 +38,8 @@ test('Story 6.2 defines explicit-cluster client gates and typed SDK errors', () 
   const client = read(clientPath);
   const errors = read(errorsPath);
 
-  assert.match(errors, /class\s+SusuClusterError\s+extends\s+Error/, 'SusuClusterError must extend Error');
-  assert.match(errors, /class\s+SusuSimulationError\s+extends\s+Error/, 'SusuSimulationError must extend Error');
+  assert.match(errors, /class\s+SusuClusterError\s+extends\s+(?:Error|SusuErrorBase)/, 'SusuClusterError must extend Error or the SDK error base');
+  assert.match(errors, /class\s+SusuSimulationError\s+extends\s+(?:Error|SusuErrorBase)/, 'SusuSimulationError must extend Error or the SDK error base');
   assert.match(errors, /\bkind\s*=\s*['"]cluster['"]|\bkind:\s*['"]cluster['"]/, 'SusuClusterError must discriminate with kind="cluster"');
   assert.match(errors, /\bkind\s*=\s*['"]simulation['"]|\bkind:\s*['"]simulation['"]/, 'SusuSimulationError must discriminate with kind="simulation"');
   assert.match(errors, /\blogs\b/, 'SusuSimulationError must expose logs');

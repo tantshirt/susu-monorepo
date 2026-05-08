@@ -9,7 +9,7 @@ import {
   getSetComputeUnitLimitInstruction,
   getSetComputeUnitPriceInstruction,
 } from '@solana-program/compute-budget';
-import { SusuClusterError } from './errors.js';
+import { SusuClusterError, SusuRpcError, type SusuRpcErrorDetails } from './errors.js';
 
 export const DEFAULT_SUSU_PROGRAM_ID = address('2f6CBrNHZp8oyXPFRXfzroGx5pZ7WyLA6dUqFFpYsX2N');
 export const DEFAULT_COMPUTE_UNITS = 200_000;
@@ -91,16 +91,16 @@ export type SusuClientOptions = Readonly<{
 
 export type SusuPlugin = (client: SusuClient) => Partial<SusuClient> | void;
 
-export class SusuClientConfigError extends Error {
-  constructor(message: string) {
-    super(message);
+export class SusuClientConfigError extends SusuRpcError {
+  constructor(message: string, details: SusuRpcErrorDetails = {}) {
+    super(message, details);
     this.name = 'SusuClientConfigError';
   }
 }
 
-export class SusuTransactionSendError extends Error {
-  constructor(message: string) {
-    super(message);
+export class SusuTransactionSendError extends SusuRpcError {
+  constructor(message: string, details: SusuRpcErrorDetails = {}) {
+    super(message, details);
     this.name = 'SusuTransactionSendError';
   }
 }
@@ -214,6 +214,7 @@ export function assertClientReady(client: SusuClient): asserts client is SusuCli
   if (!client.cluster) {
     throw new SusuClusterError('Susu client requires an explicit cluster before helpers can run', {
       reason: 'missing-cluster',
+      expected: 'localnet | devnet | testnet | mainnet-beta',
     });
   }
   if (!client.rpc) {
@@ -244,10 +245,22 @@ export async function assertMainnetResolutionMatchesCluster(
     return;
   }
 
-  const genesisHash = normalizeGenesisHash(await resolveSendable(getGenesisHash()));
+  let genesisHash: string | undefined;
+  try {
+    genesisHash = normalizeGenesisHash(await resolveSendable(getGenesisHash()));
+  } catch (error) {
+    throw new SusuRpcError('Susu RPC getGenesisHash failed', {
+      endpoint: extractRpcEndpoint(client.rpc),
+      status: extractRpcStatus(error),
+      cause: error,
+    });
+  }
+
   if (genesisHash === MAINNET_BETA_GENESIS_HASH && client.cluster !== 'mainnet-beta') {
     throw new SusuClusterError('RPC resolves to mainnet-beta; pass cluster: "mainnet-beta" explicitly to send', {
       reason: 'mainnet-mismatch',
+      expected: 'mainnet-beta',
+      actual: client.cluster,
       cluster: client.cluster,
       genesisHash,
     });
@@ -283,7 +296,17 @@ export async function resolvePriorityFee(
     return 0n;
   }
 
-  const response = await resolveSendable(estimator({ instructions, programId: client.programId }));
+  let response: PriorityFeeEstimateResponse | PriorityFee;
+  try {
+    response = await resolveSendable(estimator({ instructions, programId: client.programId }));
+  } catch (error) {
+    throw new SusuRpcError('Susu RPC priority fee estimation failed', {
+      endpoint: extractRpcEndpoint(client.rpc),
+      status: extractRpcStatus(error),
+      cause: error,
+    });
+  }
+
   if (typeof response === 'number' || typeof response === 'bigint') {
     return BigInt(response);
   }
@@ -331,12 +354,15 @@ function requireExplicitCluster(clusterValue: Cluster | undefined): Cluster {
   if (typeof clusterValue !== 'string' || clusterValue.trim() === '') {
     throw new SusuClusterError('createSusuClient requires an explicit cluster', {
       reason: 'missing-cluster',
+      expected: 'localnet | devnet | testnet | mainnet-beta',
     });
   }
 
   if (!isSupportedCluster(clusterValue)) {
     throw new SusuClusterError(`Unsupported Susu cluster "${clusterValue}"`, {
       reason: 'unsupported-cluster',
+      expected: 'localnet | devnet | testnet | mainnet-beta',
+      actual: clusterValue,
       cluster: clusterValue,
     });
   }
@@ -357,6 +383,8 @@ function assertKnownMainnetEndpointMatchesCluster(clusterValue: Cluster, rpc?: S
   if (clusterValue !== 'mainnet-beta') {
     throw new SusuClusterError('RPC endpoint appears to target mainnet-beta; pass cluster: "mainnet-beta" explicitly to send', {
       reason: 'mainnet-mismatch',
+      expected: 'mainnet-beta',
+      actual: clusterValue,
       cluster: clusterValue,
       endpoint,
     });
@@ -391,6 +419,17 @@ function normalizeGenesisHash(value: string | Readonly<{ genesisHash?: string; r
     return value;
   }
   return value.genesisHash ?? value.result ?? value.value;
+}
+
+function extractRpcStatus(error: unknown): number | undefined {
+  const record = asRecord(error);
+  const response = asRecord(record?.response);
+  const status = record?.status ?? record?.statusCode ?? response?.status ?? response?.statusCode;
+  return typeof status === 'number' ? status : undefined;
+}
+
+function asRecord(value: unknown): Readonly<Record<string, unknown>> | undefined {
+  return typeof value === 'object' && value !== null ? (value as Readonly<Record<string, unknown>>) : undefined;
 }
 
 function withRpcEndpointMetadata(rpc: SusuRpc, endpoint: string): SusuRpc {
