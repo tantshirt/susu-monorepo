@@ -10,6 +10,7 @@ import {
   getSetComputeUnitPriceInstruction,
 } from '@solana-program/compute-budget';
 import { SusuClusterError, SusuRpcError, type SusuRpcErrorDetails } from './errors.js';
+import { extractRpcEndpoint, extractRpcStatus } from './lib/rpcErrors.js';
 
 export const DEFAULT_SUSU_PROGRAM_ID = address('2f6CBrNHZp8oyXPFRXfzroGx5pZ7WyLA6dUqFFpYsX2N');
 export const DEFAULT_COMPUTE_UNITS = 200_000;
@@ -391,18 +392,6 @@ function assertKnownMainnetEndpointMatchesCluster(clusterValue: Cluster, rpc?: S
   }
 }
 
-function extractRpcEndpoint(rpc?: SusuRpc): string | undefined {
-  if (!rpc) {
-    return undefined;
-  }
-  for (const key of ['endpoint', 'url'] as const) {
-    if (Object.prototype.hasOwnProperty.call(rpc, key) && typeof rpc[key] === 'string') {
-      return rpc[key];
-    }
-  }
-  return undefined;
-}
-
 function isKnownMainnetEndpoint(endpoint: string): boolean {
   const normalized = endpoint.toLowerCase();
   return (
@@ -419,17 +408,6 @@ function normalizeGenesisHash(value: string | Readonly<{ genesisHash?: string; r
     return value;
   }
   return value.genesisHash ?? value.result ?? value.value;
-}
-
-function extractRpcStatus(error: unknown): number | undefined {
-  const record = asRecord(error);
-  const response = asRecord(record?.response);
-  const status = record?.status ?? record?.statusCode ?? response?.status ?? response?.statusCode;
-  return typeof status === 'number' ? status : undefined;
-}
-
-function asRecord(value: unknown): Readonly<Record<string, unknown>> | undefined {
-  return typeof value === 'object' && value !== null ? (value as Readonly<Record<string, unknown>>) : undefined;
 }
 
 function withRpcEndpointMetadata(rpc: SusuRpc, endpoint: string): SusuRpc {

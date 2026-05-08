@@ -45,7 +45,7 @@ const SUSU_PROGRAM_ERRORS_BY_CODE = new Map<number, SusuProgramErrorDefinition>(
   SUSU_PROGRAM_ERRORS.map((error) => [error.code, error]),
 );
 
-export function lookupSusuProgramError(code: number): SusuProgramErrorDefinition | undefined {
+function lookupSusuProgramError(code: number): SusuProgramErrorDefinition | undefined {
   return SUSU_PROGRAM_ERRORS_BY_CODE.get(code);
 }
 

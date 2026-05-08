@@ -36,18 +36,25 @@ Reviewed the branch diff against `origin/main`:
 
 | Layer | Result | Notes |
 | --- | --- | --- |
-| Blind Hunter | Clean | No raw `Error` throws or string rejections remain in `sdk/ts/src`; public exports include the taxonomy and guards. |
-| Edge Case Hunter | Clean | Decode covers Anchor `ErrorNumber`, spaced `Error Number`, and custom-program hex fallbacks; non-Anchor simulation failures remain typed with no decoded cause. |
+| Blind Hunter | Fixed | Cursor found duplicated RPC metadata helpers; they are now centralized in `sdk/ts/src/lib/rpcErrors.ts`. |
+| Edge Case Hunter | Fixed | Cursor found a programLogs-only diagnostic gap and redundant regex fallback; both are fixed, and coverage now locks programLogs preservation. |
 | Acceptance Auditor | Clean | AC1-AC5 satisfied: typed classes, typed fields, no bare SDK throws, unit coverage, and docs with `switch (err.kind)`. |
 
 ## Findings
 
-No blocking, high, medium, or low-severity findings were found.
+No blocking, high, medium, or low-severity findings remain.
+
+Cursor Bugbot findings fixed during PR gate:
+
+- Medium: duplicated `extractRpcEndpoint`, `extractRpcStatus`, and `asRecord` helpers in `client.ts` and `executeTx.ts`; fixed by adding shared `sdk/ts/src/lib/rpcErrors.ts`.
+- Medium: decoded program errors used empty `logs` for `simulationLogs` when decoding from non-empty `programLogs`; fixed by preserving the logs actually used for decode and adding unit coverage.
+- Low: redundant exported `lookupSusuProgramError`; fixed by keeping it module-private and exporting only `decodeSusuProgramError`.
+- Low: unreachable Anchor `ErrorNumber` regex fallback; fixed by using one `Error\s*Number` regex with a short clarifying comment.
 
 ## Validation Evidence
 
 - `pnpm --dir sdk/ts build` passed.
-- `pnpm --dir sdk/ts test` passed: 6 files passed, 1 skipped; 34 tests passed, 1 todo.
+- `pnpm --dir sdk/ts test` passed after Cursor follow-up fixes: 6 files passed, 1 skipped; 35 tests passed, 1 todo.
 - `node --test tests/atdd/story-6-3-sdk-error-classes.static.red.test.mjs` passed.
 - `node --test tests/atdd/story-6-2-sdk-simulate-cluster-gate.static.red.test.mjs tests/atdd/story-6-3-sdk-error-classes.static.red.test.mjs` passed.
 - `pnpm test:atdd` passed: 159 tests.

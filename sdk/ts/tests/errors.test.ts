@@ -116,6 +116,34 @@ describe('typed SDK error taxonomy', () => {
     expect(rpc.sendTransaction).not.toHaveBeenCalled();
   });
 
+  it('preserves programLogs on decoded program errors when raw logs are absent', async () => {
+    const rpc = createRpc();
+    const programLogs = [
+      'Program log: Instruction: Contribute',
+      'Program log: AnchorError occurred. Error Code: GroupFull. ErrorNumber: 6000.',
+    ];
+    rpc.simulateTransaction.mockReturnValue({
+      send: vi.fn(async () => ({
+        value: {
+          err: { InstructionError: [0, { Custom: 6000 }] },
+          logs: [],
+          programLogs,
+        },
+      })),
+    });
+
+    const thrown = await captureContributeError(rpc);
+
+    expect(thrown).toBeInstanceOf(SusuSimulationError);
+    expect((thrown as SusuSimulationError).cause).toBeInstanceOf(SusuError);
+    expect((thrown as SusuSimulationError).cause).toMatchObject({
+      kind: 'program',
+      code: 6000,
+      name: 'GroupFull',
+      simulationLogs: programLogs,
+    });
+  });
+
   it('wraps RPC timeouts as SusuRpcError', async () => {
     const rpc = createRpc();
     const timeout = { name: 'AbortError', message: 'operation timed out' };

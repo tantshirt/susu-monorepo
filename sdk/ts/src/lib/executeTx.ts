@@ -17,6 +17,7 @@ import {
 } from '../client.js';
 import { SusuError, SusuRpcError, SusuSimulationError, isSusuRpcError } from '../errors.js';
 import { decodeSusuProgramError } from './programErrors.js';
+import { extractRpcEndpoint, extractRpcStatus } from './rpcErrors.js';
 
 export type ExecuteTxOptions = ComputeBudgetOptions &
   Readonly<{
@@ -130,15 +131,14 @@ function decodeProgramErrorFromLogs(
     code: definition.code,
     name: definition.name,
     instructionName,
-    simulationLogs: logs,
+    simulationLogs: logsToDecode,
   });
 }
 
 function extractAnchorProgramErrorCode(logs: readonly string[]): number | undefined {
   const joinedLogs = logs.join('\n');
-  const anchorMatch =
-    joinedLogs.match(/AnchorError[\s\S]*?Error\s*Number:\s*(\d+)/i) ??
-    joinedLogs.match(/AnchorError[\s\S]*?ErrorNumber:\s*(\d+)/i);
+  // AnchorError logs may spell this field as ErrorNumber or Error Number.
+  const anchorMatch = joinedLogs.match(/AnchorError[\s\S]*?Error\s*Number:\s*(\d+)/i);
   const rawCode = anchorMatch?.[1];
   if (rawCode !== undefined) {
     return Number(rawCode);
@@ -181,25 +181,6 @@ function wrapRpcError(error: unknown, rpc: SusuRpc | undefined, message: string)
     status: extractRpcStatus(error),
     cause: error,
   });
-}
-
-function extractRpcEndpoint(rpc?: SusuRpc): string | undefined {
-  if (!rpc) {
-    return undefined;
-  }
-  for (const key of ['endpoint', 'url'] as const) {
-    if (Object.prototype.hasOwnProperty.call(rpc, key) && typeof rpc[key] === 'string') {
-      return rpc[key];
-    }
-  }
-  return undefined;
-}
-
-function extractRpcStatus(error: unknown): number | undefined {
-  const record = asRecord(error);
-  const response = asRecord(record?.response);
-  const status = record?.status ?? record?.statusCode ?? response?.status ?? response?.statusCode;
-  return typeof status === 'number' ? status : undefined;
 }
 
 function asRecord(value: unknown): Readonly<Record<string, unknown>> | undefined {
