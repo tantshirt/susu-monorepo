@@ -51,6 +51,9 @@ coverage/
 .nyc_output/
 !tests/coverage/
 !tests/coverage/.gitkeep
+tests/.tmp/
+audits/handoff-*.tar.gz
+audits/handoff-*.MANIFEST.txt
 
 # Submodule / nested unrelated project
 mempalace/
