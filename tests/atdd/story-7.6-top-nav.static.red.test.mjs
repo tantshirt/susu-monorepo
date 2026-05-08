@@ -56,7 +56,11 @@ test('[P0] ClusterPill styling follows label-based devnet/mainnet-beta contract'
 
 test('[P0] Top nav is mounted in root layout and Playwright covers /404 cluster-pill visibility', async () => {
   const layout = await readRepoFile('apps/reference/app/layout.tsx');
-  assert.match(layout, /<TopNav/, 'Root layout must render TopNav');
+  assert.match(layout, /<TopNavShell/, 'Root layout must render TopNavShell');
+
+  const shell = await readRepoFile('apps/reference/components/susu/TopNavShell.tsx');
+  const shellNeedles = ['onLocaleChange={setLocale}', "onDisconnect={() => setWalletStatus({ kind: 'not-connected' })}"];
+  assertSourceMatchesAll(shell, shellNeedles, (needle) => `TopNavShell must include ${needle}`);
 
   const playwright = await readRepoFile('apps/reference/tests/e2e/top-nav.cluster-pill.spec.ts');
   const needles = ['const ROUTES = [\'\/\', \'\/404\'];', "getByTestId('cluster-pill')", 'toBeVisible'];
