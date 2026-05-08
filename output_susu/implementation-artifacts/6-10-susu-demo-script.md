@@ -113,6 +113,8 @@ GPT-5 Codex
 - `node --test tests/atdd/story-6-10-susu-demo-script.static.red.test.mjs` (red before implementation; green after implementation)
 - `pnpm install --frozen-lockfile`
 - `SUSU_DEMO_SKIP_PREFLIGHT=1 SUSU_DEMO_MAX_SECONDS=60 pnpm susu:demo`
+- `pnpm test:atdd`
+- `pnpm --filter @susu/sdk test`
 
 ### Completion Notes List
 
@@ -120,6 +122,7 @@ GPT-5 Codex
 - Added the SDK-backed mock ROSCA runner using `@susu/sdk` helpers for group create, member join/collateral, 5 contribution rounds, and 5 payouts with cluster-aware Solscan links.
 - Documented RPC, airdrop, and dependency mismatch recovery paths in `docs/troubleshooting.md`.
 - Added a `susu-demo-smoke` GitHub Actions job for main-branch Surfpool devnet-fork execution and wall-clock parsing.
+- Test review added runtime coverage proving the shell exits non-zero when the NFR-P2 wall-clock budget is exceeded.
 
 ### File List
 
@@ -133,3 +136,4 @@ GPT-5 Codex
 - `tests/atdd/story-6-10-susu-demo-script.static.red.test.mjs`
 - `output_susu/implementation-artifacts/6-10-susu-demo-script.md`
 - `output_susu/test-artifacts/atdd-checklist-6-10-susu-demo-script.md`
+- `output_susu/test-artifacts/test-reviews/story-6-10-test-review.md`

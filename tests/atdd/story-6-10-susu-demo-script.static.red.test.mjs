@@ -91,3 +91,20 @@ test('Story 6.10 adds a Surfpool-backed main-branch CI smoke job', () => {
   assert.match(workflow, /Wall-clock:\s*\[0-9\]\+\?s|Wall-clock:.*([0-9]+)s/, 'job must parse the final wall-clock line');
   assert.match(workflow, /SUSU_DEMO_MAX_SECONDS:\s*60|MAX_SECONDS=60/, 'job must enforce the 60s budget');
 });
+
+test('Story 6.10 shell command fails when the wall-clock budget is exceeded', () => {
+  assertExists(shellPath);
+  const result = spawnSync('bash', [shellPath], {
+    encoding: 'utf8',
+    timeout: 20_000,
+    env: {
+      ...process.env,
+      SUSU_DEMO_SKIP_PREFLIGHT: '1',
+      SUSU_DEMO_MAX_SECONDS: '-1',
+      NO_COLOR: '1',
+    },
+  });
+
+  assert.notEqual(result.status, 0, 'demo must fail when elapsed time is greater than budget');
+  assert.match(`${result.stdout}\n${result.stderr}`, /Demo exceeded NFR-P2 budget/, 'failure must explain the budget breach');
+});
