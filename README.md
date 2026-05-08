@@ -11,6 +11,7 @@ Susu Protocol is a public-from-commit-zero monorepo for building rotating saving
 [![Devnet Program](https://img.shields.io/badge/devnet-program%20id-tbd-lightgrey)](./programs/susu/)
 [![CI](https://img.shields.io/badge/ci-scaffold-lightgrey)](./.github/workflows/)
 [![Adversary Report](https://img.shields.io/badge/adversary-report%20pending-lightgrey)](./audits/adversary/)
+[![Legal Opinion](https://img.shields.io/badge/legal-opinion%20placeholder-yellow)](./docs/legal-opinion.pdf)
 [![Upgrade Burned](https://img.shields.io/badge/upgrade-burned%20proof%20pending-lightgrey)](./docs/)
 
 Badge links are scaffold slots in Epic 1 and may stay unresolved until later stories wire workflows and reports.

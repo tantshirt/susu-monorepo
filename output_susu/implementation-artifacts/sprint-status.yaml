@@ -94,7 +94,7 @@ development_status:
   5-6-threat-model-doc: done
   5-7-fincen-cvc-framing-doc: done
   5-8-audit-engagement: done
-  5-9-legal-opinion: ready-for-dev
+  5-9-legal-opinion: done
   epic-5-retrospective: optional
 
   # Epic 6: SDK Surface, Examples & One-Command Reproducibility
