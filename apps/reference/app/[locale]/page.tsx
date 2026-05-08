@@ -1,8 +1,8 @@
 import {LocaleDropdown} from '../../components/locale-dropdown';
-import {useTranslation} from '../../lib/i18n/useTranslation';
+import {getTranslations} from 'next-intl/server';
 
-export default function HomePage() {
-  const t = useTranslation('home');
+export default async function HomePage() {
+  const t = await getTranslations('home');
 
   return (
     <main>
