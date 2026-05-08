@@ -9,6 +9,8 @@ const OPTIONS: ReadonlyArray<{ label: string; value: Skin }> = [
   { label: 'Neutral', value: 'neutral' },
   { label: 'Heritage', value: 'heritage' },
 ];
+const FIRST_OPTION = OPTIONS[0]?.value ?? 'neutral';
+const LAST_OPTION = OPTIONS[OPTIONS.length - 1]?.value ?? 'heritage';
 
 export function SkinToggle() {
   const skin = useSkinStore((state) => state.skin);
@@ -18,7 +20,8 @@ export function SkinToggle() {
     if (typeof document === 'undefined') {
       return;
     }
-    const button = document.querySelector<HTMLButtonElement>(`button[data-skin-option="${value}"]`);
+    const escaped = typeof CSS === 'undefined' || typeof CSS.escape !== 'function' ? value : CSS.escape(value);
+    const button = document.querySelector<HTMLButtonElement>(`button[data-skin-option="${escaped}"]`);
     button?.focus();
   };
 
@@ -30,14 +33,14 @@ export function SkinToggle() {
     event.preventDefault();
 
     if (event.key === 'Home') {
-      setSkin('neutral');
-      focusOption('neutral');
+      setSkin(FIRST_OPTION);
+      focusOption(FIRST_OPTION);
       return;
     }
 
     if (event.key === 'End') {
-      setSkin('heritage');
-      focusOption('heritage');
+      setSkin(LAST_OPTION);
+      focusOption(LAST_OPTION);
       return;
     }
 
