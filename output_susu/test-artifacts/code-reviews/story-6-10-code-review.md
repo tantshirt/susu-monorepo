@@ -18,6 +18,10 @@ Cursor Bugbot flagged broad `node`, `solana`, and `version` matches that could c
 
 Cursor Bugbot flagged that appending Surfpool install paths to `GITHUB_PATH` only affects later workflow steps. The install step now exports `$HOME/.local/bin` and `$HOME/.cargo/bin` before running `surfpool --version`, matching the Solana CLI install pattern.
 
+### Fixed: Shared Classifier And RPC 429 Handling
+
+Cursor Bugbot flagged that RPC HTTP 429 was classified as `devnet-airdrop-limit` and that shell/runner regexes could drift. Classification now lives in `scripts/susu-demo-classify.mjs`; the shell calls that module and the runner imports it. Bare RPC 429 falls through to `rpc-reachability`, while airdrop/faucet rate-limit text remains `devnet-airdrop-limit`.
+
 ## Evidence
 
 - `node --test tests/atdd/story-6-10-susu-demo-script.static.red.test.mjs`

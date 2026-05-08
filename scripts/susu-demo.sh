@@ -56,14 +56,16 @@ require_command() {
 
 classify_runner_failure() {
   text="$1"
-  if printf '%s' "$text" | grep -Eiq 'airdrop|faucet|rate limit|429'; then
-    fail_bucket "devnet-airdrop-limit" "Devnet airdrop rate limit. Run \`solana airdrop 2\` manually or wait 24h." "docs/troubleshooting.md#devnet-airdrop-limit"
+  classification="$(printf '%s' "$text" | node scripts/susu-demo-classify.mjs)" || \
+    fail_bucket "dependency-mismatch" "Failed to classify demo error. Run \`pnpm install\` and retry." "docs/troubleshooting.md#dependency-mismatch"
+  tab="$(printf '\t')"
+  IFS="$tab" read -r bucket message link <<EOF
+$classification
+EOF
+  if [ -z "${bucket:-}" ] || [ -z "${message:-}" ] || [ -z "${link:-}" ]; then
+    fail_bucket "dependency-mismatch" "Failed to classify demo error. Run \`pnpm install\` and retry." "docs/troubleshooting.md#dependency-mismatch"
   fi
-  dependency_pattern='ERR_MODULE_NOT_FOUND|Cannot find (module|package)|module not found|Package subpath .* is not defined|workspace package|ERR_PNPM|pnpm (install|build).*failed|(^|[[:space:]/])(anchor|solana|solana-keygen|node|pnpm)(: command not found|: not found| not found| is not installed| unsupported|required|requires|mismatch)|(unsupported|required|requires|mismatch) (Node.js|node|pnpm|anchor|solana)|(Node.js|node|pnpm|anchor|solana) version (mismatch|unsupported|required)'
-  if printf '%s' "$text" | grep -Eiq "$dependency_pattern"; then
-    fail_bucket "dependency-mismatch" "Toolchain mismatch. Run \`nvm use && rustup show\`." "docs/troubleshooting.md#dependency-mismatch"
-  fi
-  fail_bucket "rpc-reachability" "Helius/Solana devnet RPC unreachable." "docs/troubleshooting.md#rpc"
+  fail_bucket "$bucket" "$message" "$link"
 }
 
 check_rpc() {

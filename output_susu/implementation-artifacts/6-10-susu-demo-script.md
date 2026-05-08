@@ -117,7 +117,7 @@ GPT-5 Codex
 - `pnpm --filter @susu/sdk test`
 - `bash scripts/check-patterns.sh`
 - `bash scripts/check-sdk-parity.sh`
-- Cursor Bugbot PR #184 reviews: fixed budget-breach classification, narrowed dependency mismatch regexes, and exported the Surfpool install PATH before the same-step version check.
+- Cursor Bugbot PR #184 reviews: fixed budget-breach classification, moved shell/JS failure classification to one shared module, narrowed dependency mismatch and airdrop-rate matching, and exported the Surfpool install PATH before the same-step version check.
 
 ### Completion Notes List
 
@@ -129,6 +129,7 @@ GPT-5 Codex
 - Code review hardened the Surfpool smoke job with `--ci --no-deploy` so CI starts only the forked RPC needed by the demo.
 - Cursor review recovery added a dedicated `performance-budget` failure bucket and narrowed dependency mismatch detection so RPC failures can reach the `rpc-reachability` bucket.
 - Cursor follow-up recovery exported `$HOME/.local/bin` and `$HOME/.cargo/bin` during the Surfpool install step before running `surfpool --version`.
+- Cursor follow-up recovery moved classifier logic into `scripts/susu-demo-classify.mjs` so shell and runner share the same buckets, and kept RPC HTTP 429 under `rpc-reachability`.
 
 ### File List
 
@@ -137,6 +138,7 @@ GPT-5 Codex
 - `package.json`
 - `pnpm-lock.yaml`
 - `scripts/susu-demo.mjs`
+- `scripts/susu-demo-classify.mjs`
 - `scripts/susu-demo.sh`
 - `tests/atdd/story-6-10-susu-demo-script.atdd.md`
 - `tests/atdd/story-6-10-susu-demo-script.static.red.test.mjs`

@@ -8,6 +8,7 @@ const storyPath = 'output_susu/implementation-artifacts/6-10-susu-demo-script.md
 const packagePath = 'package.json';
 const shellPath = 'scripts/susu-demo.sh';
 const runnerPath = 'scripts/susu-demo.mjs';
+const classifierPath = 'scripts/susu-demo-classify.mjs';
 const docsPath = 'docs/troubleshooting.md';
 const ciPath = '.github/workflows/ci.yml';
 
@@ -59,14 +60,15 @@ test('Story 6.10 runner drives the 5-member ROSCA lifecycle via @susu/sdk', () =
   assert.match(runner, /commitment:\s*['"]confirmed['"]|confirmedCommitment|SUSU_DEMO_COMMITMENT/, 'runner must use confirmed commitment for waits');
 
   assert.equal(spawnSync('node', ['--check', runnerPath], { encoding: 'utf8' }).status, 0, 'runner must parse');
+  assert.equal(spawnSync('node', ['--check', classifierPath], { encoding: 'utf8' }).status, 0, 'classifier must parse');
 });
 
 test('Story 6.10 classifies required failure buckets with recovery docs', () => {
-  for (const path of [runnerPath, shellPath, docsPath]) {
+  for (const path of [runnerPath, classifierPath, shellPath, docsPath]) {
     assertExists(path);
   }
 
-  const combined = `${read(runnerPath)}\n${read(shellPath)}\n${read(docsPath)}`;
+  const combined = `${read(runnerPath)}\n${read(classifierPath)}\n${read(shellPath)}\n${read(docsPath)}`;
   for (const bucket of ['rpc-reachability', 'devnet-airdrop-limit', 'dependency-mismatch', 'performance-budget']) {
     assert.match(combined, new RegExp(bucket), `missing ${bucket} bucket`);
   }
@@ -78,6 +80,8 @@ test('Story 6.10 classifies required failure buckets with recovery docs', () => 
   assert.match(combined, /Helius\/Solana devnet RPC unreachable/i);
   assert.match(combined, /Devnet airdrop rate limit/i);
   assert.match(combined, /Toolchain mismatch/i);
+  assert.match(read(shellPath), /node scripts\/susu-demo-classify\.mjs/, 'shell must use the shared classifier module');
+  assert.doesNotMatch(read(shellPath), /dependency_pattern|grep -Eiq 'airdrop\|faucet/, 'shell must not duplicate classifier regexes');
 });
 
 test('Story 6.10 keeps RPC failures out of the dependency bucket', async () => {
@@ -92,6 +96,16 @@ test('Story 6.10 keeps RPC failures out of the dependency bucket', async () => {
     classifyDemoError(new Error('Transaction version not supported by RPC node')).bucket,
     'rpc-reachability',
     'RPC transaction-version failures must not be dependency failures',
+  );
+  assert.equal(
+    classifyDemoError(new Error('RPC health HTTP 429')).bucket,
+    'rpc-reachability',
+    'RPC rate limiting must remain an RPC failure',
+  );
+  assert.equal(
+    classifyDemoError(new Error('airdrop faucet HTTP 429')).bucket,
+    'devnet-airdrop-limit',
+    'airdrop faucet rate limits must remain a faucet failure',
   );
   assert.equal(
     classifyDemoError(new Error('Cannot find module @susu/sdk')).bucket,
