@@ -70,6 +70,12 @@ pub fn handler(ctx: Context<ClaimPayout>, group_id: u64, rotation_index: u8) -> 
         ctx.accounts.member_position.rotation_slot == rotation_index,
         SusuError::NotRotationRecipient
     );
+    verify_rotation_funded(
+        ctx.accounts.group.key(),
+        group,
+        rotation_index,
+        ctx.remaining_accounts,
+    )?;
 
     let close_timestamp = rotation_close_timestamp(
         group.start_timestamp,
@@ -128,6 +134,66 @@ pub fn calculate_payout_amount(n: u8, contribution_amount: u64) -> Result<u64> {
     u64::from(n)
         .checked_mul(contribution_amount)
         .ok_or(error!(SusuError::ArithmeticOverflow))
+}
+
+pub fn verify_rotation_funded(
+    group_key: Pubkey,
+    group: &Group,
+    rotation_index: u8,
+    remaining: &[AccountInfo],
+) -> Result<()> {
+    require!(
+        remaining.len() == usize::from(group.n),
+        SusuError::InvalidMemberPositionList
+    );
+
+    for (member_slot, ai) in group.members.iter().zip(remaining.iter()) {
+        require!(member_slot.accepted, SusuError::InvalidMemberPositionList);
+        require!(ai.owner == &crate::ID, SusuError::InvalidMemberPositionList);
+
+        let data = ai
+            .try_borrow_data()
+            .map_err(|_| error!(SusuError::InvalidMemberPositionList))?;
+        let mut body: &[u8] = &data;
+        let position = MemberPosition::try_deserialize(&mut body)
+            .map_err(|_| error!(SusuError::InvalidMemberPositionList))?;
+
+        require!(
+            position.group == group_key,
+            SusuError::InvalidMemberPositionList
+        );
+        require!(
+            position.member_pubkey == member_slot.pubkey,
+            SusuError::InvalidMemberPositionList
+        );
+
+        let expected_member_position = Pubkey::find_program_address(
+            &[MEMBER_SEED, group_key.as_ref(), member_slot.pubkey.as_ref()],
+            &crate::ID,
+        )
+        .0;
+        require!(
+            ai.key() == expected_member_position,
+            SusuError::InvalidMemberPositionList
+        );
+
+        let idx = rotation_index as usize;
+        require!(
+            idx < position.contribution_history.len(),
+            SusuError::InvalidContributionRotation
+        );
+        let record = position.contribution_history[idx];
+        require!(
+            record.rotation_index == rotation_index,
+            SusuError::InvalidContributionRotation
+        );
+        require!(
+            record.amount == group.contribution_amount,
+            SusuError::ContributionAmountMismatch
+        );
+    }
+
+    Ok(())
 }
 
 pub fn rotation_close_timestamp(

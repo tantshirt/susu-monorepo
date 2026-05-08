@@ -56,14 +56,19 @@ test('Story 4.2 validates recipient, active status, and closed period before CPI
   assert.match(source, /MemberPositionMismatch/, 'must bind MemberPosition to signer and group');
   assert.match(source, /NotRotationRecipient/, 'must reject signers who are not the rotation recipient');
   assert.match(source, /RotationNotClosed/, 'must reject claims before the rotation closes');
+  assert.match(source, /verify_rotation_funded/, 'must verify the rotation pot is funded before payout');
+  assert.match(source, /contribution_history/, 'funding proof must inspect member contribution history');
+  assert.match(source, /ContributionAmountMismatch/, 'underfunded rotations must reject before CPI');
   assert.match(source, /Clock/, 'must use the Solana Clock sysvar');
 
   const active = squashed.indexOf('GroupStatus::Active');
   const recipient = squashed.indexOf('NotRotationRecipient');
+  const funded = squashed.indexOf('verify_rotation_funded');
   const closed = squashed.indexOf('RotationNotClosed');
   const cpi = squashed.indexOf('CpiContext::new_with_signer');
   assert.ok(active !== -1 && active < cpi, 'active check must precede vault transfer CPI');
   assert.ok(recipient !== -1 && recipient < cpi, 'recipient check must precede vault transfer CPI');
+  assert.ok(funded !== -1 && funded < cpi, 'funding check must precede vault transfer CPI');
   assert.ok(closed !== -1 && closed < cpi, 'close-time check must precede vault transfer CPI');
 });
 

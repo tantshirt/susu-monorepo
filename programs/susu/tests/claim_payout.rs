@@ -1,8 +1,14 @@
 use anchor_lang::error::Error;
-use anchor_lang::prelude::Pubkey;
+use anchor_lang::prelude::{AccountInfo, Pubkey};
+use anchor_lang::{AccountSerialize, Space};
 use susu::error::SusuError;
-use susu::instructions::claim_payout::{calculate_payout_amount, rotation_close_timestamp};
-use susu::seeds::{GROUP_SEED, ROTATION_SEED};
+use susu::instructions::claim_payout::{
+    calculate_payout_amount, rotation_close_timestamp, verify_rotation_funded,
+};
+use susu::seeds::{GROUP_SEED, MEMBER_SEED, ROTATION_SEED};
+use susu::state::{
+    ContributionRecord, CurveParams, Group, GroupStatus, MemberPosition, MemberSlot, SlashStatus,
+};
 use susu::ID;
 
 const CLAIM_PAYOUT_SOURCE: &str = include_str!("../src/instructions/claim_payout.rs");
@@ -32,6 +38,81 @@ fn derive_group_pda(creator: Pubkey, group_id: u64) -> Pubkey {
         &ID,
     )
     .0
+}
+
+fn derive_member_position_pda(group: Pubkey, member: Pubkey) -> Pubkey {
+    Pubkey::find_program_address(&[MEMBER_SEED, group.as_ref(), member.as_ref()], &ID).0
+}
+
+fn group_fixture(creator: Pubkey, group_key: Pubkey, members: Vec<Pubkey>) -> Group {
+    let _: Pubkey = group_key;
+    Group {
+        mint: Pubkey::new_unique(),
+        contribution_amount: 10,
+        contribution_period: 30,
+        n: members.len() as u8,
+        curve_params: CurveParams {},
+        members: members
+            .into_iter()
+            .map(|pubkey| MemberSlot {
+                pubkey,
+                accepted: true,
+            })
+            .collect(),
+        status: GroupStatus::Active,
+        created_at: 1,
+        creator,
+        group_id: 42,
+        bump: 255,
+        start_timestamp: 1,
+        contribution_window_duration: 30,
+        slash_grace_seconds: 30,
+    }
+}
+
+fn serialize_position(position: &MemberPosition) -> Vec<u8> {
+    let mut data = vec![0_u8; 8 + MemberPosition::INIT_SPACE];
+    let mut writer: &mut [u8] = &mut data;
+    position
+        .try_serialize(&mut writer)
+        .expect("serialize member position");
+    data
+}
+
+fn member_position_account(
+    group_key: Pubkey,
+    member: Pubkey,
+    n: u8,
+    paid_rotation: u8,
+    paid_amount: u64,
+) -> AccountInfo<'static> {
+    let key = Box::leak(Box::new(derive_member_position_pda(group_key, member)));
+    let lamports = Box::leak(Box::new(1_u64));
+    let position = MemberPosition {
+        group: group_key,
+        member_pubkey: member,
+        rotation_slot: paid_rotation,
+        contribution_history: (0..n)
+            .map(|rotation_index| ContributionRecord {
+                rotation_index,
+                amount: if rotation_index == paid_rotation {
+                    paid_amount
+                } else {
+                    0
+                },
+                paid_at: if rotation_index == paid_rotation {
+                    200
+                } else {
+                    0
+                },
+            })
+            .collect(),
+        collateral_posted: 1_000,
+        slash_status: SlashStatus::None,
+    };
+    let data = Box::leak(serialize_position(&position).into_boxed_slice());
+
+    AccountInfo::new(key, false, false, lamports, data, &ID, false)
 }
 
 #[test]
@@ -81,6 +162,9 @@ fn claim_payout_source_orders_guards_before_vault_transfer() {
     let recipient = source
         .find("NotRotationRecipient")
         .expect("recipient guard");
+    let funded = source
+        .find("verify_rotation_funded")
+        .expect("funded rotation guard");
     let closed = source.find("RotationNotClosed").expect("closed guard");
     let cpi = source
         .find("CpiContext::new_with_signer")
@@ -88,6 +172,7 @@ fn claim_payout_source_orders_guards_before_vault_transfer() {
 
     assert!(active < cpi, "active guard must precede CPI");
     assert!(recipient < cpi, "recipient guard must precede CPI");
+    assert!(funded < cpi, "funding guard must precede CPI");
     assert!(closed < cpi, "closed-period guard must precede CPI");
 }
 
@@ -100,4 +185,45 @@ fn claim_payout_source_uses_group_pda_as_vault_transfer_authority() {
     assert!(source.contains("GROUP_SEED"));
     assert!(source.contains("new_with_signer"));
     assert_eq!(PAYOUT_CLAIMED_LOG, "payout_claimed");
+}
+
+#[test]
+fn verify_rotation_funded_requires_every_member_to_have_paid_exact_amount() {
+    let creator = Pubkey::new_unique();
+    let group_key = derive_group_pda(creator, 42);
+    let members: Vec<_> = (0..5).map(|_| Pubkey::new_unique()).collect();
+    let group = group_fixture(creator, group_key, members.clone());
+
+    let funded_accounts: Vec<_> = members
+        .iter()
+        .copied()
+        .map(|member| {
+            member_position_account(group_key, member, group.n, 0, group.contribution_amount)
+        })
+        .collect();
+    verify_rotation_funded(group_key, &group, 0, &funded_accounts)
+        .expect("all exact contributions should fund payout");
+
+    let underfunded_accounts: Vec<_> = members
+        .iter()
+        .copied()
+        .enumerate()
+        .map(|(idx, member)| {
+            member_position_account(
+                group_key,
+                member,
+                group.n,
+                0,
+                if idx == 0 {
+                    0
+                } else {
+                    group.contribution_amount
+                },
+            )
+        })
+        .collect();
+    assert_susu_error(
+        verify_rotation_funded(group_key, &group, 0, &underfunded_accounts),
+        SusuError::ContributionAmountMismatch,
+    );
 }
