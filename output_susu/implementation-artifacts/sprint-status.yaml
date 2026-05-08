@@ -78,7 +78,7 @@ development_status:
   epic-4: in-progress
   4-1-rotation-slot-algorithm: done # merged via PR #157 on 2026-05-08
   4-2-claim-payout: done # merged via PR #158 on 2026-05-08
-  4-3-non-recipient-guard: ready-for-dev
+  4-3-non-recipient-guard: done # merged via PR #159 on 2026-05-08
   4-4-pre-deadline-guard: ready-for-dev
   4-5-double-claim-guard: ready-for-dev
   4-6-e2e-lifecycle-test: ready-for-dev
