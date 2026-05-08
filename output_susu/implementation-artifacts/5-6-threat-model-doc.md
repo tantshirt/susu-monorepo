@@ -1,6 +1,6 @@
 # Story 5.6: Threat Model Doc and Traceability Matrix
 
-Status: ready-for-dev
+Status: review
 
 ## Story
 
@@ -17,12 +17,12 @@ As an auditor, I want `docs/threat-model.md` enumerating adversary models, attac
 
 ## Tasks / Subtasks
 
-- [ ] Create Story 5.6 ATDD/static coverage guard.
-- [ ] Expand `docs/threat-model.md` with required adversary models, mitigations, and residual risks.
-- [ ] Replace `tests/coverage/threat-model.md` with a traceability table using the required columns.
-- [ ] Verify every cited path in the coverage matrix exists.
-- [ ] Run story-local and repository checks.
-- [ ] Complete review follow-ups.
+- [x] Create Story 5.6 ATDD/static coverage guard.
+- [x] Expand `docs/threat-model.md` with required adversary models, mitigations, and residual risks.
+- [x] Replace `tests/coverage/threat-model.md` with a traceability table using the required columns.
+- [x] Verify every cited path in the coverage matrix exists.
+- [x] Run story-local and repository checks.
+- [x] Complete review follow-ups.
 
 ## Dev Notes
 
@@ -44,7 +44,10 @@ As an auditor, I want `docs/threat-model.md` enumerating adversary models, attac
 
 ### Completion Notes
 
-- Pending implementation.
+- Implemented the Story 5.6 threat model across all required adversary categories.
+- Added a coverage matrix with the required `attack`, `mitigation`, and `test_file_path` columns.
+- Kept Epic 5 follow-on artifacts that do not exist yet, including the named 30% Cartel simulator and 5.1 proptest, as residual risk instead of citing missing paths.
+- Verified the Story 5.6 ATDD static guard passes after implementation.
 
 ### File List
 
@@ -57,3 +60,4 @@ As an auditor, I want `docs/threat-model.md` enumerating adversary models, attac
 ### Change Log
 
 - 2026-05-08: Initialized Story 5.6 from issue #49.
+- 2026-05-08: Implemented threat model and coverage traceability matrix; moved story to review.
