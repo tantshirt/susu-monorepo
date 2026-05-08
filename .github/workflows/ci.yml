@@ -84,7 +84,7 @@ jobs:
         run: bash scripts/check-sdk-parity.sh
 
       - name: Check i18n parity
-        run: pnpm dlx tsx scripts/check-i18n-parity.ts
+        run: pnpm exec tsx scripts/check-i18n-parity.ts
 
       - name: Check FinCEN posture
         run: bash scripts/check-fincen-posture.sh
