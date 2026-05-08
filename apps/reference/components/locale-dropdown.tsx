@@ -15,11 +15,11 @@ export function LocaleDropdown() {
   function onLocaleChange(nextLocale: string) {
     const segments = pathname.split('/').filter(Boolean);
     const [, ...rest] = segments;
-    const currentPathWithoutLocale = locales.includes(segments[0] as (typeof locales)[number])
-      ? rest.length > 0
-        ? `/${rest.join('/')}`
-        : ''
-      : pathname;
+    const hasLocalePrefix = locales.includes(segments[0] as (typeof locales)[number]);
+    let currentPathWithoutLocale = pathname;
+    if (hasLocalePrefix) {
+      currentPathWithoutLocale = rest.length > 0 ? `/${rest.join('/')}` : '';
+    }
     router.replace(`/${nextLocale}${currentPathWithoutLocale}`);
   }
 
