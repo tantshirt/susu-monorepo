@@ -12,3 +12,4 @@ This artifact records the red-phase acceptance surface for Story 5.8.
 ## Generated Tests
 
 - `tests/atdd/story-5-8-audit-engagement.static.red.test.mjs`
+- `tests/atdd/story-5-8-audit-engagement.scripts.red.test.mjs`

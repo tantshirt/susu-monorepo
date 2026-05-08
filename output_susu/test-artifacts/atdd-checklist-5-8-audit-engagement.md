@@ -14,6 +14,7 @@ storyFile: output_susu/implementation-artifacts/5-8-audit-engagement.md
 atddChecklistPath: output_susu/test-artifacts/atdd-checklist-5-8-audit-engagement.md
 generatedTestFiles:
   - tests/atdd/story-5-8-audit-engagement.static.red.test.mjs
+  - tests/atdd/story-5-8-audit-engagement.scripts.red.test.mjs
 inputDocuments:
   - output_susu/implementation-artifacts/5-8-audit-engagement.md
   - output_susu/test-artifacts/test-design/test-design-epic-5.md
@@ -52,6 +53,7 @@ inputDocuments:
 ## Step 4: Generated Red Tests
 
 - `tests/atdd/story-5-8-audit-engagement.static.red.test.mjs`
+- `tests/atdd/story-5-8-audit-engagement.scripts.red.test.mjs`
 
 The tests follow the repo's active red-test convention rather than skipped Playwright scaffolds, because the repository already uses `node:test` for ATDD. They should fail before Story 5.8 implementation and pass after the docs/scripts land.
 

@@ -61,6 +61,7 @@ So that the audit closure is operational and the report's existence becomes a li
 
 - Checklist: `output_susu/test-artifacts/atdd-checklist-5-8-audit-engagement.md`
 - Static acceptance tests: `tests/atdd/story-5-8-audit-engagement.static.red.test.mjs`
+- Script acceptance tests: `tests/atdd/story-5-8-audit-engagement.scripts.red.test.mjs`
 - Story handoff path: `output_susu/implementation-artifacts/5-8-audit-engagement.md`
 
 ## Dev Agent Record
@@ -72,7 +73,9 @@ GPT-5 Codex
 ### Debug Log References
 
 - Ran `node --test tests/atdd/story-5-8-audit-engagement.static.red.test.mjs`.
+- Ran `node --test tests/atdd/story-5-8-audit-engagement.scripts.red.test.mjs`.
 - Ran `pnpm test:atdd`.
+- Ran `GIT_PAGER=cat pnpm test:atdd`.
 - Ran `bash scripts/audit-handoff.sh --allow-missing --firm primary-audit-firm --date 2026-05-08` and removed the generated gitignored bundle artifacts after validation.
 - Created or verified GitHub labels `audit-finding` and `audit-finding-resolved`.
 
@@ -83,6 +86,7 @@ GPT-5 Codex
 - Added `scripts/audit-handoff.sh` with strict default artifact validation, `--allow-missing` preflight support for concurrent Epic 5 root-story PRs, tarball output, and manifest output.
 - Added `scripts/check-audit-report-citations.sh` enforcing required NFR-S1 report citations.
 - Added fixture-based ATDD coverage for handoff tarball contents and citation-check positive/negative behavior.
+- Addressed test-review maintainability and determinism feedback by splitting the Story 5.8 tests and using deterministic scratch paths under `tests/.tmp/`.
 
 ### File List
 
@@ -91,9 +95,11 @@ GPT-5 Codex
 - `audits/audit-sow-summary.md`
 - `output_susu/implementation-artifacts/5-8-audit-engagement.md`
 - `output_susu/test-artifacts/atdd-checklist-5-8-audit-engagement.md`
+- `output_susu/test-artifacts/test-reviews/story-5-8-test-review.md`
 - `scripts/audit-handoff.sh`
 - `scripts/check-audit-report-citations.sh`
 - `tests/atdd/story-5-8-audit-engagement.atdd.md`
+- `tests/atdd/story-5-8-audit-engagement.scripts.red.test.mjs`
 - `tests/atdd/story-5-8-audit-engagement.static.red.test.mjs`
 - `tests/fixtures/audit-handoff-complete/IDL_FREEZE.md`
 - `tests/fixtures/audit-handoff-complete/audits/adversary/adversary-report.json`
@@ -109,3 +115,4 @@ GPT-5 Codex
 
 - 2026-05-08: Added ATDD artifacts for Story 5.8 audit engagement workflow.
 - 2026-05-08: Implemented audit engagement docs, handoff tooling, citation check, fixtures, and validation record.
+- 2026-05-08: Addressed BMad test-review findings for maintainability and deterministic scratch output.
