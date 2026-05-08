@@ -14,6 +14,7 @@ pub mod error;
 pub mod curve;
 pub mod constants;
 pub mod instructions;
+pub mod rotation;
 pub mod seeds;
 pub mod state;
 

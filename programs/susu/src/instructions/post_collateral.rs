@@ -3,6 +3,7 @@ use anchor_lang::prelude::*;
 use anchor_spl::token::{self, Mint, Token, TokenAccount, TransferChecked};
 
 use crate::error::SusuError;
+use crate::rotation::calculate_rotation_assignments;
 use crate::seeds::{GROUP_SEED, MEMBER_SEED, VAULT_SEED};
 use crate::state::{Group, GroupStatus, MemberPosition};
 
@@ -57,32 +58,38 @@ pub fn handler(
     );
 
     require!(
-        ctx.accounts.group
+        ctx.accounts
+            .group
             .members
             .iter()
             .any(|s| s.pubkey == ctx.accounts.member.key() && s.accepted),
         SusuError::MemberNotInvited
     );
 
-    let roster_index = ctx
+    let roster: Vec<Pubkey> = ctx
         .accounts
         .group
         .members
         .iter()
-        .position(|s| s.pubkey == ctx.accounts.member.key())
+        .map(|slot| slot.pubkey)
+        .collect();
+    let assignments = calculate_rotation_assignments(ctx.accounts.group.key(), &roster)?;
+    let expected_slot = assignments
+        .iter()
+        .find(|assignment| assignment.member_pubkey == ctx.accounts.member.key())
+        .map(|assignment| assignment.slot)
         .ok_or(SusuError::MemberNotInvited)?;
-    let roster_ix = roster_index as u8;
+
     require!(
-        rotation_slot == roster_ix,
+        rotation_slot == expected_slot,
         SusuError::InvalidContributionRotation
     );
 
     let mp = &mut ctx.accounts.member_position;
-    if mp.rotation_slot == u8::MAX {
-        mp.rotation_slot = rotation_slot;
-    } else {
-        require!(mp.rotation_slot == rotation_slot, SusuError::InvalidContributionRotation);
-    }
+    require!(
+        mp.rotation_slot == u8::MAX || mp.rotation_slot == rotation_slot,
+        SusuError::InvalidContributionRotation
+    );
 
     let required = crate::curve::calculate_collateral(
         rotation_slot,

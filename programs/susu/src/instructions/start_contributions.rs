@@ -2,7 +2,8 @@ use anchor_lang::prelude::*;
 use anchor_spl::token::{Mint, Token};
 
 use crate::error::SusuError;
-use crate::seeds::GROUP_SEED;
+use crate::rotation::{calculate_rotation_assignments, RotationAssignment};
+use crate::seeds::{GROUP_SEED, MEMBER_SEED};
 use crate::state::{Group, GroupStatus, MemberPosition};
 
 #[derive(Accounts)]
@@ -22,7 +23,7 @@ pub struct StartContributions<'info> {
 }
 
 pub fn handler(ctx: Context<StartContributions>) -> Result<()> {
-    let clock = Clock::get()?;
+    let group_key = ctx.accounts.group.key();
     let group = &mut ctx.accounts.group;
     let mint_decimals = ctx.accounts.mint.decimals;
 
@@ -44,43 +45,105 @@ pub fn handler(ctx: Context<StartContributions>) -> Result<()> {
         SusuError::InvalidMemberPositionList
     );
 
-    for i in 0..usize::from(n) {
-        let ai = &remaining[i];
-        let mut bd: &[u8] = &ai.try_borrow_data().map_err(|_| error!(SusuError::InvalidMemberPositionList))?;
-        let deser = MemberPosition::try_deserialize(&mut bd).map_err(|_| error!(SusuError::InvalidMemberPositionList))?;
-        require!(deser.group == group.key(), SusuError::InvalidMemberPositionList);
+    let assignments = assign_rotation_slots_for_start(
+        group_key,
+        group,
+        remaining,
+        contribution_amount,
+        mint_decimals,
+    )?;
+
+    group.status = GroupStatus::Active;
+    group.start_timestamp = ctx.accounts.clock.unix_timestamp;
+
+    msg!(
+        "group_started: group={} start_timestamp={}",
+        group_key,
+        ctx.accounts.clock.unix_timestamp
+    );
+    msg!("slots_assigned: group={}", group_key);
+    for assignment in assignments {
+        msg!(
+            "slots_assigned: member={} slot={}",
+            assignment.member_pubkey,
+            assignment.slot
+        );
+    }
+
+    Ok(())
+}
+
+pub fn assign_rotation_slots_for_start(
+    group_key: Pubkey,
+    group: &Group,
+    remaining: &[AccountInfo],
+    contribution_amount: u64,
+    mint_decimals: u8,
+) -> Result<Vec<RotationAssignment>> {
+    let n = group.n;
+    let roster: Vec<Pubkey> = group.members.iter().map(|member| member.pubkey).collect();
+    let assignments = calculate_rotation_assignments(group_key, &roster)?;
+
+    for (i, ai) in remaining.iter().enumerate() {
+        require!(ai.is_writable, SusuError::InvalidMemberPositionList);
+        require!(ai.owner == &crate::ID, SusuError::InvalidMemberPositionList);
+
+        let mut data = ai
+            .try_borrow_mut_data()
+            .map_err(|_| error!(SusuError::InvalidMemberPositionList))?;
+        let mut body: &[u8] = &data;
+        let mut position = MemberPosition::try_deserialize(&mut body)
+            .map_err(|_| error!(SusuError::InvalidMemberPositionList))?;
+
         require!(
-            group.members[i].pubkey == deser.member_pubkey,
+            position.group == group_key,
+            SusuError::InvalidMemberPositionList
+        );
+        let expected_member_position = Pubkey::find_program_address(
+            &[MEMBER_SEED, group_key.as_ref(), position.member_pubkey.as_ref()],
+            &crate::ID,
+        )
+        .0;
+        require!(
+            ai.key() == expected_member_position,
+            SusuError::InvalidMemberPositionList
+        );
+        require!(
+            group.members[i].pubkey == position.member_pubkey,
             SusuError::InvalidMemberPositionList
         );
         require!(
             group.members[i].accepted,
             SusuError::InvalidMemberPositionList
         );
+
+        let assignment = assignments
+            .iter()
+            .find(|assignment| assignment.member_pubkey == position.member_pubkey)
+            .ok_or(error!(SusuError::InvalidMemberPositionList))?;
+
         require!(
-            deser.rotation_slot == i as u8,
+            position.rotation_slot == u8::MAX || position.rotation_slot == assignment.slot,
             SusuError::InvalidMemberPositionList
         );
+        position.rotation_slot = assignment.slot;
+
         let req = crate::curve::calculate_collateral(
-            deser.rotation_slot,
+            position.rotation_slot,
             n,
             contribution_amount,
             mint_decimals,
         )?;
         require!(
-            deser.collateral_posted >= req,
+            position.collateral_posted >= req,
             SusuError::NotAllCollateralized
         );
+
+        let mut writer: &mut [u8] = &mut data;
+        position
+            .try_serialize(&mut writer)
+            .map_err(|_| error!(SusuError::InvalidMemberPositionList))?;
     }
 
-    group.status = GroupStatus::Active;
-    group.start_timestamp = clock.unix_timestamp;
-
-    msg!(
-        "group_started: group={} start_timestamp={}",
-        group.key(),
-        clock.unix_timestamp
-    );
-
-    Ok(())
+    Ok(assignments)
 }
