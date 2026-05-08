@@ -50,7 +50,6 @@ describe('simulate-by-default transaction execution', () => {
         value: {
           err: { InstructionError: [0, 'Custom'] },
           logs: ['Program log: failed'],
-          programLogs: ['Program log: failed'],
         },
       })),
     });
@@ -76,6 +75,38 @@ describe('simulate-by-default transaction execution', () => {
     });
     expect(contributeBuilder).toHaveBeenCalledTimes(1);
     expect(rpc.simulateTransaction).toHaveBeenCalledTimes(1);
+    expect(rpc.sendTransaction).not.toHaveBeenCalled();
+  });
+
+  it('wraps rejected simulation RPC errors as SusuSimulationError and never sends', async () => {
+    const rpc = createRpc();
+    const upstream = new Error('simulation transport failed');
+    rpc.simulateTransaction.mockReturnValue({
+      send: vi.fn(async () => {
+        throw upstream;
+      }),
+    });
+    const { contribute, createSusuClient } = await import('../src/index.js');
+    const client = createSusuClient({ cluster: 'devnet', rpc });
+
+    let thrown: unknown;
+    try {
+      await contribute(client, {
+        group,
+        amount: 50_000_000n,
+        rotationIndex: 0,
+      });
+    } catch (error) {
+      thrown = error;
+    }
+
+    expect(thrown).toBeInstanceOf(SusuSimulationError);
+    expect(thrown).toMatchObject({
+      kind: 'simulation',
+      logs: [],
+      programLogs: [],
+      error: upstream,
+    });
     expect(rpc.sendTransaction).not.toHaveBeenCalled();
   });
 

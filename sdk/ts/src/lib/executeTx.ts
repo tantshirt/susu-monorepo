@@ -74,7 +74,17 @@ async function simulateOrThrow(client: SusuClient & { rpc: NonNullable<SusuClien
     );
   }
 
-  const response = await resolveSendable(simulateTransaction(transaction));
+  let response: SusuSimulationResponse;
+  try {
+    response = await resolveSendable(simulateTransaction(transaction));
+  } catch (error) {
+    throw new SusuSimulationError({
+      logs: [],
+      programLogs: [],
+      error,
+    });
+  }
+
   const outcome = extractSimulationOutcome(response);
   if (outcome.error !== undefined && outcome.error !== null && outcome.error !== false) {
     throw new SusuSimulationError({
@@ -94,7 +104,8 @@ function extractSimulationOutcome(response: SusuSimulationResponse): Readonly<{
   const valueRecord = asRecord(response.value) ?? asRecord(resultRecord?.value) ?? asRecord(response);
   const error = valueRecord?.err ?? valueRecord?.error ?? response.err ?? response.error;
   const logs = normalizeLogs(valueRecord?.logs ?? response.logs ?? resultRecord?.logs);
-  const programLogs = normalizeLogs(valueRecord?.programLogs ?? response.programLogs ?? resultRecord?.programLogs) ?? logs;
+  const explicitProgramLogs = normalizeLogs(valueRecord?.programLogs ?? response.programLogs ?? resultRecord?.programLogs);
+  const programLogs = explicitProgramLogs.length > 0 ? explicitProgramLogs : logs;
 
   return {
     error,
