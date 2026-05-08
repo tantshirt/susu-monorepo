@@ -66,6 +66,5 @@ AI generation, backend/Rust invariant mode. No browser recording or API endpoint
 | 5.1-UNIT-002 | Canonical curve API import and negative payoff assertion |
 | 5.1-UNIT-003 | Static check forbids duplicated closed-form collateral math in the invariant |
 | 5.1-UNIT-004 | CI release-mode command |
-| 5.1-UNIT-005 | Deterministic proptest config and regression persistence path |
+| 5.1-UNIT-005 | Fixed proptest RNG seed and regression persistence path |
 | 5.1-UNIT-006 | Counterexample message fields |
-

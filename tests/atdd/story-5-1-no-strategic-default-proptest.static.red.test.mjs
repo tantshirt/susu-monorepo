@@ -23,6 +23,7 @@ test('Story 5.1 exposes the audit-path no strategic default proptest', () => {
   assert.match(source, /expected_default_payoff/, 'must call the canonical expected_default_payoff API');
   assert.match(source, /prop_assert!\s*\(\s*payoff\s*<\s*0/, 'must assert defection payoff is strictly negative');
   assert.match(source, /n=.*slot=.*contribution=.*expected_payoff=/s, 'counterexample message must include the required tuple fields');
+  assert.match(source, /rng_seed\s*:\s*proptest::test_runner::RngSeed::Fixed/, 'must pin proptest RNG seed for deterministic CI replay');
   assert.doesNotMatch(source, /2\s*\*\s*n|checked_add\(n|checked_mul\(factor|calculate_collateral\(/, 'invariant must not duplicate collateral curve math');
 });
 

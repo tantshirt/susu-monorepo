@@ -33,6 +33,7 @@ fn no_strategic_default_case() -> impl Strategy<Value = (u8, u8, u64, StableMint
 proptest! {
     #![proptest_config(ProptestConfig {
         cases: CASES,
+        rng_seed: proptest::test_runner::RngSeed::Fixed(0x0501_2026),
         failure_persistence: Some(Box::new(proptest::test_runner::FileFailurePersistence::Direct(
             concat!(
                 env!("CARGO_MANIFEST_DIR"),

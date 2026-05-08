@@ -76,7 +76,7 @@ GPT-5 Codex
 ### Completion Notes List
 
 - Added canonical `expected_default_payoff` in `programs/susu/src/curve.rs`, deriving collateral through `calculate_collateral` and using checked signed arithmetic for payout, paid-before-payout, and collateral subtraction.
-- Activated the audit-facing proptest through `programs/susu/tests/no_strategic_default.rs`; the property runs 10,000 generated cases across `n`, `slot`, contribution base units, and USDC/USDT 6-decimal labels.
+- Activated the audit-facing proptest through `programs/susu/tests/no_strategic_default.rs`; the property runs 10,000 generated cases across `n`, `slot`, contribution base units, and USDC/USDT 6-decimal labels with a fixed proptest RNG seed.
 - Wired the release-mode invariant command into the CI `lint-and-build` job.
 - Verified the release invariant completed successfully in 0.02 seconds on this machine.
 
