@@ -6,8 +6,6 @@ import { useWallets } from '@solana/react-hooks';
 
 import { signerFromWalletStandard, type WalletLike } from './signer.js';
 
-const KNOWN_EXTENSION_WALLETS = new Set(['Phantom', 'Backpack', 'Solflare']);
-
 type BrowserWallet = WalletLike & Readonly<{
   name: string;
 }>;
@@ -15,10 +13,7 @@ type BrowserWallet = WalletLike & Readonly<{
 export function useWalletStandardWallets(): ReadonlyArray<BrowserWallet> {
   const wallets = useWallets() as ReadonlyArray<BrowserWallet>;
 
-  return useMemo(
-    () => wallets.filter((wallet) => KNOWN_EXTENSION_WALLETS.has(wallet.name)),
-    [wallets],
-  );
+  return useMemo(() => wallets.filter((wallet) => (wallet.accounts?.length ?? 0) > 0), [wallets]);
 }
 
 export function useWalletStandardSigner() {
