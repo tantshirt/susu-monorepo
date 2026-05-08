@@ -16,7 +16,7 @@ export type PrivyState =
       config?: undefined;
     }>;
 
-type PrivyWindow = Window & { __PRIVY_EMBEDDED_WALLET__?: WalletLike };
+type PrivyWindow = Window & { _privyEmbeddedWallet?: WalletLike };
 
 export function getPrivyState(): PrivyState {
   const privyAppId = getPublicEnv('NEXT_PUBLIC_PRIVY_APP_ID');
@@ -50,7 +50,7 @@ export function getPrivyEmbeddedWallet(): WalletLike | undefined {
   if (typeof window === 'undefined') {
     return undefined;
   }
-  const wallet = (window as PrivyWindow).__PRIVY_EMBEDDED_WALLET__;
+  const wallet = (window as PrivyWindow)._privyEmbeddedWallet;
   return wallet?.address ? wallet : undefined;
 }
 
