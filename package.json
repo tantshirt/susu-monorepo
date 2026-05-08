@@ -10,10 +10,8 @@
     "sdk:codegen": "node codama.config.mjs",
     "test:atdd": "node --test tests/atdd/*.red.test.mjs"
   },
-  "dependencies": {
-    "@susu/sdk": "workspace:*"
-  },
   "devDependencies": {
+    "@susu/sdk": "workspace:*",
     "tsx": "^4.21.0"
   }
 }

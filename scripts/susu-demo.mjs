@@ -10,8 +10,6 @@ import { createHash } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import { classifyDemoError } from './susu-demo-classify.mjs';
 
-export { classifyDemoError };
-
 const confirmedCommitment = process.env.SUSU_DEMO_COMMITMENT ?? 'confirmed';
 const memberCount = 5;
 const rounds = 5;

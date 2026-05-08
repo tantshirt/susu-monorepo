@@ -28,6 +28,8 @@ test('Story 6.10 wires the public demo command to a strict shell orchestrator', 
 
   const pkg = JSON.parse(read(packagePath));
   assert.equal(pkg.scripts?.['susu:demo'], 'bash scripts/susu-demo.sh');
+  assert.equal(pkg.devDependencies?.['@susu/sdk'], 'workspace:*', '@susu/sdk must be a root dev dependency for the demo tool');
+  assert.equal(pkg.dependencies?.['@susu/sdk'], undefined, '@susu/sdk must not be a root production dependency');
 
   const shell = read(shellPath);
   assert.match(shell, /set -euo pipefail/, 'shell script must run in strict mode');
@@ -48,6 +50,7 @@ test('Story 6.10 runner drives the 5-member ROSCA lifecycle via @susu/sdk', () =
   const runner = read(runnerPath);
   assert.match(runner, /from ['"]@susu\/sdk['"]/, 'runner must consume @susu/sdk');
   assert.doesNotMatch(runner, /@solana\/web3\.js/, 'runner must not import @solana/web3.js');
+  assert.doesNotMatch(runner, /export\s+\{\s*classifyDemoError\s*\}/, 'runner must not re-export classifier helpers');
 
   for (const helper of ['createGroup', 'acceptInvite', 'postCollateral', 'contribute', 'claimPayout']) {
     assert.match(runner, new RegExp(`\\b${helper}\\b`), `runner must call ${helper}`);

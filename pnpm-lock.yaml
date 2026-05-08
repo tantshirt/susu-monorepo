@@ -7,11 +7,10 @@ settings:
 importers:
 
   .:
-    dependencies:
+    devDependencies:
       '@susu/sdk':
         specifier: workspace:*
         version: link:sdk/ts
-    devDependencies:
       tsx:
         specifier: ^4.21.0
         version: 4.21.0

@@ -134,6 +134,7 @@ GPT-5 Codex
 - Cursor follow-up recovery preserved non-mainnet clusters in Solscan links instead of mapping every non-mainnet cluster to devnet.
 - Cursor follow-up recovery fixed dependency-classifier spacing so `anchor mismatch` and `solana required` stay in the dependency bucket.
 - Cursor follow-up recovery decoupled classifier ATDD from the SDK-backed demo runner by importing `scripts/susu-demo-classify.mjs` directly.
+- Cursor follow-up recovery removed the unused runner classifier re-export and moved the root `@susu/sdk` entry to `devDependencies`.
 
 ### File List
 

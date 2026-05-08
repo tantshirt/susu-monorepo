@@ -38,6 +38,10 @@ Cursor Bugbot flagged unreachable dependency-classifier alternatives for `requir
 
 Cursor Bugbot flagged that classifier ATDD imported through the SDK-backed runner. The test now imports `scripts/susu-demo-classify.mjs` directly, keeping classifier coverage independent of SDK build state.
 
+### Fixed: Demo Dependency Metadata
+
+Cursor Bugbot flagged the now-unused runner classifier re-export and that the root `@susu/sdk` workspace entry was listed as a production dependency. The re-export is removed, and `@susu/sdk` now lives in root `devDependencies` with ATDD coverage.
+
 ## Evidence
 
 - `node --test tests/atdd/story-6-10-susu-demo-script.static.red.test.mjs`
