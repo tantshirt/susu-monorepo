@@ -68,7 +68,7 @@ const ACTION_VARIANTS: Record<TransactionActionType, { title: string; confirmLab
 };
 
 const FOCUSABLE_SELECTOR =
-  'a[href], button:not([disabled]), textarea, input, select, details,[tabindex]:not([tabindex="-1"])';
+  'a[href], button:not([disabled]), textarea, input, select, details, [tabindex]:not([tabindex="-1"])';
 
 function truncateRecipient(recipient: string): string {
   if (recipient.length <= 12) {
@@ -203,7 +203,6 @@ export function TransactionConfirmModal({
   }
 
   const recipientText = expandedRecipient ? descriptor.recipient : truncateRecipient(descriptor.recipient);
-  const simulationReady = simulationState === 'success' || simulationState === 'failure';
   const canConfirm = simulationState === 'success' && !isSigning;
 
   return (
@@ -309,7 +308,7 @@ export function TransactionConfirmModal({
           <button type="button" onClick={onClose} disabled={isSigning}>
             Cancel
           </button>
-          <button type="button" onClick={onConfirm} disabled={!simulationReady || !canConfirm}>
+          <button type="button" onClick={onConfirm} disabled={!canConfirm}>
             {isSigning ? 'Signing…' : variant.confirmLabel}
           </button>
         </footer>

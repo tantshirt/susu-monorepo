@@ -25,7 +25,7 @@ test('[P0] TransactionConfirmModal simulates on mount and gates confirm button u
   assert.match(source, /simulationState\s*===\s*'loading'/, 'modal must expose loading simulation state');
   assert.match(source, /Will\s+succeed\s+✓/, 'modal must show success copy');
   assert.match(source, /Will\s+fail:\s*\{simulationReason\}/, 'modal must show failure copy with reason');
-  assert.match(source, /disabled=\{!simulationReady\s*\|\|\s*!canConfirm\}/, 'confirm button must remain disabled until simulation returns success');
+  assert.match(source, /disabled=\{!canConfirm\}/, 'confirm button must remain disabled until simulation returns success');
 });
 
 test('[P0] TransactionConfirmModal includes accessibility + responsive contract', async () => {
