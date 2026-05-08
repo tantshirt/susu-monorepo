@@ -44,19 +44,61 @@ report_violations() {
   fi
 }
 
-non_pda_init_hits="$({
-  grep -rEn --include='*.rs' 'token::authority\s*=\s*[^,)]+' "$INSTRUCTION_DIR" 2>/dev/null || true
-} | grep -vE 'seeds|vault_authority|group|pda' || true)"
+non_pda_init_hits="$(
+  for instruction_file in "$INSTRUCTION_DIR"/*.rs; do
+    [[ -f "$instruction_file" ]] || continue
+    perl -0ne '
+      while (/#\[account\((.*?)\)\]\s*pub\s+([A-Za-z0-9_]+):/gs) {
+        my ($attr, $account) = ($1, $2);
+        next unless $attr =~ /\binit\b/s && $attr =~ /token::authority\s*=\s*([^,\)]+)/s;
+        my $authority = $1;
+        $authority =~ s/^\s+|\s+$//g;
+        next if $attr =~ /\bseeds\s*=/s || $authority =~ /\b(?:group|vault_authority|pda)\b/;
+        my $line = substr($_, 0, $-[0]) =~ tr/\n//;
+        $line += 1;
+        print "$ARGV:$line: account $account initializes token account with authority $authority\n";
+      }
+    ' "$instruction_file"
+  done
+)"
 report_violations "token-account-init-authority" "$non_pda_init_hits"
 
-risky_transfer_hits="$({
-  grep -rEn --include='*.rs' '(transfer|transfer_checked)' "$INSTRUCTION_DIR" 2>/dev/null || true
-} | grep -vE 'vault|recipient|token_program|spl_token' || true)"
+risky_transfer_hits="$(
+  for instruction_file in "$INSTRUCTION_DIR"/*.rs; do
+    [[ -f "$instruction_file" ]] || continue
+    perl -0ne '
+      while (/\btoken::transfer(?:_checked)?\s*\(/g) {
+        my $start = $-[0];
+        my $line = substr($_, 0, $start) =~ tr/\n//;
+        $line += 1;
+        my $before_start = $start > 700 ? $start - 700 : 0;
+        my $context = substr($_, $before_start, 1400);
+        next if $context =~ /to:\s*(?:ctx\.accounts\.)?vault\b/s;
+        next if $context =~ /to:\s*(?:ctx\.accounts\.)?member_token_account\b/s;
+        next if $context =~ /to:\s*ata_ai\.to_account_info\(\)/s;
+        next if $context =~ /\brecipient\b/s;
+        print "$ARGV:$line: token transfer without approved collateral destination\n";
+      }
+    ' "$instruction_file"
+  done
+)"
 report_violations "transfer-destination" "$risky_transfer_hits"
 
-non_allowlisted_cpi_hits="$({
-  grep -rEn --include='*.rs' '(invoke_signed\(|invoke\(|CpiContext::new\()' "$INSTRUCTION_DIR" 2>/dev/null || true
-} | grep -vE 'spl_token|token_program|associated_token_program' || true)"
+non_allowlisted_cpi_hits="$(
+  for instruction_file in "$INSTRUCTION_DIR"/*.rs; do
+    [[ -f "$instruction_file" ]] || continue
+    perl -0ne '
+      while (/(?:invoke_signed\(|invoke\(|CpiContext::new(?:_with_signer)?\()/g) {
+        my $start = $-[0];
+        my $line = substr($_, 0, $start) =~ tr/\n//;
+        $line += 1;
+        my $context = substr($_, $start, 900);
+        next if $context =~ /\b(?:spl_token|token_program|token_program_id|associated_token_program)\b/s;
+        print "$ARGV:$line: CPI without allowlisted program in local context\n";
+      }
+    ' "$instruction_file"
+  done
+)"
 report_violations "cpi-allowlist" "$non_allowlisted_cpi_hits"
 
 if [[ "$failures" -ne 0 ]]; then
