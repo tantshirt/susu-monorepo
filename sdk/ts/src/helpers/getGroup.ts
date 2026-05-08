@@ -12,7 +12,7 @@ import { getGroup as getGroupViaQuery, type QueryRpc } from './queries.js';
  * import { createSusuClient, getGroup, solanaDevnetRpc } from '@susu/sdk';
  * import { address } from '@solana/kit';
  *
- * const client = createSusuClient().use(solanaDevnetRpc({ rpc }));
+ * const client = createSusuClient({ cluster: 'devnet' }).use(solanaDevnetRpc({ rpc }));
  * const group = await getGroup(client, address('11111111111111111111111111111111'));
  * ```
  */

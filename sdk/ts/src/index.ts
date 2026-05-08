@@ -9,9 +9,13 @@ export {
   SusuClientConfigError,
   SusuTransactionSendError,
 } from './client.js';
+export { SusuClusterError, SusuSimulationError } from './errors.js';
+export type { SusuClusterErrorDetails, SusuClusterErrorReason, SusuSimulationErrorDetails } from './errors.js';
 export type {
   Cluster,
   ComputeBudgetOptions,
+  SusuSimulationResponse,
+  SusuTransaction,
   PriorityFee,
   SendInstructionsContext,
   SusuClientOptions,

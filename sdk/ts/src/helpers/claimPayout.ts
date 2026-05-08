@@ -12,7 +12,7 @@ export type ClaimPayoutInput = StateHelperInput<ClaimPayoutAccounts, ClaimPayout
  * import { claimPayout, createSusuClient, solanaDevnetRpc } from '@susu/sdk';
  * import { address } from '@solana/kit';
  *
- * const client = createSusuClient().use(solanaDevnetRpc({ rpc }));
+ * const client = createSusuClient({ cluster: 'devnet' }).use(solanaDevnetRpc({ rpc }));
  * await claimPayout(client, { group: address('11111111111111111111111111111111'), rotationIndex: 0 });
  * ```
  */

@@ -18,7 +18,7 @@ export type GetMemberPositionInput = Readonly<{
  * import { createSusuClient, getMemberPosition, solanaDevnetRpc } from '@susu/sdk';
  * import { address } from '@solana/kit';
  *
- * const client = createSusuClient().use(solanaDevnetRpc({ rpc }));
+ * const client = createSusuClient({ cluster: 'devnet' }).use(solanaDevnetRpc({ rpc }));
  * const position = await getMemberPosition(client, {
  *   group: address('11111111111111111111111111111111'),
  *   member: address('11111111111111111111111111111112'),

@@ -12,7 +12,7 @@ export type WithdrawCollateralInput = StateHelperInput<WithdrawCollateralAccount
  * import { createSusuClient, solanaDevnetRpc, withdrawCollateral } from '@susu/sdk';
  * import { address } from '@solana/kit';
  *
- * const client = createSusuClient().use(solanaDevnetRpc({ rpc }));
+ * const client = createSusuClient({ cluster: 'devnet' }).use(solanaDevnetRpc({ rpc }));
  * await withdrawCollateral(client, { group: address('11111111111111111111111111111111'), amount: 10_000_000n });
  * ```
  */
