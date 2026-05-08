@@ -81,7 +81,7 @@ development_status:
   4-3-non-recipient-guard: done # merged via PR #159 on 2026-05-08
   4-4-pre-deadline-guard: done # merged via PR #161 on 2026-05-08
   4-5-double-claim-guard: done # merged via PR #160 on 2026-05-08
-  4-6-e2e-lifecycle-test: ready-for-dev
+  4-6-e2e-lifecycle-test: atdd-done
   epic-4-retrospective: optional
 
   # Epic 5: Curve Verification, Adversary Simulation & Public Documentation
