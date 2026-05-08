@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { ClusterPill, type ClusterLabel } from './ClusterPill';
 import { SkinToggle } from './SkinToggle';
 
-type WalletStatus =
+export type WalletStatus =
   | { kind: 'not-connected' }
   | { kind: 'privy-email'; email: string }
   | { kind: 'wallet-standard'; walletName: string };
@@ -52,7 +52,7 @@ export function TopNav({ clusterLabel, walletStatus, locale, onLocaleChange, onD
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <header className="border-b bg-white">
+    <header className="border-b">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-3">
         <div className="flex items-center gap-3">
           <a className="font-semibold" href="/">
@@ -80,7 +80,6 @@ export function TopNav({ clusterLabel, walletStatus, locale, onLocaleChange, onD
             value={locale}
             onChange={(event) => onLocaleChange(event.target.value as LocaleCode)}
             className="rounded-md border px-2 py-1 text-sm"
-            aria-label="Select locale"
           >
             {(Object.entries(LOCALE_LABELS) as Array<[LocaleCode, string]>).map(([code, nativeName]) => (
               <option key={code} value={code}>
@@ -104,7 +103,6 @@ export function TopNav({ clusterLabel, walletStatus, locale, onLocaleChange, onD
               value={locale}
               onChange={(event) => onLocaleChange(event.target.value as LocaleCode)}
               className="rounded-md border px-2 py-1 text-sm"
-              aria-label="Select locale"
             >
               {(Object.entries(LOCALE_LABELS) as Array<[LocaleCode, string]>).map(([code, nativeName]) => (
                 <option key={code} value={code}>

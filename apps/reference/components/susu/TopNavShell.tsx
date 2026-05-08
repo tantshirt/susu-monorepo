@@ -2,11 +2,11 @@
 
 import { useState } from 'react';
 
-import { TopNav } from './TopNav';
+import { TopNav, type WalletStatus } from './TopNav';
 
 export function TopNavShell() {
   const [locale, setLocale] = useState<'en' | 'vi' | 'ar' | 'es' | 'yo' | 'ht-kreyol'>('en');
-  const [walletStatus, setWalletStatus] = useState<{ kind: 'not-connected' }>({ kind: 'not-connected' });
+  const [walletStatus, setWalletStatus] = useState<WalletStatus>({ kind: 'not-connected' });
 
   return (
     <TopNav
