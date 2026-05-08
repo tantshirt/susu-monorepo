@@ -13,11 +13,10 @@ const OPTIONS: ReadonlyArray<{ label: string; value: Skin }> = [
 export function SkinToggle() {
   const skin = useSkinStore((state) => state.skin);
   const setSkin = useSkinStore((state) => state.setSkin);
-  const syncFromCookie = useSkinStore((state) => state.syncFromCookie);
 
   useEffect(() => {
-    syncFromCookie();
-  }, [syncFromCookie]);
+    useSkinStore.getState().syncFromCookie();
+  }, []);
 
   const focusOption = (value: Skin) => {
     if (typeof document === 'undefined') {

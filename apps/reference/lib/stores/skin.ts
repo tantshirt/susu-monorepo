@@ -31,20 +31,17 @@ function applySkinToDom(skin: Skin): void {
   }
 }
 
-function persistSkin(skin: Skin): void {
-  if (typeof document !== 'undefined') {
-    document.cookie = `${SKIN_COOKIE_NAME}=${skin}; path=/; max-age=${SKIN_COOKIE_MAX_AGE_SECONDS}; samesite=lax`;
-  }
-
+function persistStorageSkin(skin: Skin): void {
   if (typeof window !== 'undefined') {
     window.localStorage.setItem(SKIN_LOCAL_STORAGE_KEY, skin);
   }
 }
 
-function syncStorageSkin(skin: Skin): void {
-  if (typeof window !== 'undefined') {
-    window.localStorage.setItem(SKIN_LOCAL_STORAGE_KEY, skin);
+function persistSkin(skin: Skin): void {
+  if (typeof document !== 'undefined') {
+    document.cookie = `${SKIN_COOKIE_NAME}=${skin}; path=/; max-age=${SKIN_COOKIE_MAX_AGE_SECONDS}; samesite=lax`;
   }
+  persistStorageSkin(skin);
 }
 
 function getInitialSkin(): Skin {
@@ -86,7 +83,7 @@ export const useSkinStore = create<SkinStore>((set) => ({
   syncFromCookie: () => {
     const cookieSkin = readCookieSkin() ?? FALLBACK_SKIN;
     applySkinToDom(cookieSkin);
-    syncStorageSkin(cookieSkin);
+    persistStorageSkin(cookieSkin);
     set({ skin: cookieSkin });
   },
 }));

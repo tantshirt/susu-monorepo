@@ -66,8 +66,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
             cursor: pointer;
           }
 
-          .skin-toggle__option:focus-visible,
-          .skin-toggle:focus-visible {
+          .skin-toggle__option:focus-visible {
             outline: 2px solid color-mix(in srgb, var(--fg) 75%, transparent);
             outline-offset: 2px;
           }
