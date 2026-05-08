@@ -110,6 +110,8 @@ GPT-5 Codex
 - `git diff --check` passed.
 - `bash scripts/check-patterns.sh` passed.
 - `bash scripts/check-sdk-parity.sh` passed and did not modify generated files.
+- `pnpm --filter @susu/sdk test` passed after test-review cleanup: 28 passed, 1 todo.
+- `node --test tests/atdd/story-6-2-sdk-simulate-cluster-gate.static.red.test.mjs` passed after test-review cleanup.
 
 ### Completion Notes List
 
@@ -121,6 +123,7 @@ GPT-5 Codex
 - Added client and simulation Vitest coverage for missing cluster, mainnet mismatch, explicit mainnet success, simulation success/failure, and `simulate: false`.
 - Added `docs/sdk-typescript.md` and updated SDK README/JSDoc examples for explicit cluster and simulation behavior.
 - Added `typescript` as an SDK dev dependency so `pnpm --filter @susu/sdk build` has a direct `tsc` binary.
+- Test review fixed the duplicated simulation-failure invocation and left no remaining findings.
 
 ### File List
 
@@ -150,9 +153,11 @@ GPT-5 Codex
 - `tests/atdd/story-6-2-sdk-simulate-cluster-gate.atdd.md`
 - `tests/atdd/story-6-2-sdk-simulate-cluster-gate.static.red.test.mjs`
 - `output_susu/test-artifacts/atdd-checklist-6-2-sdk-simulate-cluster-gate.md`
+- `output_susu/test-artifacts/test-reviews/story-6-2-test-review.md`
 - `output_susu/implementation-artifacts/6-2-sdk-simulate-cluster-gate.md`
 
 ### Change Log
 
 - 2026-05-08: Added ATDD artifacts for Story 6.2 and captured the red-phase failure.
 - 2026-05-08: Implemented simulate-by-default transaction execution, explicit cluster gate, typed errors, docs, and unit coverage. Moved story to review pending BAD review/PR gates.
+- 2026-05-08: Ran test review, fixed the duplicated simulation-failure helper invocation, and recorded no remaining findings.

@@ -57,24 +57,25 @@ describe('simulate-by-default transaction execution', () => {
     const { contribute, createSusuClient } = await import('../src/index.js');
     const client = createSusuClient({ cluster: 'devnet', rpc });
 
-    await expect(
-      contribute(client, {
+    let thrown: unknown;
+    try {
+      await contribute(client, {
         group,
         amount: 50_000_000n,
         rotationIndex: 0,
-      }),
-    ).rejects.toMatchObject({
+      });
+    } catch (error) {
+      thrown = error;
+    }
+
+    expect(thrown).toBeInstanceOf(SusuSimulationError);
+    expect(thrown).toMatchObject({
       kind: 'simulation',
       logs: ['Program log: failed'],
       programLogs: ['Program log: failed'],
     });
-    await expect(
-      contribute(client, {
-        group,
-        amount: 50_000_000n,
-        rotationIndex: 0,
-      }),
-    ).rejects.toBeInstanceOf(SusuSimulationError);
+    expect(contributeBuilder).toHaveBeenCalledTimes(1);
+    expect(rpc.simulateTransaction).toHaveBeenCalledTimes(1);
     expect(rpc.sendTransaction).not.toHaveBeenCalled();
   });
 
