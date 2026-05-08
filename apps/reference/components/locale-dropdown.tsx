@@ -14,8 +14,8 @@ export function LocaleDropdown() {
 
   function onLocaleChange(nextLocale: string) {
     const segments = pathname.split('/').filter(Boolean);
-    const [, ...rest] = segments;
     const hasLocalePrefix = locales.includes(segments[0] as (typeof locales)[number]);
+    const rest = hasLocalePrefix ? segments.slice(1) : segments;
     let currentPathWithoutLocale = pathname;
     if (hasLocalePrefix) {
       currentPathWithoutLocale = rest.length > 0 ? `/${rest.join('/')}` : '';
