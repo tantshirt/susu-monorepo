@@ -62,7 +62,7 @@ export function createDryRunSquadsGateway(): SquadsGateway {
     },
     async approveVaultTransaction(proposal, member) {
       const approvals = [...new Set([...proposal.approvals, member])];
-      return save(proposal, { ...proposal, approvals, status: approvals.length > 0 ? 'approved' : proposal.status });
+      return save(proposal, { ...proposal, approvals, status: 'approved' });
     },
     async executeVaultTransaction(proposal) {
       const threshold = thresholds.get(proposal.multisigPda) ?? 1;
@@ -85,7 +85,7 @@ export function createSquadsMultisigSigner(input: {
 }): SquadsMultisigSigner {
   let nextIndex = input.transactionIndex ?? 1n;
   return {
-    address: input.multisig.multisigPda,
+    address: input.multisig.vaultPda,
     multisigPda: input.multisig.multisigPda,
     vaultPda: input.multisig.vaultPda,
     async propose(instructions: readonly SusuInstruction[]) {
@@ -93,7 +93,7 @@ export function createSquadsMultisigSigner(input: {
         transactionIndex: nextIndex,
         multisigPda: input.multisig.multisigPda,
         vaultPda: input.multisig.vaultPda,
-        creator: input.multisig.multisigPda,
+        creator: input.multisig.vaultPda,
         instructions,
       });
       nextIndex += 1n;

@@ -43,6 +43,8 @@ No blocking, high, medium, or low-severity findings remain.
 Resolved during review:
 
 - Low: the dry-run Squads gateway could execute a proposal if called directly with insufficient approvals. Fixed by recording the multisig threshold during `ensureMultisig` and rejecting execution until `approvals.length >= threshold`.
+- Medium: Cursor Bugbot noted Squads vault transactions sign inner instructions from the vault PDA, not the multisig account PDA. Fixed by using the vault PDA as `squadsSigner.address` and the Susu `creator`, while keeping the multisig PDA as the governance account that owns the vault.
+- Low: Cursor Bugbot noted the approval status ternary was always true. Fixed by setting proposal status to `approved` unconditionally after adding the member approval.
 
 ## Validation Evidence
 

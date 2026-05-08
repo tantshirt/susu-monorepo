@@ -44,7 +44,7 @@ Coverage scoring is intentionally out of scope for `test-review`; traceability b
 
 No blocking, high, medium, or low-severity test-review findings remain.
 
-One review hardening was applied during the pass: the dry-run gateway now enforces the multisig threshold before executing a proposal, so the happy-path tests are not exercising an unrealistically permissive execution model.
+Review hardening applied during the pass: the dry-run gateway now enforces the multisig threshold before executing a proposal, and Cursor Bugbot's vault-authority finding was fixed so the verified Susu creator is the Squads vault PDA controlled by the multisig.
 
 ## Validation
 

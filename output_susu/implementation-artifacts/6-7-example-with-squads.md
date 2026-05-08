@@ -28,7 +28,7 @@ so that I can build governance-controlled circles by copy-pasting the pattern.
     - [x] (2) `createSusuClient({ cluster: 'devnet', rpc, signer: multisigSigner })`
     - [x] (3) Build `createGroup` instruction; wrap in Squads `vault_transaction_create` proposal
     - [x] (4) Threshold members approve proposal; execute
-    - [x] (5) Verify group's `creator` field == multisig PDA; print result
+    - [x] (5) Verify group's `creator` field == Squads vault PDA; print result
   - [x] `src/multisigSigner.ts` — adapter wrapping Squads vault signing as `@solana/kit` `TransactionSigner` (note: Squads is not a single-key signer — adapter constructs proposals)
   - [x] LOC ≤200 in `src/`
 - [x] Author `examples/with-squads/README.md` (AC: 2, 4)
@@ -48,7 +48,7 @@ so that I can build governance-controlled circles by copy-pasting the pattern.
 ### Architecture compliance (non-negotiables)
 
 - **Squads is NOT a key-replacement signer.** It's a governance/proposal layer. The adapter constructs proposals; threshold members approve; the multisig executes. The Susu SDK sees the multisig PDA as the signer (via `vault_transaction`).
-- **Group `creator` is the multisig PDA, not a member's key.** This is the load-bearing pattern this example teaches.
+- **Group `creator` is the Squads vault PDA controlled by the multisig, not a member's key.** This is the load-bearing pattern this example teaches because Squads vault transactions sign inner instructions from the vault authority.
 - **≤200 LOC, independent runnability** — same constraints as Story 6.6.
 - **Kit-first, devnet default, partner SDK pinned** — same as 6.6.
 - **Trade-offs section in README is required.** Multisig latency and complexity are real; integrators must understand before copy-pasting.

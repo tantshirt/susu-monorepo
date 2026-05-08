@@ -20,7 +20,7 @@ And it submits a Susu `createGroup` instruction through a Squads vault transacti
 
 Given the Squads vault transaction executes
 When the example verifies the resulting Susu group
-Then the group's `creator` field equals the Squads multisig PDA
+Then the group's `creator` field equals the Squads vault PDA controlled by the multisig
 And the example prints the multisig, vault, group, proposal, and signature identifiers.
 
 ## Scenario 4: Governance Trade-Offs

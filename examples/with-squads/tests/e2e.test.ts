@@ -8,7 +8,7 @@ e2eDescribe('with-squads e2e', () => {
   it('runs the multisig-as-creator happy path', async () => {
     const result = await run();
 
-    expect(result.verifiedCreator).toBe(result.multisigPda);
+    expect(result.verifiedCreator).toBe(result.vaultPda);
     expect(result.signature).toMatch(/^squads-/);
   }, 120_000);
 });

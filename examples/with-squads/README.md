@@ -2,7 +2,7 @@
 
 ## What this demonstrates
 
-This example shows the Squads multisig PDA acting as the Susu Group Creator. Member wallets approve a Squads vault transaction, and the vault transaction submits the Susu `createGroup` instruction with `creator` set to the multisig PDA rather than to any individual member.
+This example shows the Squads vault PDA controlled by a multisig acting as the Susu Group Creator. Member wallets approve a Squads vault transaction, and the vault transaction submits the Susu `createGroup` instruction with `creator` set to the vault PDA rather than to any individual member.
 
 The local default path is a dry-run gateway that derives real Squads PDAs and exercises the proposal/approval/execute shape without requiring funded devnet wallets. Use it as the copy-paste integration skeleton, then replace the dry-run gateway with live Squads RPC calls when wiring production keys.
 
@@ -32,7 +32,7 @@ pnpm test
 PNPM_TEST_E2E=1 pnpm test
 ```
 
-Expected output includes the Squads program id, multisig PDA, vault PDA, Susu group PDA, verified creator, and vault transaction signature.
+Expected output includes the Squads program id, multisig PDA, vault PDA, Susu group PDA, verified creator, and vault transaction signature. The verified creator should equal the vault PDA because Squads vault transactions sign inner instructions from the vault authority.
 
 ## Trade-offs of multisig governance
 

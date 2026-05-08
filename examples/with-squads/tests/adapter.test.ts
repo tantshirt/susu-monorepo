@@ -51,9 +51,9 @@ describe('Squads multisig signer adapter', () => {
     const proposal = gateway.getProposals()[0];
     expect(SQUADS_PROGRAM_ADDRESS).toMatch(/^SQDS/);
     expect(signature).toBe('squads-1-2');
-    expect(squadsSigner.address).toBe(multisig.multisigPda);
+    expect(squadsSigner.address).toBe(multisig.vaultPda);
     expect(proposal?.status).toBe('executed');
     expect(proposal?.approvals).toEqual(members.slice(0, 2));
-    expect(gateway.getGroupCreator(group)).toBe(multisig.multisigPda);
+    expect(gateway.getGroupCreator(group)).toBe(multisig.vaultPda);
   });
 });
