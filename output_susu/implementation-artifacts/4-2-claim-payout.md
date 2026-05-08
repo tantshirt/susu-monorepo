@@ -1,7 +1,8 @@
 # Story 4.2: Implement `claim_payout` instruction
 
-Status: review
+Status: done
 Issue: #39
+Merged: PR #158 on 2026-05-08
 
 ## Story
 
@@ -31,3 +32,14 @@ so that I can collect my pot after my rotation contribution period closes withou
 - `claim_payout` initializes `RotationReceipt` with canonical rotation PDA seeds.
 - Vault transfer uses `transfer_checked` with the group PDA signer.
 - Payout amount and close timestamp use checked arithmetic and return `ArithmeticOverflow`.
+- Payout is funded only after all ordered member positions prove the rotation recorded exact contributions, preventing collateral in the shared vault from being drained as pot funds.
+
+## Validation
+
+- `pnpm test:atdd`
+- `cargo test -p susu`
+- `scripts/check-idl-hash.sh`
+- `scripts/check-sdk-parity.sh`
+- `scripts/check-fincen-posture.sh`
+- `scripts/check-patterns.sh`
+- `anchor build --ignore-keys`
