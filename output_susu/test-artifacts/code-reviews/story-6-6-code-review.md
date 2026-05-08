@@ -32,8 +32,8 @@ Reviewed the branch diff against `origin/main`:
 | Layer | Result | Notes |
 | --- | --- | --- |
 | Blind Hunter | Clean | The example is independent of `apps/reference`, declares its own package, README, env example, and tests. |
-| Edge Case Hunter | Fixed | Review cleanup removed duplicate signature collection and avoided forcing all clients back to devnet when `CLUSTER` is overridden. |
-| Acceptance Auditor | Clean | AC1-AC5 satisfied with three mocked Privy members, Susu group/create/contribute flow, 153 nonblank source LOC, README, independence checks, and unit/e2e coverage. |
+| Edge Case Hunter | Fixed | Review cleanup removed duplicate signature collection, avoided forcing all clients back to devnet, and fixed Cursor findings for missing signatures, testnet CAIP-2, and signature-byte decoding. |
+| Acceptance Auditor | Clean | AC1-AC5 satisfied with three mocked Privy members, Susu group/create/contribute flow, 162 nonblank source LOC, README, independence checks, and unit/e2e coverage. |
 
 ## Findings
 
@@ -45,17 +45,21 @@ Review fixes already applied:
 - Switched the client construction from a devnet-specific plugin to direct `{ cluster, rpc }` options so explicit non-devnet cluster settings are not overwritten.
 - Removed duplicate result collection between the Susu RPC bridge and the caller-level signature list.
 - Aligned `@types/node` with the repo's Node 20 target.
+- Fixed Cursor Bugbot findings:
+  - Missing `hash`/`signature` from Privy `signAndSendTransaction` now throws instead of returning the encoded payload.
+  - `CLUSTER=testnet` now uses Solana testnet CAIP-2, and `localnet` is rejected for this Privy-backed example.
+  - `signAndSendTransactions` decodes 64-byte base64 or base58 signatures as binary data instead of UTF-8 text.
 
 ## Validation Evidence
 
 - `pnpm --filter @susu-examples/with-privy build` passed.
-- `pnpm --filter @susu-examples/with-privy test` passed: 2 files passed, 2 tests passed, 1 live e2e skipped by design.
+- `pnpm --filter @susu-examples/with-privy test` passed: 2 files passed, 4 tests passed, 1 live e2e skipped by design.
 - `node --test tests/atdd/story-6-6-example-with-privy.static.red.test.mjs` passed.
-- `pnpm test:atdd` passed: 163 tests.
+- `node --test --test-concurrency=1 tests/atdd/*.red.test.mjs` passed: 163 tests.
 - `bash scripts/check-patterns.sh` passed via full ATDD and direct parity diagnostics.
 - `bash scripts/check-sdk-parity.sh` passed and did not modify generated files.
 - `git diff --check` passed.
-- Source LOC check passed: 153 nonblank lines under `examples/with-privy/src`.
+- Source LOC check passed: 162 nonblank lines under `examples/with-privy/src`.
 
 ## Outcome
 

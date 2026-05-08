@@ -4,10 +4,11 @@ import { createPrivySusuSigner, type PrivySolanaApi } from '../src/privyAdapter.
 describe('createPrivySusuSigner', () => {
   it('wraps a Privy Solana wallet as a kit TransactionSigner', async () => {
     const calls: unknown[] = [];
+    const privySignature = Buffer.from(new Uint8Array(64).fill(7)).toString('base64');
     const solana: PrivySolanaApi = {
       signAndSendTransaction: async (walletId, input) => {
         calls.push({ walletId, input });
-        return { hash: Buffer.from('signed-by-privy').toString('base64') };
+        return { hash: privySignature };
       },
     };
     const signer = createPrivySusuSigner({
@@ -23,8 +24,18 @@ describe('createPrivySusuSigner', () => {
 
     expect(signer.walletId).toBe('wallet-1');
     expect(signer.address).toBe('11111111111111111111111111111111');
-    expect(signature).toBe(Buffer.from('signed-by-privy').toString('base64'));
+    expect(signature).toBe(privySignature);
     expect(bytes).toHaveLength(64);
     expect(calls).toHaveLength(2);
+  });
+
+  it('rejects Privy transaction responses without a signature', async () => {
+    const signer = createPrivySusuSigner({
+      wallet: { id: 'wallet-1', address: '11111111111111111111111111111111' },
+      solana: { signAndSendTransaction: async () => ({}) },
+      caip2: 'solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1',
+    });
+
+    await expect(signer.signSusuPayload({ helper: 'createGroup' })).rejects.toThrow('transaction signature');
   });
 });

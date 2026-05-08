@@ -29,7 +29,7 @@ export async function runPrivySusuDemo(options: DemoOptions = {}) {
     appId: required(env.PRIVY_APP_ID, 'PRIVY_APP_ID'),
     appSecret: required(env.PRIVY_APP_SECRET, 'PRIVY_APP_SECRET'),
   });
-  const caip2 = cluster === 'mainnet-beta' ? 'solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp' : 'solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1';
+  const caip2 = caip2ForCluster(cluster);
   const solana = privy.wallets().solana() as PrivySolanaApi;
   const members = await createMembers(privy, solana, caip2, log);
   const signatures: DemoSignature[] = [];
@@ -88,8 +88,14 @@ function createPrivyDemoRpc(env: Env, log: (line: string) => void): SusuRpc {
 
 function readCluster(env: Env): Cluster {
   const cluster = env.CLUSTER ?? 'devnet';
-  if (!['devnet', 'testnet', 'localnet', 'mainnet-beta'].includes(cluster)) throw new Error(`Unsupported CLUSTER=${cluster}`);
+  if (!['devnet', 'testnet', 'mainnet-beta'].includes(cluster)) throw new Error(`Unsupported CLUSTER=${cluster}`);
   return cluster as Cluster;
+}
+
+function caip2ForCluster(cluster: Cluster): string {
+  if (cluster === 'devnet') return 'solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1';
+  if (cluster === 'testnet') return 'solana:4uhcVJyU9pJkvQyS88uRDiswHXSCkY3z';
+  return 'solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp';
 }
 
 function required(value: string | undefined, name: string): string {

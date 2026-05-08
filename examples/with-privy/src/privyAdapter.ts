@@ -1,5 +1,6 @@
 import { Buffer } from 'node:buffer';
 import { address, signatureBytes, type Address, type SignatureBytes, type TransactionSigner } from '@solana/kit';
+import bs58 from 'bs58';
 
 export type PrivySolanaWallet = Readonly<{ id: string; address: string }>;
 
@@ -32,7 +33,9 @@ export function createPrivySusuSigner(input: Readonly<{
         caip2: input.caip2,
         transaction,
       });
-      return response.hash ?? response.signature ?? transaction;
+      const signature = response.hash ?? response.signature;
+      if (!signature) throw new Error('Privy Solana signer did not return a transaction signature');
+      return signature;
     }
     const response = await input.solana.signMessage?.(input.wallet.id, { message: transaction });
     if (!response?.signature) throw new Error('Privy Solana signer did not return a signature');
@@ -58,9 +61,10 @@ function stringifyBigInt(_key: string, value: unknown): unknown {
 
 function toSignatureBytes(value: string): SignatureBytes {
   const decoded = Buffer.from(value, 'base64');
-  const bytes = decoded.length === 64 ? decoded : new Uint8Array(64);
-  if (decoded.length !== 64) bytes.set(new TextEncoder().encode(value).slice(0, 64));
-  return signatureBytes(bytes);
+  if (decoded.length === 64) return signatureBytes(decoded);
+  const base58 = bs58.decode(value);
+  if (base58.length === 64) return signatureBytes(base58);
+  throw new Error('Privy signature must decode to 64 bytes');
 }
 
 export function signerAddress(signer: PrivySusuSigner): Address {

@@ -36,7 +36,7 @@ Coverage scoring is intentionally out of scope for `test-review`; traceability b
 | --- | ---: | --- | --- |
 | Determinism | 100 | A | Default tests use mocked Privy wallet creation/signing and do not touch live RPC or Privy APIs. |
 | Isolation | 100 | A | Adapter behavior and SDK happy path are isolated behind injected Privy and SDK RPC doubles. |
-| Maintainability | 95 | A | Tests assert the integration contract without duplicating source internals. Live e2e remains opt-in via `PNPM_TEST_E2E=1`. |
+| Maintainability | 96 | A | Tests assert the integration contract without duplicating source internals and now lock Cursor follow-ups for missing signatures plus testnet CAIP-2 selection. Live e2e remains opt-in via `PNPM_TEST_E2E=1`. |
 | Performance | 100 | A | Focused package tests complete in under one second after SDK prebuild. |
 | Overall | 99 | A | No actionable test-review findings remain. |
 
@@ -50,8 +50,8 @@ One implementation cleanup was made during review: `vitest run tests --exclude d
 
 - `node --test tests/atdd/story-6-6-example-with-privy.static.red.test.mjs` passed: 4 tests.
 - `pnpm --filter @susu-examples/with-privy build` passed.
-- `pnpm --filter @susu-examples/with-privy test` passed: 2 files passed, 2 tests passed, 1 live e2e skipped by design.
-- `pnpm test:atdd` passed: 163 tests.
+- `pnpm --filter @susu-examples/with-privy test` passed: 2 files passed, 4 tests passed, 1 live e2e skipped by design.
+- `node --test --test-concurrency=1 tests/atdd/*.red.test.mjs` passed: 163 tests.
 - `git diff --check` passed.
 
 ## Recommendation

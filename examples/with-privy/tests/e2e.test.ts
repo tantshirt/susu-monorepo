@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { runPrivySusuDemo } from '../src/index.js';
 
-const fakePrivy = () => {
+const fakePrivy = (caip2s: string[] = []) => {
   let counter = 0;
   return {
     wallets: () => ({
@@ -11,8 +11,9 @@ const fakePrivy = () => {
         chain_type,
       }),
       solana: () => ({
-        signAndSendTransaction: async (walletId: string) => ({
+        signAndSendTransaction: async (walletId: string, input: { caip2: string }) => ({
           hash: Buffer.from(`${walletId}-createGroup-acceptInvite-postCollateral-contribute`).toString('base64'),
+          caip2: caip2s.push(input.caip2),
         }),
       }),
     }),
@@ -35,6 +36,17 @@ describe('with-privy mocked happy path', () => {
     expect(result.members).toHaveLength(3);
     expect(result.signatures.map((entry) => entry.step).join(' ')).toMatch(/createGroup[\s\S]*acceptInvite[\s\S]*postCollateral[\s\S]*contribute/);
     expect(lines.some((line) => line.includes('Privy wallet'))).toBe(true);
+  });
+
+  it('uses the testnet CAIP-2 identifier when CLUSTER=testnet', async () => {
+    const caip2s: string[] = [];
+    await runPrivySusuDemo({
+      privy: fakePrivy(caip2s) as never,
+      env: { CLUSTER: 'testnet', HELIUS_RPC_URL: 'https://example.invalid/testnet' },
+      log: () => undefined,
+    });
+
+    expect(new Set(caip2s)).toEqual(new Set(['solana:4uhcVJyU9pJkvQyS88uRDiswHXSCkY3z']));
   });
 });
 
