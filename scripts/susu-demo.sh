@@ -59,7 +59,8 @@ classify_runner_failure() {
   if printf '%s' "$text" | grep -Eiq 'airdrop|faucet|rate limit|429'; then
     fail_bucket "devnet-airdrop-limit" "Devnet airdrop rate limit. Run \`solana airdrop 2\` manually or wait 24h." "docs/troubleshooting.md#devnet-airdrop-limit"
   fi
-  if printf '%s' "$text" | grep -Eiq 'module not found|ERR_MODULE_NOT_FOUND|anchor|solana|pnpm|node|toolchain|version'; then
+  dependency_pattern='ERR_MODULE_NOT_FOUND|Cannot find (module|package)|module not found|Package subpath .* is not defined|workspace package|ERR_PNPM|pnpm (install|build).*failed|(^|[[:space:]/])(anchor|solana|solana-keygen|node|pnpm)(: command not found|: not found| not found| is not installed| unsupported|required|requires|mismatch)|(unsupported|required|requires|mismatch) (Node.js|node|pnpm|anchor|solana)|(Node.js|node|pnpm|anchor|solana) version (mismatch|unsupported|required)'
+  if printf '%s' "$text" | grep -Eiq "$dependency_pattern"; then
     fail_bucket "dependency-mismatch" "Toolchain mismatch. Run \`nvm use && rustup show\`." "docs/troubleshooting.md#dependency-mismatch"
   fi
   fail_bucket "rpc-reachability" "Helius/Solana devnet RPC unreachable." "docs/troubleshooting.md#rpc"
@@ -191,7 +192,7 @@ printf '%s\n' "$runner_output"
 end_epoch="$(date +%s)"
 elapsed=$((end_epoch - start_epoch))
 if [ "$elapsed" -gt "$max_seconds" ]; then
-  fail_bucket "dependency-mismatch" "Demo exceeded NFR-P2 budget: ${elapsed}s > ${max_seconds}s." "docs/troubleshooting.md#dependency-mismatch"
+  fail_bucket "performance-budget" "Demo exceeded NFR-P2 budget: ${elapsed}s > ${max_seconds}s." "docs/troubleshooting.md#performance-budget"
 fi
 
 ok "Demo complete. Wall-clock: ${elapsed}s."

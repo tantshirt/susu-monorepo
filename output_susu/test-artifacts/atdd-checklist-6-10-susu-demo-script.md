@@ -31,7 +31,7 @@ generatedTestFiles:
 | AC1 complete mock ROSCA cycle | P0 | Static + runner parse | `scripts/susu-demo.sh` delegates to `scripts/susu-demo.mjs`; runner calls SDK lifecycle helpers for 5 members and 5 rounds |
 | AC2 structured colored output | P1 | Static | Shell/runner output helpers, phase markers, tx signatures, Solscan links |
 | AC3 <=60s budget | P0 | Static + shell syntax | `SUSU_DEMO_MAX_SECONDS` default 60 and shell assertion on final wall clock |
-| AC4 failure buckets | P0 | Static | `rpc-reachability`, `devnet-airdrop-limit`, and `dependency-mismatch` hints with docs anchors |
+| AC4 failure buckets | P0 | Static | `rpc-reachability`, `devnet-airdrop-limit`, `dependency-mismatch`, and `performance-budget` hints with docs anchors |
 | AC5 Surfpool CI smoke | P0 | Static | `.github/workflows/ci.yml` starts `surfpool start --network devnet --port 8899` and runs `pnpm susu:demo` against the fork |
 
 ## Generated Red Tests

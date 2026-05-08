@@ -27,7 +27,7 @@ And it fails if the value is greater than `SUSU_DEMO_MAX_SECONDS`, defaulting to
 
 Given the RPC, faucet, or local dependency state can fail independently
 When the shell or runner catches an error
-Then it classifies the error into `rpc-reachability`, `devnet-airdrop-limit`, or `dependency-mismatch`
+Then it classifies the error into `rpc-reachability`, `devnet-airdrop-limit`, `dependency-mismatch`, or `performance-budget`
 And it prints a one-line recovery hint with a link to `docs/troubleshooting.md`.
 
 ## Scenario 5: Main-Branch CI Smoke

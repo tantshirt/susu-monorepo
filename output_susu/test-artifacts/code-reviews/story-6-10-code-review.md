@@ -10,6 +10,10 @@ Reviewed branch diff against `origin/main` for Story 6.10.
 
 The initial CI smoke started Surfpool from the repository root without disabling automatic deployment. Because Surfpool can auto-generate/run deployment runbooks in a Solana program directory, the smoke job could spend time on deployment or fail before the demo runner starts. The demo only needs a devnet-compatible RPC fork, so the workflow now starts Surfpool with `--ci --no-deploy --no-tui --no-studio`.
 
+### Fixed: Dependency Bucket Shadowed RPC Failures
+
+Cursor Bugbot flagged broad `node`, `solana`, and `version` matches that could classify ordinary RPC failures as dependency mismatches. The shell and runner now match dependency issues only for explicit missing module/package, missing command, unsupported toolchain, or version-mismatch signals, leaving transport failures to the `rpc-reachability` bucket.
+
 ## Evidence
 
 - `node --test tests/atdd/story-6-10-susu-demo-script.static.red.test.mjs`

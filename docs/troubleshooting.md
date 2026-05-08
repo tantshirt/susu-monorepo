@@ -23,3 +23,11 @@ Bucket: `dependency-mismatch`
 Message: "Toolchain mismatch. Run `nvm use && rustup show`."
 
 Recovery: install the versions implied by `.nvmrc`, `packageManager`, `rust-toolchain.toml`, Anchor, and the Solana CLI. Then run `pnpm install`, `pnpm --filter @susu/sdk build`, and `pnpm susu:demo` again.
+
+## Performance Budget
+
+Bucket: `performance-budget`
+
+Message: "Demo exceeded NFR-P2 budget: Xs > 60s."
+
+Recovery: run the demo against a local Surfpool fork first to separate RPC latency from SDK/runtime work. If the forked run is still over budget, profile the phase timings printed by `pnpm susu:demo` and keep the public path under `SUSU_DEMO_MAX_SECONDS`.

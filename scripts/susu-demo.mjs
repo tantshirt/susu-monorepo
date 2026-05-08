@@ -145,7 +145,18 @@ export function classifyDemoError(error) {
     };
   }
 
-  if (/module not found|ERR_MODULE_NOT_FOUND|anchor|solana|pnpm|node|toolchain|version|workspace/i.test(text)) {
+  const dependencyMismatch =
+    /ERR_MODULE_NOT_FOUND|Cannot find (module|package)|module not found|Package subpath .* is not defined|workspace package|ERR_PNPM|pnpm (install|build).*failed/i.test(
+      text,
+    ) ||
+    /(^|[\s/])(anchor|solana|solana-keygen|node|pnpm)(: command not found|: not found| not found| is not installed| unsupported|required|requires|mismatch)/i.test(
+      text,
+    ) ||
+    /(unsupported|required|requires|mismatch) (Node\.js|node|pnpm|anchor|solana)|(Node\.js|node|pnpm|anchor|solana) version (mismatch|unsupported|required)/i.test(
+      text,
+    );
+
+  if (dependencyMismatch) {
     return {
       bucket: 'dependency-mismatch',
       message: 'Toolchain mismatch. Run `nvm use && rustup show`.',

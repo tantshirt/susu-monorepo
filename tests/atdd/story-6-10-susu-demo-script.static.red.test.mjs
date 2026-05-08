@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { existsSync, readFileSync, statSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
 import test from 'node:test';
+import { pathToFileURL } from 'node:url';
 
 const storyPath = 'output_susu/implementation-artifacts/6-10-susu-demo-script.md';
 const packagePath = 'package.json';
@@ -60,22 +61,43 @@ test('Story 6.10 runner drives the 5-member ROSCA lifecycle via @susu/sdk', () =
   assert.equal(spawnSync('node', ['--check', runnerPath], { encoding: 'utf8' }).status, 0, 'runner must parse');
 });
 
-test('Story 6.10 classifies the three required failure buckets with recovery docs', () => {
+test('Story 6.10 classifies required failure buckets with recovery docs', () => {
   for (const path of [runnerPath, shellPath, docsPath]) {
     assertExists(path);
   }
 
   const combined = `${read(runnerPath)}\n${read(shellPath)}\n${read(docsPath)}`;
-  for (const bucket of ['rpc-reachability', 'devnet-airdrop-limit', 'dependency-mismatch']) {
+  for (const bucket of ['rpc-reachability', 'devnet-airdrop-limit', 'dependency-mismatch', 'performance-budget']) {
     assert.match(combined, new RegExp(bucket), `missing ${bucket} bucket`);
   }
 
   assert.match(combined, /docs\/troubleshooting\.md#rpc/, 'RPC failures must link to troubleshooting RPC docs');
   assert.match(combined, /docs\/troubleshooting\.md#devnet-airdrop-limit/, 'airdrop failures must link to troubleshooting airdrop docs');
   assert.match(combined, /docs\/troubleshooting\.md#dependency-mismatch/, 'dependency failures must link to troubleshooting dependency docs');
+  assert.match(combined, /docs\/troubleshooting\.md#performance-budget/, 'budget failures must link to troubleshooting performance docs');
   assert.match(combined, /Helius\/Solana devnet RPC unreachable/i);
   assert.match(combined, /Devnet airdrop rate limit/i);
   assert.match(combined, /Toolchain mismatch/i);
+});
+
+test('Story 6.10 keeps RPC failures out of the dependency bucket', async () => {
+  const { classifyDemoError } = await import(pathToFileURL(runnerPath).href);
+
+  assert.equal(
+    classifyDemoError(new Error('Solana node connection refused')).bucket,
+    'rpc-reachability',
+    'Solana transport failures must remain RPC failures',
+  );
+  assert.equal(
+    classifyDemoError(new Error('Transaction version not supported by RPC node')).bucket,
+    'rpc-reachability',
+    'RPC transaction-version failures must not be dependency failures',
+  );
+  assert.equal(
+    classifyDemoError(new Error('Cannot find module @susu/sdk')).bucket,
+    'dependency-mismatch',
+    'actual module resolution failures must still be dependency failures',
+  );
 });
 
 test('Story 6.10 adds a Surfpool-backed main-branch CI smoke job', () => {
@@ -106,5 +128,8 @@ test('Story 6.10 shell command fails when the wall-clock budget is exceeded', ()
   });
 
   assert.notEqual(result.status, 0, 'demo must fail when elapsed time is greater than budget');
-  assert.match(`${result.stdout}\n${result.stderr}`, /Demo exceeded NFR-P2 budget/, 'failure must explain the budget breach');
+  const output = `${result.stdout}\n${result.stderr}`;
+  assert.match(output, /Demo exceeded NFR-P2 budget/, 'failure must explain the budget breach');
+  assert.match(output, /\[performance-budget\]/, 'budget breach must use the performance bucket');
+  assert.match(output, /docs\/troubleshooting\.md#performance-budget/, 'budget breach must link to the performance docs');
 });
