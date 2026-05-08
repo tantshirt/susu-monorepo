@@ -2,7 +2,7 @@
 
 ## Status
 
-ready-for-dev
+review
 
 ## Story
 
@@ -21,22 +21,22 @@ so that the Curve Invariant is verifiable from a clean clone with one command an
 
 ## Tasks / Subtasks
 
-- [ ] Create ATDD artifacts for Story 5.1 (AC: 1-6)
-  - [ ] Add `tests/atdd/story-5-1-no-strategic-default-proptest.atdd.md`
-  - [ ] Add `tests/atdd/story-5-1-no-strategic-default-proptest.static.red.test.mjs`
-  - [ ] Add red-phase Rust property scaffold at `tests/invariants/no_strategic_default.rs`
-- [ ] Add the canonical strategic-default payoff API to the curve module (AC: 2, 5)
-  - [ ] Expose `expected_default_payoff(slot, n, contribution, decimals) -> Result<i128, SusuError>`
-  - [ ] Reuse `calculate_collateral`; do not duplicate closed-form collateral math
-  - [ ] Use checked arithmetic and propagate existing curve errors
-- [ ] Wire and activate the proptest target (AC: 1, 4, 5)
-  - [ ] Add `proptest` as the `susu` dev-dependency
-  - [ ] Add `programs/susu/tests/no_strategic_default.rs` to include the audit-path invariant test
-  - [ ] Add the release-mode invariant command to the CI `lint-and-build` job
-- [ ] Validate performance, determinism, and failure quality (AC: 3, 6)
-  - [ ] Run `RUSTUP_TOOLCHAIN=stable cargo test --test no_strategic_default --release`
-  - [ ] Ensure the proptest config uses at least 10,000 cases
-  - [ ] Ensure assertion messages include `n`, `slot`, `contribution`, `decimals`, and `expected_payoff`
+- [x] Create ATDD artifacts for Story 5.1 (AC: 1-6)
+  - [x] Add `tests/atdd/story-5-1-no-strategic-default-proptest.atdd.md`
+  - [x] Add `tests/atdd/story-5-1-no-strategic-default-proptest.static.red.test.mjs`
+  - [x] Add red-phase Rust property scaffold at `tests/invariants/no_strategic_default.rs`
+- [x] Add the canonical strategic-default payoff API to the curve module (AC: 2, 5)
+  - [x] Expose `expected_default_payoff(slot, n, contribution, decimals) -> Result<i128, SusuError>`
+  - [x] Reuse `calculate_collateral`; do not duplicate closed-form collateral math
+  - [x] Use checked arithmetic and propagate existing curve errors
+- [x] Wire and activate the proptest target (AC: 1, 4, 5)
+  - [x] Add `proptest` as the `susu` dev-dependency
+  - [x] Add `programs/susu/tests/no_strategic_default.rs` to include the audit-path invariant test
+  - [x] Add the release-mode invariant command to the CI `lint-and-build` job
+- [x] Validate performance, determinism, and failure quality (AC: 3, 6)
+  - [x] Run `RUSTUP_TOOLCHAIN=stable cargo test --test no_strategic_default --release`
+  - [x] Ensure the proptest config uses at least 10,000 cases
+  - [x] Ensure assertion messages include `n`, `slot`, `contribution`, `decimals`, and `expected_payoff`
 
 ## Dev Notes
 
@@ -69,9 +69,29 @@ GPT-5 Codex
 
 ### Debug Log References
 
+- `node --test tests/atdd/story-5-1-no-strategic-default-proptest.static.red.test.mjs`
+- `RUSTUP_TOOLCHAIN=stable cargo test -p susu expected_default_payoff`
+- `RUSTUP_TOOLCHAIN=stable cargo test --test no_strategic_default --release`
+
 ### Completion Notes List
+
+- Added canonical `expected_default_payoff` in `programs/susu/src/curve.rs`, deriving collateral through `calculate_collateral` and using checked signed arithmetic for payout, paid-before-payout, and collateral subtraction.
+- Activated the audit-facing proptest through `programs/susu/tests/no_strategic_default.rs`; the property runs 10,000 generated cases across `n`, `slot`, contribution base units, and USDC/USDT 6-decimal labels.
+- Wired the release-mode invariant command into the CI `lint-and-build` job.
+- Verified the release invariant completed successfully in 0.02 seconds on this machine.
 
 ### File List
 
+- `.github/workflows/ci.yml`
+- `Cargo.lock`
+- `programs/susu/Cargo.toml`
+- `programs/susu/src/curve.rs`
+- `programs/susu/tests/no_strategic_default.rs`
+- `tests/invariants/no_strategic_default.rs`
+- `tests/atdd/story-5-1-no-strategic-default-proptest.atdd.md`
+- `tests/atdd/story-5-1-no-strategic-default-proptest.static.red.test.mjs`
+- `output_susu/implementation-artifacts/5-1-no-strategic-default-proptest.md`
+
 ### Change Log
 
+- 2026-05-08: Story 5.1 — no-strategic-default proptest, canonical expected payoff helper, release-mode CI invariant gate.

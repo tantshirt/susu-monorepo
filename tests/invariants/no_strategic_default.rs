@@ -34,7 +34,10 @@ proptest! {
     #![proptest_config(ProptestConfig {
         cases: CASES,
         failure_persistence: Some(Box::new(proptest::test_runner::FileFailurePersistence::Direct(
-            "tests/invariants/no_strategic_default.proptest-regressions".into(),
+            concat!(
+                env!("CARGO_MANIFEST_DIR"),
+                "/../../tests/invariants/no_strategic_default.proptest-regressions"
+            ),
         ))),
         ..ProptestConfig::default()
     })]
@@ -53,4 +56,3 @@ proptest! {
         );
     }
 }
-
