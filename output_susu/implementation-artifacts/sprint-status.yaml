@@ -105,7 +105,7 @@ development_status:
   6-4-rust-client: ready-for-dev
   6-5-sdk-parity-check: ready-for-dev
   6-6-example-with-privy: ready-for-dev
-  6-7-example-with-squads: ready-for-dev
+  6-7-example-with-squads: review
   6-8-example-with-token-extensions: ready-for-dev
   6-9-integration-docs: ready-for-dev
   6-10-susu-demo-script: ready-for-dev
