@@ -74,6 +74,14 @@ jobs:
       - name: Cargo invariant proof (no strategic default)
         run: RUSTUP_TOOLCHAIN=stable cargo test --test no_strategic_default --release
 
+      - name: Check adversary report determinism
+        run: RUSTUP_TOOLCHAIN=stable bash scripts/check-adversary-determinism.sh
+
+      - name: Check canonical adversary report artifact
+        run: |
+          CANONICAL_SEED="$(node -e "console.log(require('./audits/adversary/adversary-report.json').run_metadata.seed)")"
+          COMMIT_SHA="${CANONICAL_SEED}" CHECK_CANONICAL=1 RUSTUP_TOOLCHAIN=stable bash scripts/check-adversary-determinism.sh
+
       - name: pnpm test
         run: pnpm test --if-present
 
