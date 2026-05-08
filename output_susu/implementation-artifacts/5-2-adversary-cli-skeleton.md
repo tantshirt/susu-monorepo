@@ -1,6 +1,6 @@
 # Story 5.2: susu-adversary CLI binary skeleton (FR22 part 1)
 
-Status: review
+Status: done
 
 ## Story
 
@@ -161,3 +161,4 @@ GPT-5 Codex
 - 2026-05-08: Completed test-review cleanup with no remaining findings.
 - 2026-05-08: Completed code review with no remaining findings.
 - 2026-05-08: Addressed Cursor Bugbot findings for build-script reruns and intentional SDK dependency usage.
+- 2026-05-08: Marked Story 5.2 done after PR #170 CI and Cursor Bugbot passed; aligned story file with `sprint-status.yaml`.
