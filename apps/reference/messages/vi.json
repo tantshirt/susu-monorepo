@@ -1,0 +1,80 @@
+{
+  "meta": {
+    "appName": "Giao thức Susu",
+    "tagline": "Hụi cộng đồng, không lưu ký, không phí, không hứa hẹn lợi suất."
+  },
+  "localeSwitcher": {
+    "label": "Ngôn ngữ",
+    "placeholder": "Chọn ngôn ngữ",
+    "helper": "Đổi ngôn ngữ ngay lập tức và ghi nhớ trên thiết bị này.",
+    "options": {
+      "en": "English",
+      "vi": "Tiếng Việt",
+      "ar": "العربية",
+      "es": "Español",
+      "yo": "Yorùbá",
+      "ht-kreyol": "Kreyòl Ayisyen"
+    }
+  },
+  "nav": {
+    "home": "Trang chủ",
+    "groups": "Nhóm",
+    "activity": "Hoạt động",
+    "settings": "Cài đặt"
+  },
+  "home": {
+    "title": "Gây dựng niềm tin, xoay vòng nhận quỹ và cùng nhau tiết kiệm.",
+    "subtitle": "Tạo hoặc tham gia dây hụi với kỳ đóng góp rõ ràng và lịch sử minh bạch.",
+    "primaryCta": "Tạo nhóm",
+    "secondaryCta": "Xem các nhóm"
+  },
+  "group": {
+    "title": "Tổng quan nhóm",
+    "empty": "Chưa có nhóm nào. Hãy tạo nhóm để bắt đầu dây hụi.",
+    "members": "Thành viên",
+    "contributionAmount": "Số tiền đóng góp",
+    "contributionWindow": "Khung thời gian đóng góp",
+    "nextRotation": "Kỳ xoay vòng tiếp theo"
+  },
+  "member": {
+    "title": "Trạng thái thành viên",
+    "position": "Vị trí",
+    "collateral": "Tài sản thế chấp đã nộp",
+    "lastContribution": "Lần đóng góp gần nhất",
+    "invited": "Đã mời",
+    "accepted": "Đã chấp nhận"
+  },
+  "actions": {
+    "inviteMembers": "Mời thành viên",
+    "acceptInvite": "Chấp nhận lời mời",
+    "contribute": "Đóng góp",
+    "topUpCollateral": "Nạp thêm thế chấp",
+    "cancelGroup": "Hủy nhóm"
+  },
+  "status": {
+    "forming": "Đang hình thành",
+    "active": "Đang hoạt động",
+    "completed": "Đã hoàn tất",
+    "cancelled": "Đã hủy"
+  },
+  "errors": {
+    "GroupFull": "Nhóm này đã đủ số lượng thành viên tối đa. Hãy chọn nhóm nhỏ hơn hoặc chờ nhóm mới trong đợt tiếp theo.",
+    "GroupAlreadyStarted": "Nhóm này đã bắt đầu. Hãy tạo nhóm mới hoặc chọn nhóm vẫn đang trong giai đoạn hình thành.",
+    "MemberNotInvited": "Ví này chưa được mời vào nhóm. Kiểm tra lại địa chỉ mời hoặc nhờ người tạo nhóm mời lại.",
+    "InvalidMemberCount": "Số lượng thành viên nằm ngoài phạm vi hỗ trợ. Hãy chọn quy mô nhóm trong giới hạn tối thiểu và tối đa.",
+    "MintNotSupported": "Loại token mint này chưa được hỗ trợ cho nhóm. Hãy chọn mint được hỗ trợ trước khi tạo hoặc tham gia.",
+    "GroupCancelled": "Nhóm này đã bị hủy. Hãy chờ người tạo lập nhóm mới hoặc chọn lời mời đang hoạt động khác.",
+    "AlreadyAccepted": "Lời mời này đã được chấp nhận trước đó. Hãy tiếp tục với vị trí thành viên hiện có thay vì thử lại.",
+    "GroupNotActive": "Nhóm này chưa hoạt động. Hãy chờ nhóm kích hoạt trước khi đóng góp, hoặc chọn nhóm khác đang hoạt động.",
+    "OutsideContributionWindow": "Chỉ có thể đóng góp trong khung thời gian đã lên lịch cho kỳ xoay vòng này. Kiểm tra lịch xoay vòng của nhóm rồi thử lại khi cửa sổ mở.",
+    "ContributionAmountMismatch": "Số tiền gửi không khớp với mức đóng góp cố định của nhóm. Hãy gửi lại đúng số tiền đã cấu hình.",
+    "MemberSlashedCannotContribute": "Vị trí thành viên này đã bị phạt và không thể đóng góp nữa. Hãy liên hệ quản trị nhóm hoặc dùng ví/nhóm khác.",
+    "ContributionAlreadyRecorded": "Bạn đã ghi nhận đóng góp cho kỳ này rồi. Hãy chờ kỳ tiếp theo hoặc kiểm tra lịch sử on-chain trước khi thử lại.",
+    "InvalidContributionRotation": "Chỉ số vòng xoay này không hợp lệ với quy mô nhóm. Hãy dùng vòng xoay nằm trong số thành viên của nhóm rồi thử lại.",
+    "InvalidCurveParams": "Tham số đường cong nằm ngoài phạm vi hỗ trợ. Hãy kiểm tra quy mô nhóm và vị trí vòng xoay.",
+    "GroupIdMismatch": "Mã nhóm trong giao dịch không khớp với tài khoản nhóm này. Hãy tải lại thông tin nhóm rồi thử lại.",
+    "MemberPositionMismatch": "Vị trí thành viên này không khớp với ví của bạn hoặc với nhóm hiện tại.",
+    "CurveOverflow": "Phép tính thế chấp bị tràn số. Hãy dùng số tiền nhỏ hơn hoặc liên hệ hỗ trợ nếu thấy bất thường.",
+    "InsufficientCollateral": "Thế chấp đã nộp cộng khoản nạp thêm vẫn thấp hơn mức tối thiểu theo đường cong. Hãy tăng số tiền hoặc chờ đến khi có thể nộp thêm."
+  }
+}
