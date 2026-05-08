@@ -1,6 +1,6 @@
 # Story 5.6: Threat Model Doc and Traceability Matrix
 
-Status: review
+Status: done
 
 ## Story
 
@@ -65,3 +65,4 @@ As an auditor, I want `docs/threat-model.md` enumerating adversary models, attac
 - 2026-05-08: Implemented threat model and coverage traceability matrix; moved story to review.
 - 2026-05-08: Completed test-review workflow; reduced static ATDD test below maintainability line budget.
 - 2026-05-08: Completed code-review workflow; fixed all coverage-matrix cited-path rows, not just required attack rows.
+- 2026-05-08: PR gates passed; moved story to done.
