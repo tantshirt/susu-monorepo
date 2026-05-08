@@ -1,0 +1,23 @@
+{
+  "name": "@susu-examples/with-squads",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "pnpm --filter @susu/sdk build && tsx src/index.ts",
+    "test": "pnpm --filter @susu/sdk build && vitest run --dir tests",
+    "build": "pnpm --filter @susu/sdk build && tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@solana/kit": "^5.0.0",
+    "@solana/web3-compat": "^0.0.21",
+    "@sqds/multisig": "^2.1.4",
+    "@susu/sdk": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "25.6.1",
+    "tsx": "^4.21.0",
+    "typescript": "5.9.3",
+    "vitest": "^4.1.5"
+  }
+}
