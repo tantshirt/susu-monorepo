@@ -148,10 +148,13 @@ GPT-5 Codex
 - `crates/susu-adversary/tests/cli_smoke.rs`
 - `output_susu/implementation-artifacts/5-2-adversary-cli-skeleton.md`
 - `output_susu/test-artifacts/atdd-checklist-5-2-adversary-cli-skeleton.md`
+- `output_susu/test-artifacts/test-reviews/story-5-2-test-review.md`
 - `tests/atdd/story-5-2-adversary-cli-skeleton.atdd.md`
+- `tests/atdd/story-5-2-adversary-cli-skeleton.report.red.test.mjs`
 - `tests/atdd/story-5-2-adversary-cli-skeleton.static.red.test.mjs`
 
 ### Change Log
 
 - 2026-05-08: Added ATDD red artifacts for Story 5.2.
 - 2026-05-08: Implemented deterministic `susu-adversary` CLI skeleton and marked story ready for review.
+- 2026-05-08: Completed test-review cleanup with no remaining findings.

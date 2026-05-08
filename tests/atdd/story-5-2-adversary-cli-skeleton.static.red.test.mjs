@@ -68,32 +68,6 @@ test('Story 5.2 validates a 32-byte hex seed and constructs ChaCha20Rng exactly 
   assert.doesNotMatch(combined, /thread_rng|OsRng|from_entropy|StdRng|SmallRng|getrandom|random\(/, 'unseeded randomness is forbidden');
 });
 
-test('Story 5.2 report schema contains deterministic metadata, summary, and scenario results', () => {
-  const source = read(reportPath);
-
-  for (const required of [
-    /RunMetadata/,
-    /Summary/,
-    /PerScenarioResult/,
-    /AdversaryReport/,
-    /seed:\s*String/,
-    /commit_sha:\s*String/,
-    /circles:\s*u32/,
-    /started_at:\s*String/,
-    /finished_at:\s*String/,
-    /total_runs:\s*u32/,
-    /max_defector_profit_lamports:\s*i64/,
-    /scenarios_covered:\s*Vec<String>/,
-    /per_scenario_results:\s*Vec<PerScenarioResult>/,
-  ]) {
-    assert.match(source, required, `report.rs must include ${required}`);
-  }
-
-  assert.match(source, /to_writer_pretty/, 'report writer must use stable pretty JSON');
-  assert.match(source, /write_all\(b"\\n"\)/, 'report writer must add a trailing newline');
-  assert.doesNotMatch(source, /HashMap|SystemTime::now|Utc::now|Local::now|hostname|process::id|thread::current|f32|f64/, 'report output must avoid nondeterministic fields and floats');
-});
-
 test('Story 5.2 simulator skeleton records stable localnet scenario coverage', () => {
   const source = read(simulatorPath);
 
@@ -104,22 +78,4 @@ test('Story 5.2 simulator skeleton records stable localnet scenario coverage', (
   assert.match(source, /gen_range\(3\.\.=12\)/, 'lifecycle sampling must cover n in [3, 12]');
   assert.match(source, /gen_range\(10_000_000\.\.=10_000_000_000\)/, 'contribution sampling must cover $10-$10K in 6-decimal base units');
   assert.match(source, /scenario_skeleton|skeleton/i, 'Story 5.2 should name skeleton scenario coverage before Story 5.3');
-});
-
-test('Story 5.2 README and smoke test document reproducible CLI usage', () => {
-  const readme = read(readmePath);
-  const smoke = read(smokeTestPath);
-
-  assert.match(readme, /--seed\s+\$COMMIT_SHA/, 'README must document commit-SHA seed convention');
-  assert.match(readme, /audits\/adversary\/adversary-report\.json/, 'README must name canonical report path');
-  assert.match(readme, /run_metadata/i, 'README must explain run_metadata');
-  assert.match(readme, /summary/i, 'README must explain summary');
-  assert.match(readme, /per_scenario_results/i, 'README must explain per_scenario_results');
-  assert.match(readme, /Story 5\.4|byte-deterministic/i, 'README must defer canonical byte determinism to Story 5.4');
-
-  assert.match(smoke, /Command::new/, 'smoke test must shell out to the binary');
-  assert.match(smoke, /--circles[\s\S]*10/, 'smoke test must use a small 10-circle run');
-  assert.match(smoke, /"0"\.repeat\(64\)|0000000000000000000000000000000000000000000000000000000000000000/, 'smoke test must use a fixed 32-byte zero seed');
-  assert.match(smoke, /serde_json::from_str|serde_json::from_slice/, 'smoke test must parse the output JSON');
-  assert.match(smoke, /status\.success\(\)/, 'known-good skeleton smoke must exit 0');
 });

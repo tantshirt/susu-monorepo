@@ -13,6 +13,7 @@ storyFile: output_susu/implementation-artifacts/5-2-adversary-cli-skeleton.md
 atddChecklistPath: output_susu/test-artifacts/atdd-checklist-5-2-adversary-cli-skeleton.md
 generatedTestFiles:
   - tests/atdd/story-5-2-adversary-cli-skeleton.atdd.md
+  - tests/atdd/story-5-2-adversary-cli-skeleton.report.red.test.mjs
   - tests/atdd/story-5-2-adversary-cli-skeleton.static.red.test.mjs
 ---
 
@@ -23,6 +24,7 @@ generatedTestFiles:
 Red-phase acceptance scaffolds were generated from the Story 5.2 acceptance criteria and Epic 5 test design.
 
 - Static ATDD tests: `tests/atdd/story-5-2-adversary-cli-skeleton.static.red.test.mjs`
+- Report/doc ATDD tests: `tests/atdd/story-5-2-adversary-cli-skeleton.report.red.test.mjs`
 - BDD scenario notes: `tests/atdd/story-5-2-adversary-cli-skeleton.atdd.md`
 - Story handoff: `output_susu/implementation-artifacts/5-2-adversary-cli-skeleton.md`
 

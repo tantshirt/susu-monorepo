@@ -1,10 +1,13 @@
 use std::fs::read_to_string;
+use std::path::PathBuf;
 use std::process::Command;
 
 #[test]
 fn cli_smoke_writes_parseable_report_and_exits_zero() {
-    let output_path =
-        std::env::temp_dir().join(format!("susu-adversary-smoke-{}.json", std::process::id()));
+    let output_dir = option_env!("CARGO_TARGET_TMPDIR")
+        .map(PathBuf::from)
+        .unwrap_or_else(std::env::temp_dir);
+    let output_path = output_dir.join("susu-adversary-smoke-report.json");
     let _ = std::fs::remove_file(&output_path);
 
     let status = Command::new(env!("CARGO_BIN_EXE_susu-adversary"))
