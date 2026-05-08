@@ -1,6 +1,6 @@
 # Story 6.3: SDK error classes — typed discriminated union
 
-Status: ready-for-dev
+Status: done
 
 ## Story
 
@@ -18,30 +18,30 @@ so that I can build robust error UX without `instanceof Error` guards on bare st
 
 ## Tasks / Subtasks
 
-- [ ] Define typed discriminated union in `sdk/ts/src/errors.ts` (AC: 1, 2)
-  - [ ] `abstract class SusuErrorBase extends Error { abstract kind: 'program' | 'simulation' | 'rpc' | 'cluster' }`
-  - [ ] `class SusuError extends SusuErrorBase { kind: 'program'; code: number; name: string; instructionName?: string; }` — decoded from Anchor's `SusuError` enum (sourced from generated `errors/` map)
-  - [ ] `class SusuSimulationError extends SusuErrorBase { kind: 'simulation'; logs: string[]; programLogs: string[]; cause?: SusuError | unknown; }`
-  - [ ] `class SusuRpcError extends SusuErrorBase { kind: 'rpc'; status?: number; endpoint?: string; cause?: unknown; }`
-  - [ ] `class SusuClusterError extends SusuErrorBase { kind: 'cluster'; expected: string; actual: string; }` (carried over from 6.2)
-  - [ ] Type-narrowing helper: `isSusuError(e): e is SusuErrorBase` and per-kind guards (`isSusuProgramError`, etc.)
-- [ ] Decode Anchor program errors in `executeTx` (AC: 1, 3)
-  - [ ] On simulation failure, parse logs for `Program log: AnchorError ... ErrorNumber: N` and map to `SusuError` via the Codama-generated error map
-  - [ ] If decode succeeds: throw `SusuSimulationError({ logs, programLogs, cause: new SusuError(...) })`
-  - [ ] If decode fails: throw `SusuSimulationError` with `cause: undefined`
-  - [ ] On RPC connectivity errors (timeout, 5xx, network): wrap in `SusuRpcError`
-- [ ] Audit all helpers and `executeTx` for bare throws (AC: 3)
-  - [ ] Replace any `throw new Error(...)` or `Promise.reject('...')` with the appropriate typed class
-  - [ ] Add CI grep check (Story 6.5 / 6.11) for `throw new Error\(` inside `sdk/ts/src/`
-- [ ] Unit tests at `sdk/ts/tests/errors.test.ts` (AC: 4)
-  - [ ] Synthetic Anchor error log → decoded `SusuError` with correct `code` + `name`
-  - [ ] Simulation failure with non-Anchor log → `SusuSimulationError` with `cause: undefined`
-  - [ ] Mock RPC timeout → `SusuRpcError`
-  - [ ] Type-narrowing via discriminated `kind` works for TS pattern match
-- [ ] Document error taxonomy in `docs/sdk-typescript.md` (AC: 5)
-  - [ ] Full class hierarchy + fields
-  - [ ] Pattern-matching example (`switch (err.kind)`)
-  - [ ] Recovery-hint table per error kind
+- [x] Define typed discriminated union in `sdk/ts/src/errors.ts` (AC: 1, 2)
+  - [x] `abstract class SusuErrorBase extends Error { abstract kind: 'program' | 'simulation' | 'rpc' | 'cluster' }`
+  - [x] `class SusuError extends SusuErrorBase { kind: 'program'; code: number; name: string; instructionName?: string; }` — decoded from Anchor's `SusuError` enum (sourced from generated `errors/` map)
+  - [x] `class SusuSimulationError extends SusuErrorBase { kind: 'simulation'; logs: string[]; programLogs: string[]; cause?: SusuError | unknown; }`
+  - [x] `class SusuRpcError extends SusuErrorBase { kind: 'rpc'; status?: number; endpoint?: string; cause?: unknown; }`
+  - [x] `class SusuClusterError extends SusuErrorBase { kind: 'cluster'; expected: string; actual: string; }` (carried over from 6.2)
+  - [x] Type-narrowing helper: `isSusuError(e): e is SusuErrorBase` and per-kind guards (`isSusuProgramError`, etc.)
+- [x] Decode Anchor program errors in `executeTx` (AC: 1, 3)
+  - [x] On simulation failure, parse logs for `Program log: AnchorError ... ErrorNumber: N` and map to `SusuError` via the Codama-generated error map
+  - [x] If decode succeeds: throw `SusuSimulationError({ logs, programLogs, cause: new SusuError(...) })`
+  - [x] If decode fails: throw `SusuSimulationError` with `cause: undefined`
+  - [x] On RPC connectivity errors (timeout, 5xx, network): wrap in `SusuRpcError`
+- [x] Audit all helpers and `executeTx` for bare throws (AC: 3)
+  - [x] Replace any `throw new Error(...)` or `Promise.reject('...')` with the appropriate typed class
+  - [x] Add CI grep check (Story 6.5 / 6.11) for `throw new Error\(` inside `sdk/ts/src/`
+- [x] Unit tests at `sdk/ts/tests/errors.test.ts` (AC: 4)
+  - [x] Synthetic Anchor error log → decoded `SusuError` with correct `code` + `name`
+  - [x] Simulation failure with non-Anchor log → `SusuSimulationError` with `cause: undefined`
+  - [x] Mock RPC timeout → `SusuRpcError`
+  - [x] Type-narrowing via discriminated `kind` works for TS pattern match
+- [x] Document error taxonomy in `docs/sdk-typescript.md` (AC: 5)
+  - [x] Full class hierarchy + fields
+  - [x] Pattern-matching example (`switch (err.kind)`)
+  - [x] Recovery-hint table per error kind
 
 ## Dev Notes
 
@@ -97,10 +97,41 @@ docs/
 
 ### Agent Model Used
 
-_TBD_
+GPT-5 Codex
 
 ### Debug Log References
 
+- `log/2026-05-09.md`
+- `output_susu/test-artifacts/atdd-checklist-6-3-sdk-error-classes.md`
+- `output_susu/test-artifacts/test-reviews/story-6-3-test-review.md`
+- `output_susu/test-artifacts/code-reviews/story-6-3-code-review.md`
+
 ### Completion Notes List
 
+- Added `SusuErrorBase`, program/simulation/RPC/cluster subclasses, `SusuSdkError` union, and public type guards.
+- Added IDL-sourced `sdk/ts/src/lib/programErrors.ts` fallback because the generated TypeScript enum has names but no numeric code map.
+- Updated `executeTx` to decode Anchor program errors from simulation logs, preserve diagnostic logs, and wrap RPC transport/config failures in `SusuRpcError`.
+- Removed bare `throw new Error(...)` paths from `sdk/ts/src`, documented `switch (err.kind)`, and added Story 6.3 ATDD/unit coverage.
+- Addressed Cursor Bugbot findings on PR #179; latest `lint-and-build` and Cursor Bugbot checks passed on commit `51f6cf40b58ccb44d96ffa863ab081a7a6e92efa`.
+
 ### File List
+
+- `docs/sdk-typescript.md`
+- `log/2026-05-09.md`
+- `output_susu/implementation-artifacts/6-3-sdk-error-classes.md`
+- `output_susu/implementation-artifacts/sprint-status.yaml`
+- `output_susu/test-artifacts/atdd-checklist-6-3-sdk-error-classes.md`
+- `output_susu/test-artifacts/code-reviews/story-6-3-code-review.md`
+- `output_susu/test-artifacts/test-reviews/story-6-3-test-review.md`
+- `scripts/check-patterns.sh`
+- `sdk/ts/src/client.ts`
+- `sdk/ts/src/errors.ts`
+- `sdk/ts/src/index.ts`
+- `sdk/ts/src/lib/executeTx.ts`
+- `sdk/ts/src/lib/programErrors.ts`
+- `sdk/ts/src/lib/rpcErrors.ts`
+- `sdk/ts/tests/errors.test.ts`
+- `sdk/ts/tests/simulate.test.ts`
+- `tests/atdd/story-6-2-sdk-simulate-cluster-gate.static.red.test.mjs`
+- `tests/atdd/story-6-3-sdk-error-classes.atdd.md`
+- `tests/atdd/story-6-3-sdk-error-classes.static.red.test.mjs`
