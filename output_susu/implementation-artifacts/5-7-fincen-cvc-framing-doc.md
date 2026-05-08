@@ -69,6 +69,7 @@ GPT-5 Codex
 - Added `docs/fincen-cvc-framing.md` with TL;DR, official FinCEN FIN-2019-G001 citation, structural clauses, posture enforcement reference, forfeiture triggers, and Story 5.9 legal-opinion boundary.
 - Added active static ATDD coverage for issue #50 acceptance criteria.
 - Linked the framing doc from `docs/README.md`.
+- Code review tightened the enforcement citation to explicitly name Story 1.4 CI and Story 3.3 vault/custody posture.
 
 ### File List
 

@@ -32,7 +32,7 @@ Any CPI that places group or member funds into a yield, investment, liquidity, s
 
 ## Structural Enforcement
 
-`scripts/check-fincen-posture.sh` is the CI structural check for this posture. It scans instruction handlers for:
+`scripts/check-fincen-posture.sh` is the CI structural check for this posture. It is the Story 1.4 CI guard applied to the Story 3.3 vault/custody posture, and it scans instruction handlers for:
 
 - token-account initialization where authority is neither PDA-derived nor otherwise approved,
 - token transfers to destinations outside the expected collateral/member/recipient paths,

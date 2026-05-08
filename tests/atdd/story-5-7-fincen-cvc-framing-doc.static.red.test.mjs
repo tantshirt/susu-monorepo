@@ -52,6 +52,8 @@ test('Story 5.7 cites posture enforcement script and keeps the script present', 
   const script = read(postureScriptPath);
 
   assert.match(doc, /scripts\/check-fincen-posture\.sh/, 'doc must cite posture script by path');
+  assert.match(doc, /Story 1\.4/i, 'doc must tie the posture script to Story 1.4 CI enforcement');
+  assert.match(doc, /Story 3\.3/i, 'doc must tie the posture script to Story 3.3 vault/custody posture');
   assert.match(script, /token-account-init-authority/, 'script must scan token account authority posture');
   assert.match(script, /transfer-destination/, 'script must scan transfer destination posture');
   assert.match(script, /cpi-allowlist/, 'script must scan CPI allowlist posture');
