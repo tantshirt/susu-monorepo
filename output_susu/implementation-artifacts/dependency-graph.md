@@ -38,8 +38,8 @@ _Last updated: 2026-05-08T03:42:30Z_
 | 4.2 | 4 | Implement claim_payout instruction | done | #39 | #158 | merged | 4.1 | — |
 | 4.3 | 4 | claim_payout guard — non-recipient rejection | ready-for-dev | #40 | — | — | 4.2 | ✅ Yes |
 | 4.4 | 4 | claim_payout guard — pre-deadline rejection | ready-for-dev | #41 | — | — | 4.3 | ❌ No (4.3 not merged) |
-| 4.5 | 4 | claim_payout guard — double-claim rejection via RotationReceipt PDA | ready-for-dev | #42 | — | — | 4.2 | ✅ Yes |
-| 4.6 | 4 | End-to-end full ROSCA lifecycle integration test on Surfpool | ready-for-dev | #43 | — | — | 4.1, 4.2, 4.3, 4.4, 4.5 | ❌ No (4.1-4.5 not merged) |
+| 4.5 | 4 | claim_payout guard — double-claim rejection via RotationReceipt PDA | done | #42 | #160 | merged | 4.2 | ✅ Done |
+| 4.6 | 4 | End-to-end full ROSCA lifecycle integration test on Surfpool | ready-for-dev | #43 | — | — | 4.1, 4.2, 4.3, 4.4, 4.5 | ❌ No (4.3 and 4.4 not merged) |
 | 5.1 | 5 | tests/invariants/no_strategic_default.rs proptest (FR21) | ready-for-dev | — | — | — | 3.1 | ❌ No (Epic 4 not complete) |
 | 5.2 | 5 | susu-adversary CLI binary skeleton (FR22 part 1) | ready-for-dev | — | — | — | none | ❌ No (Epic 4 not complete) |
 | 5.3 | 5 | 30% Cartel scenario named as headline test (FR23) | ready-for-dev | — | — | — | 5.2 | ❌ No (Epic 4 not complete) |
@@ -163,6 +163,6 @@ _Last updated: 2026-05-08T03:42:30Z_
 
 ## Notes
 - GitHub was reconciled on 2026-05-08: Epics 1-3 are complete on `main` through PR #153 (`feat(program): Epic 3 collateral lifecycle (Stories 3.2-3.8)`). Story 4.1 merged via PR #157 (`feat(epic4): implement rotation slot algorithm`).
-- **Ready to Work** for Epic 4 now points to 4.3 and 4.5; 4.1 is merged via PR #157 and 4.2 is merged via PR #158. 4.4 depends on 4.3; 4.6 depends on 4.1-4.5 complete/merged.
+- **Ready to Work** for Epic 4 now points to 4.3; 4.1 merged via PR #157, 4.2 via PR #158, and 4.5 via PR #160. 4.4 depends on 4.3; 4.6 remains blocked by 4.3 and 4.4.
 - **Ready to Work** for Epic 5+ remains blocked by epic ordering until Epic 4 is `done`.
 - Re-run this reconciliation after each Epic 4 story PR merges so BAD can select the next unblocked story batch.
