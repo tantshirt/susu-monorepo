@@ -1,6 +1,6 @@
 # Story 5.9: Legal opinion engagement + docs/legal-opinion.pdf publication
 
-Status: ready-for-dev
+Status: review
 Issue: #52
 
 ## Story
@@ -23,22 +23,22 @@ so that the legal-posture appendix lands by submission and the framing in `docs/
 - [x] Generate Story 5.9 ATDD artifacts.
   - [x] Create a static acceptance scaffold for legal engagement publication.
   - [x] Create an ATDD checklist mapping issue #52 ACs to tests.
-- [ ] Document the legal engagement workflow.
-  - [ ] Create `docs/legal-engagement.md` tracking firm, scope, SOW signed date, expected delivery, status, and `docs/legal-opinion.pdf`.
-  - [ ] Create a public, non-confidential SOW summary path for placeholder linkage.
-  - [ ] Ensure the workflow references the Story 5.7 FinCEN framing doc, threat model, and architecture doc.
-- [ ] Add legal handoff and placeholder publication tooling.
-  - [ ] Add a handoff script that bundles legal background into ignored transient output.
-  - [ ] Add a placeholder PDF renderer for delayed firm letters.
-  - [ ] Publish the initial `docs/legal-opinion.pdf` fallback note without overclaiming.
-- [ ] Wire public links and transparency log.
-  - [ ] Link the legal opinion from the README badge cluster.
-  - [ ] Link legal engagement artifacts from `docs/README.md`.
-  - [ ] Log the engagement in `log/2026-05-08.md`.
-- [ ] Run local verification.
-  - [ ] `node --test tests/atdd/story-5-9-legal-opinion.static.red.test.mjs`
-  - [ ] `bash scripts/legal-handoff.sh --dry-run`
-  - [ ] `bash scripts/render-legal-placeholder.sh`
+- [x] Document the legal engagement workflow.
+  - [x] Create `docs/legal-engagement.md` tracking firm, scope, SOW signed date, expected delivery, status, and `docs/legal-opinion.pdf`.
+  - [x] Create a public, non-confidential SOW summary path for placeholder linkage.
+  - [x] Ensure the workflow references the Story 5.7 FinCEN framing doc, threat model, and architecture doc.
+- [x] Add legal handoff and placeholder publication tooling.
+  - [x] Add a handoff script that bundles legal background into ignored transient output.
+  - [x] Add a placeholder PDF renderer for delayed firm letters.
+  - [x] Publish the initial `docs/legal-opinion.pdf` fallback note without overclaiming.
+- [x] Wire public links and transparency log.
+  - [x] Link the legal opinion from the README badge cluster.
+  - [x] Link legal engagement artifacts from `docs/README.md`.
+  - [x] Log the engagement in `log/2026-05-08.md`.
+- [x] Run local verification.
+  - [x] `node --test tests/atdd/story-5-9-legal-opinion.static.red.test.mjs`
+  - [x] `bash scripts/legal-handoff.sh --dry-run`
+  - [x] `bash scripts/render-legal-placeholder.sh`
 
 ## Dev Notes
 
@@ -67,18 +67,39 @@ GPT-5 Codex
 ### Debug Log References
 
 - 2026-05-08: Loaded issue #52 because the branch did not yet contain a Story 5.9 markdown file.
+- 2026-05-08: Confirmed ATDD scaffold red before implementation: 1 passing artifact check, 5 expected failures for missing legal engagement docs/scripts/PDF/links/log.
+- 2026-05-08: Verification passed: `node --test tests/atdd/story-5-9-legal-opinion.static.red.test.mjs`, `bash scripts/legal-handoff.sh --dry-run`, `bash scripts/render-legal-placeholder.sh`, `bash scripts/check-fincen-posture.sh`, and `pnpm test:atdd`.
+
+### Implementation Plan
+
+- Keep the public legal-opinion path stable by publishing `docs/legal-opinion.pdf` as a placeholder until a signed firm letter replaces it.
+- Keep privileged vendor material out of git by committing only a non-confidential SOW summary and writing handoff bundles under ignored `output_susu/legal-handoff/`.
+- Treat `docs/fincen-cvc-framing.md` as engineering background only; no implementation artifact states a law-firm conclusion.
 
 ### Completion Notes List
 
 - Generated Story 5.9 ATDD checklist and static acceptance scaffold from issue #52, Story 5.7, and the Epic 5 test design.
+- Added public legal engagement tracker, non-confidential SOW summary, placeholder PDF publication workflow, and transient legal handoff script.
+- Linked the placeholder legal opinion from the README badge cluster and docs index, and logged the engagement in `log/2026-05-08.md`.
+- Story implementation is complete and ready for review; all local acceptance and ATDD checks passed.
 
 ### File List
 
 - `output_susu/implementation-artifacts/5-9-legal-opinion.md`
+- `output_susu/implementation-artifacts/sprint-status.yaml`
 - `output_susu/test-artifacts/atdd-checklist-5-9-legal-opinion.md`
+- `docs/legal-engagement.md`
+- `docs/legal-sow-summary.md`
+- `docs/legal-opinion.pdf`
+- `docs/README.md`
+- `README.md`
+- `scripts/legal-handoff.sh`
+- `scripts/render-legal-placeholder.sh`
+- `log/2026-05-08.md`
 - `tests/atdd/story-5-9-legal-opinion.static.red.test.mjs`
 
 ### Change Log
 
 - 2026-05-08: Story artifact created from issue #52 and Epic 5 ATDD handoff scope.
 - 2026-05-08: Generated ATDD checklist and static red test scaffold.
+- 2026-05-08: Implemented legal engagement docs, handoff tooling, placeholder publication, links, and transparency log.

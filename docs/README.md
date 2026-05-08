@@ -10,3 +10,5 @@ This folder tracks implementation status artifacts and operational docs.
 ## Compliance Framing
 
 - [FinCEN CVC framing](./fincen-cvc-framing.md)
+- [Legal engagement](./legal-engagement.md)
+- [Legal opinion](./legal-opinion.pdf)
