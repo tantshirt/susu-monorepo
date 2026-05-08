@@ -32,4 +32,5 @@ pub enum SusuError {
     NotRotationRecipient,
     RotationNotClosed,
     AlreadyClaimed,
+    ContributionPeriodOpen,
 }

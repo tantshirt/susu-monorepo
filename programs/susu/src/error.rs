@@ -64,4 +64,6 @@ pub enum SusuError {
     RotationNotClosed,
     #[msg("Rotation has already been claimed.")]
     AlreadyClaimed,
+    #[msg("This rotation's contribution period is still open.")]
+    ContributionPeriodOpen,
 }

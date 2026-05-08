@@ -42,7 +42,7 @@ test('4.4-INT-001/002 rejects deadline - 1 and deadline before receipt writes an
   const cpi = handler.indexOf('CpiContext::new_with_signer');
 
   assert.notEqual(deadlineGuard, -1, 'handler must use a testable assert_rotation_closed helper');
-  assert.ok(handler.includes('ContributionPeriodOpen'), 'deadline guard must reject with ContributionPeriodOpen');
+  assert.ok(claimSource.includes('SusuError::ContributionPeriodOpen'), 'deadline guard must reject with ContributionPeriodOpen');
   assert.ok(deadlineGuard < receiptWrite, 'pre-deadline rejection must happen before receipt field writes');
   assert.ok(deadlineGuard < cpi, 'pre-deadline rejection must happen before token transfer');
 });

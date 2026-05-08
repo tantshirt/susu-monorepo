@@ -17,6 +17,7 @@
     "GroupIdMismatch": "The group id in the transaction does not match this group account. Reload group details and retry.",
     "MemberPositionMismatch": "This member position does not match your wallet or this group.",
     "CurveOverflow": "Collateral math overflowed. Use smaller amounts or contact support if this seems wrong.",
-    "InsufficientCollateral": "Your posted collateral plus this top-up is still below the minimum required by the curve. Increase the amount or wait until you can post more."
+    "InsufficientCollateral": "Your posted collateral plus this top-up is still below the minimum required by the curve. Increase the amount or wait until you can post more.",
+    "ContributionPeriodOpen": "This rotation is still inside its contribution period. Wait until the deadline has passed, then retry the payout claim."
   }
 }

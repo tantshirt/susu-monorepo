@@ -31,4 +31,5 @@ export enum SusuError {
   NotRotationRecipient = 'NotRotationRecipient',
   RotationNotClosed = 'RotationNotClosed',
   AlreadyClaimed = 'AlreadyClaimed',
+  ContributionPeriodOpen = 'ContributionPeriodOpen',
 }

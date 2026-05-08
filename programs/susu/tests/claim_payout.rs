@@ -3,8 +3,8 @@ use anchor_lang::prelude::{AccountInfo, Pubkey};
 use anchor_lang::{AccountSerialize, Space};
 use susu::error::SusuError;
 use susu::instructions::claim_payout::{
-    assert_rotation_recipient, calculate_payout_amount, rotation_close_timestamp,
-    verify_rotation_funded,
+    assert_rotation_closed, assert_rotation_recipient, calculate_payout_amount,
+    rotation_close_timestamp, verify_rotation_funded,
 };
 use susu::seeds::{GROUP_SEED, MEMBER_SEED, ROTATION_SEED};
 use susu::state::{
@@ -241,7 +241,7 @@ fn claim_payout_source_orders_guards_before_vault_transfer() {
     let funded = source
         .find("verify_rotation_funded")
         .expect("funded rotation guard");
-    let closed = source.find("RotationNotClosed").expect("closed guard");
+    let closed = source.find("assert_rotation_closed").expect("closed guard");
     let cpi = source
         .find("CpiContext::new_with_signer")
         .expect("vault signer CPI");
@@ -250,6 +250,46 @@ fn claim_payout_source_orders_guards_before_vault_transfer() {
     assert!(recipient < cpi, "recipient guard must precede CPI");
     assert!(funded < cpi, "funding guard must precede CPI");
     assert!(closed < cpi, "closed-period guard must precede CPI");
+}
+
+#[test]
+fn claim_payout_pre_deadline_guard_rejects_until_strictly_after_close() {
+    #[derive(Clone, Copy)]
+    struct DeadlineCase {
+        n: u8,
+        rotation_index: u8,
+    }
+
+    for n in [3_u8, 7_u8, 10_u8] {
+        for DeadlineCase {
+            n: case_n,
+            rotation_index,
+        } in [
+            DeadlineCase {
+                n,
+                rotation_index: 0,
+            },
+            DeadlineCase {
+                n,
+                rotation_index: n - 1,
+            },
+        ] {
+            assert!(rotation_index < case_n);
+            let deadline = rotation_close_timestamp(100, 30, rotation_index)
+                .expect("deadline should be calculable");
+
+            assert_susu_error(
+                assert_rotation_closed(deadline - 1, deadline),
+                SusuError::ContributionPeriodOpen,
+            );
+            assert_susu_error(
+                assert_rotation_closed(deadline, deadline),
+                SusuError::ContributionPeriodOpen,
+            );
+            assert_rotation_closed(deadline + 1, deadline)
+                .expect("deadline + 1 should allow payout claim");
+        }
+    }
 }
 
 #[test]
