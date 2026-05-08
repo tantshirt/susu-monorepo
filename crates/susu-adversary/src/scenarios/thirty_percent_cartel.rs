@@ -124,6 +124,11 @@ fn settle_default(setup: ScenarioSetup) -> ScenarioResult {
         .map(MemberLedger::net_pnl_lamports)
         .max()
         .unwrap_or(0);
+    let defector_net_pnl_lamports = ledgers
+        .iter()
+        .filter(|ledger| ledger.role == MemberRole::Defector)
+        .map(MemberLedger::net_pnl_lamports)
+        .collect::<Vec<_>>();
 
     ScenarioResult {
         name: THIRTY_PERCENT_CARTEL,
@@ -136,6 +141,7 @@ fn settle_default(setup: ScenarioSetup) -> ScenarioResult {
         ledgers,
         admin_intervention_count: 0,
         max_defector_profit_lamports,
+        defector_net_pnl_lamports,
         counterexample: "none".to_string(),
     }
 }
@@ -196,6 +202,10 @@ mod tests {
         assert_eq!(result.default_rotation, 4);
         assert_eq!(result.defector_members, vec![4, 5, 6]);
         assert!(result.max_defector_profit_lamports < 0);
+        assert_eq!(
+            result.defector_net_pnl_lamports,
+            vec![-400_000_000, -400_000_000, -400_000_000]
+        );
         assert_eq!(result.admin_intervention_count, 0);
     }
 }

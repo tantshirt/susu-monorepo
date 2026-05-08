@@ -42,6 +42,10 @@ fn run_makes_honest_members_whole_and_defectors_negative() {
     assert_honest_members_made_whole(&result);
     assert_defectors_net_negative(&result);
     assert_no_admin_intervention(&result);
+    assert_eq!(
+        result.defector_net_pnl_lamports,
+        vec![-400_000_000, -400_000_000, -400_000_000]
+    );
     assert!(result
         .ledgers
         .iter()

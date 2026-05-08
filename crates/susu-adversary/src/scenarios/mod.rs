@@ -66,6 +66,7 @@ pub struct ScenarioResult {
     pub ledgers: Vec<MemberLedger>,
     pub admin_intervention_count: u32,
     pub max_defector_profit_lamports: i64,
+    pub defector_net_pnl_lamports: Vec<i64>,
     pub counterexample: String,
 }
 

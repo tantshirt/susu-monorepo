@@ -105,6 +105,7 @@ GPT-5 Codex
 - `cargo test --package susu-adversary` passed after implementation: 10 tests.
 - `cargo test --workspace` passed after implementation.
 - `pnpm test:atdd` initially hit the existing Story 2.1 parity command timeout while the workspace was cold; `bash scripts/check-sdk-parity.sh` passed standalone and the full `pnpm test:atdd` rerun passed: 137 tests.
+- Code review found the report projection omitted per-defector net P&L values; `cargo test --package susu-adversary` and targeted ATDD tests passed after the fix.
 
 ### Completion Notes List
 
@@ -112,12 +113,14 @@ GPT-5 Codex
 - Implemented `thirty_percent_cartel` as the first named scenario with a fixed 10-member setup, members 4-6 as the synchronized default cartel, contribution progress through rotation 3, and zero-admin settlement assertions.
 - Registered `"30_percent_cartel"` in the scenario registry and wired `run_simulation` to include registered scenario results in `summary.scenarios_covered` and `per_scenario_results`.
 - Added the Epic 8 README handoff TODO and scenario-specific integration tests, including setup verification and a synthetic defector-profit assertion failure.
+- Addressed code review by carrying `defector_net_pnl_lamports` from `ScenarioResult` into `PerScenarioResult` for report legibility.
 
 ### File List
 
 - `crates/susu-adversary/README.md`
 - `crates/susu-adversary/src/lib.rs`
 - `crates/susu-adversary/src/main.rs`
+- `crates/susu-adversary/src/report.rs`
 - `crates/susu-adversary/src/scenarios/mod.rs`
 - `crates/susu-adversary/src/scenarios/thirty_percent_cartel.rs`
 - `crates/susu-adversary/src/simulator.rs`
@@ -132,3 +135,4 @@ GPT-5 Codex
 
 - 2026-05-08: Added ATDD red artifacts for Story 5.3.
 - 2026-05-08: Implemented the named 30% Cartel scenario, registry/report wiring, README handoff, and scenario tests; marked story ready for review.
+- 2026-05-08: Addressed code review finding by adding per-defector net P&L values to the per-scenario report projection.
