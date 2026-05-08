@@ -88,3 +88,6 @@ jobs:
 
       - name: Check FinCEN posture
         run: bash scripts/check-fincen-posture.sh
+
+      - name: Check BAD skill prompt sync
+        run: bash scripts/check-bad-skill-sync.sh

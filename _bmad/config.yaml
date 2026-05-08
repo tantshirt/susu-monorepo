@@ -51,6 +51,7 @@ bad:
           - '5.5'
       - lane: public-documentation
         stories:
+          - '5.5'
           - '5.6'
           - '5.7'
           - '5.9'
