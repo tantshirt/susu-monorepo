@@ -79,6 +79,7 @@ GPT-5 Codex
 - `CIRCLES=100 bash scripts/check-adversary-determinism.sh` passed locally; CI runs the same script with the default 10,000 circles.
 - `cargo run --bin susu-adversary --release -- --circles 10000 --seed 7438e04cd157a6a76a1d50296ced47cf9a545790 --cluster localnet --output audits/adversary/adversary-report.json` generated the canonical report with `max_defector_profit_lamports == 0`.
 - Code review found that canonical artifact reproduction must use the report's recorded seed rather than moving `HEAD`; the README and CI canonical check were updated, and `CHECK_CANONICAL=1 CIRCLES=10000 bash scripts/check-adversary-determinism.sh` passed with the recorded seed.
+- Cursor Bugbot found unused build-script commit metadata after report metadata moved to explicit CLI input; `build.rs` was reduced to a no-op source-layout sentinel and `cargo test --package susu-adversary` passed.
 
 ### Completion Notes List
 
@@ -88,6 +89,7 @@ GPT-5 Codex
 - Added a Rust integration test that shells out to the binary twice with the same commit-style seed and compares report bytes.
 - Added audit reproduction docs, committed the canonical adversary report, and wired a CI determinism script with a 10-minute budget.
 - Addressed code review by documenting the self-referential commit-seed constraint and adding a CI canonical-artifact byte comparison mode.
+- Addressed Cursor Bugbot by removing unused `SUSU_ADVERSARY_BUILD_COMMIT` emission from `build.rs`.
 
 ### File List
 
@@ -95,6 +97,7 @@ GPT-5 Codex
 - `audits/adversary/README.md`
 - `audits/adversary/adversary-report.json`
 - `crates/susu-adversary/README.md`
+- `crates/susu-adversary/build.rs`
 - `crates/susu-adversary/src/main.rs`
 - `crates/susu-adversary/src/simulator.rs`
 - `crates/susu-adversary/tests/deterministic_report.rs`
@@ -110,3 +113,4 @@ GPT-5 Codex
 - 2026-05-08: Added ATDD red artifacts for Story 5.4.
 - 2026-05-08: Implemented byte-deterministic adversary report generation, canonical audit artifact/docs, deterministic regression tests, and CI guard; marked story ready for review.
 - 2026-05-08: Addressed code review finding by making canonical artifact reproduction use the report's recorded seed and adding a CI byte comparison against the committed report.
+- 2026-05-08: Addressed Cursor Bugbot finding by making the adversary crate build script a no-op sentinel.
