@@ -291,3 +291,58 @@ fn story_4_6_full_lifecycle() {
         "fallback lifecycle exceeded budget: {elapsed:?}"
     );
 }
+
+#[test]
+fn complete_group_rejects_missing_or_malformed_receipts() {
+    let creator = Pubkey::new_unique();
+    let group_key = derive_group_pda(creator, 46);
+    let mut group = group_fixture(creator, group_key);
+    group.status = GroupStatus::Active;
+
+    let expected_amount = calculate_payout_amount(N, CONTRIBUTION_AMOUNT).expect("payout amount");
+    let good_receipts: Vec<_> = (0..N)
+        .map(|rotation_index| {
+            rotation_receipt_account(&RotationReceipt {
+                group: group_key,
+                rotation_index,
+                amount: expected_amount,
+                recipient: Pubkey::new_unique(),
+                claimed_at: 200 + i64::from(rotation_index),
+                bump: 255,
+            })
+        })
+        .collect();
+
+    assert_susu_error(
+        complete_group_after_all_rotation_receipts(group_key, &mut group, &good_receipts[..4]),
+        SusuError::InvalidMemberPositionList,
+    );
+    assert_eq!(group.status, GroupStatus::Active);
+
+    let malformed_receipts: Vec<_> = (0..N)
+        .map(|rotation_index| {
+            rotation_receipt_account(&RotationReceipt {
+                group: group_key,
+                rotation_index,
+                amount: if rotation_index == 2 {
+                    expected_amount - 1
+                } else {
+                    expected_amount
+                },
+                recipient: Pubkey::new_unique(),
+                claimed_at: 200 + i64::from(rotation_index),
+                bump: 255,
+            })
+        })
+        .collect();
+
+    assert_susu_error(
+        complete_group_after_all_rotation_receipts(group_key, &mut group, &malformed_receipts),
+        SusuError::InvalidMemberPositionList,
+    );
+    assert_eq!(group.status, GroupStatus::Active);
+
+    complete_group_after_all_rotation_receipts(group_key, &mut group, &good_receipts)
+        .expect("canonical receipts complete group");
+    assert_eq!(group.status, GroupStatus::Completed);
+}
