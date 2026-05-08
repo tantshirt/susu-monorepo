@@ -1,7 +1,3 @@
-mod report;
-mod scenarios;
-mod simulator;
-
 use std::error::Error;
 use std::path::PathBuf;
 use std::process::ExitCode;
@@ -9,7 +5,8 @@ use std::process::ExitCode;
 use clap::Parser;
 use rand_chacha::rand_core::SeedableRng;
 use rand_chacha::ChaCha20Rng;
-use simulator::{run_simulation, SimulationConfig};
+use susu_adversary::report;
+use susu_adversary::simulator::{run_simulation, SimulationConfig};
 
 const DEFAULT_REPORT_PATH: &str = "audits/adversary/adversary-report.json";
 

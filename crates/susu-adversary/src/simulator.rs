@@ -2,7 +2,7 @@ use rand::Rng;
 use rand_chacha::ChaCha20Rng;
 
 use crate::report::{AdversaryReport, PerScenarioResult, RunMetadata, Summary};
-use crate::scenarios;
+use crate::scenarios::{self, ScenarioResult, SimulatorContext};
 
 #[derive(Debug, Clone)]
 pub struct SimulationConfig {
@@ -50,16 +50,28 @@ pub fn run_simulation(
         min_group_size = 0;
     }
 
-    let scenario_name = scenarios::SCENARIO_SKELETON.to_string();
-    let scenario = PerScenarioResult {
-        name: scenario_name.clone(),
+    let skeleton_scenario_name = scenarios::SCENARIO_SKELETON.to_string();
+    let skeleton_scenario = PerScenarioResult {
+        name: skeleton_scenario_name.clone(),
         runs: config.circles,
         max_defector_profit_lamports,
+        defector_net_pnl_lamports: Vec::new(),
         min_group_size,
         max_group_size,
         max_contribution_lamports,
         counterexample: "none".to_string(),
     };
+    let mut per_scenario_results = vec![skeleton_scenario];
+    let mut scenarios_covered = vec![skeleton_scenario_name];
+
+    for scenario in scenarios::all_scenarios() {
+        let mut ctx = SimulatorContext::new(config.circles);
+        let result = (scenario.run)(rng, &mut ctx);
+        max_defector_profit_lamports =
+            max_defector_profit_lamports.max(result.max_defector_profit_lamports);
+        scenarios_covered.push(scenario.name.to_string());
+        per_scenario_results.push(per_scenario_result(result));
+    }
 
     Ok(AdversaryReport {
         run_metadata: RunMetadata {
@@ -73,10 +85,23 @@ pub fn run_simulation(
         summary: Summary {
             total_runs: config.circles,
             max_defector_profit_lamports,
-            scenarios_covered: vec![scenario_name],
+            scenarios_covered,
         },
-        per_scenario_results: vec![scenario],
+        per_scenario_results,
     })
+}
+
+fn per_scenario_result(result: ScenarioResult) -> PerScenarioResult {
+    PerScenarioResult {
+        name: result.name.to_string(),
+        runs: 1,
+        max_defector_profit_lamports: result.max_defector_profit_lamports,
+        defector_net_pnl_lamports: result.defector_net_pnl_lamports,
+        min_group_size: result.member_count,
+        max_group_size: result.member_count,
+        max_contribution_lamports: result.contribution_lamports,
+        counterexample: result.counterexample,
+    }
 }
 
 fn sample_lifecycle(rng: &mut ChaCha20Rng) -> LifecycleSample {

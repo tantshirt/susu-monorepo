@@ -88,7 +88,7 @@ development_status:
   epic-5: backlog
   5-1-no-strategic-default-proptest: done # PR #168 CI + Cursor Bugbot clean on 2026-05-08
   5-2-adversary-cli-skeleton: done
-  5-3-thirty-percent-cartel-scenario: ready-for-dev
+  5-3-thirty-percent-cartel-scenario: review
   5-4-deterministic-adversary-report: ready-for-dev
   5-5-collateral-curve-doc: ready-for-dev
   5-6-threat-model-doc: done

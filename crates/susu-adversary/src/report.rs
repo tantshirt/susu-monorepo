@@ -33,6 +33,8 @@ pub struct PerScenarioResult {
     pub name: String,
     pub runs: u32,
     pub max_defector_profit_lamports: i64,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub defector_net_pnl_lamports: Vec<i64>,
     pub min_group_size: u8,
     pub max_group_size: u8,
     pub max_contribution_lamports: u64,
