@@ -7,8 +7,7 @@ use susu::instructions::claim_payout::{
 };
 use susu::seeds::{GROUP_SEED, MEMBER_SEED, ROTATION_SEED};
 use susu::state::{
-    ContributionRecord, CurveParams, Group, GroupStatus, MemberPosition, MemberSlot,
-    RotationReceipt, SlashStatus,
+    ContributionRecord, CurveParams, Group, GroupStatus, MemberPosition, MemberSlot, SlashStatus,
 };
 use susu::ID;
 
@@ -139,18 +138,24 @@ fn claim_payout_receipt_pda_uses_rotation_seed_group_and_le_index() {
 #[test]
 fn claim_payout_double_claim_rejection_uses_receipt_existence_guard() {
     let source = CLAIM_PAYOUT_SOURCE;
-    let post_first_claim_vault_balance = 1_000_u64;
-    let duplicate_attempt_vault_balance = post_first_claim_vault_balance;
+    let accounts_start = source
+        .find("pub struct ClaimPayout")
+        .expect("accounts struct");
+    let handler_start = source.find("pub fn handler").expect("handler");
+    let receipt_init = source.find("init,").expect("receipt init constraint");
+    let transfer_checked = source
+        .find("token::transfer_checked")
+        .expect("vault transfer CPI");
 
-    assert!(source.contains("init,"));
+    assert!(accounts_start < handler_start);
+    assert!(
+        receipt_init > accounts_start && receipt_init < handler_start,
+        "receipt init must be an account-validation constraint, not handler logic"
+    );
+    assert!(handler_start < transfer_checked);
     assert!(source.contains("rotation_receipt: Account<'info, RotationReceipt>"));
     assert!(source.contains("ROTATION_SEED"));
     assert!(source.contains("rotation_index.to_le_bytes()"));
-    assert!(source.contains("token::transfer_checked"));
-    assert_eq!(
-        post_first_claim_vault_balance, duplicate_attempt_vault_balance,
-        "failed duplicate claims must not perform a second transfer_checked CPI"
-    );
     assert_eq!(
         SusuError::AlreadyClaimed.name(),
         "AlreadyClaimed",
@@ -159,40 +164,30 @@ fn claim_payout_double_claim_rejection_uses_receipt_existence_guard() {
 }
 
 #[test]
-fn claim_payout_receipt_fields_remain_unchanged_after_duplicate_claim_failure() {
-    let first_claim_receipt = RotationReceipt {
-        group: Pubkey::new_unique(),
-        rotation_index: 0,
-        amount: 50_000,
-        recipient: Pubkey::new_unique(),
-        claimed_at: 123_456,
-        bump: 251,
-    };
-    let receipt_after_failed_duplicate = first_claim_receipt.clone();
+fn claim_payout_has_no_existing_receipt_mutation_path() {
+    let source = CLAIM_PAYOUT_SOURCE;
+    let receipt_write = source.find("let receipt = &mut ctx.accounts.rotation_receipt");
 
-    assert_eq!(
-        receipt_after_failed_duplicate.group,
-        first_claim_receipt.group
+    assert!(source.contains("init,"));
+    assert!(source.contains("RotationReceipt::INIT_SPACE"));
+    assert!(
+        receipt_write.is_some(),
+        "successful claims must populate the new receipt"
     );
-    assert_eq!(
-        receipt_after_failed_duplicate.rotation_index,
-        first_claim_receipt.rotation_index
+    assert!(
+        receipt_write.unwrap()
+            > source
+                .find("token::transfer_checked")
+                .expect("vault transfer CPI"),
+        "receipt fields are only written on the successful claim path after account validation"
     );
-    assert_eq!(
-        receipt_after_failed_duplicate.amount,
-        first_claim_receipt.amount
+    assert!(
+        !source.contains("init_if_needed"),
+        "init_if_needed would permit an existing receipt to enter handler logic"
     );
-    assert_eq!(
-        receipt_after_failed_duplicate.recipient,
-        first_claim_receipt.recipient
-    );
-    assert_eq!(
-        receipt_after_failed_duplicate.claimed_at,
-        first_claim_receipt.claimed_at
-    );
-    assert_eq!(
-        receipt_after_failed_duplicate.bump,
-        first_claim_receipt.bump
+    assert!(
+        !source.contains("realloc"),
+        "receipt accounts must not be reallocated or overwritten"
     );
 }
 

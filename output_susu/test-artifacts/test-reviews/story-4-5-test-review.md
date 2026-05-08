@@ -21,7 +21,7 @@ Story: 4.5 double-claim guard
 
 - Renamed the new Rust tests to include the `claim_payout` filter token.
 - Confirmed `cargo test -p susu claim_payout` executes the three Story 4.5 tests plus the existing claim payout regression tests.
-- Added ATDD coverage for `AlreadyClaimed`, structural receipt-PDA initialization, no runtime claimed boolean, per-rotation receipt isolation, no-second-transfer evidence, and threat-model documentation.
+- Added ATDD coverage for `AlreadyClaimed`, structural receipt-PDA initialization, no runtime claimed boolean, per-rotation receipt isolation, account-validation-time guard evidence, absence of existing-receipt mutation paths, and threat-model documentation.
 
 ## Result
 

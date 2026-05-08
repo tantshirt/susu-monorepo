@@ -14,7 +14,13 @@ Story: 4.5 double-claim guard
 
 ## Findings
 
-No actionable code findings.
+1. Cursor Bugbot found two high-severity test-quality issues in `programs/susu/tests/claim_payout.rs`: a tautological vault-balance assertion and a receipt immutability test that only exercised `Clone`.
+
+## Fixes Applied
+
+- Replaced the tautological balance assertion with source-level checks proving receipt `init` is an account-validation constraint before handler transfer logic.
+- Replaced the clone-based immutability test with assertions that `claim_payout` has no `init_if_needed` or `realloc` path that can route an existing receipt into handler mutation logic.
+- Updated ATDD/static tests and threat-model wording to avoid claiming live token-transfer coverage where the repository currently has source-level Rust tests.
 
 ## Review Notes
 
@@ -25,4 +31,4 @@ No actionable code findings.
 
 ## Result
 
-- Code review passed with no fixes required.
+- Code review passed after fixing the Cursor Bugbot findings.

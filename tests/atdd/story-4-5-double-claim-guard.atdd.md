@@ -41,7 +41,7 @@ And the receipt PDA existence remains a structural backstop against any duplicat
 | No runtime divergence flag | `Group`, `MemberPosition`, and `RotationReceipt` do not add `claimed`/`has_claimed` booleans. |
 | Guard runs before CPI | Receipt validation is account-validation time via `init`; source tests also assert guard/error tokens occur before `transfer_checked`. |
 | Per-rotation isolation | Program tests derive receipt PDAs for at least two rotation indices and assert they differ. |
-| Receipt immutability on duplicate failure | Program tests snapshot receipt fields and balances after first claim and require no changes after duplicate rejection. |
+| Receipt immutability on duplicate failure | Program tests verify receipt initialization happens during account validation, before handler transfer logic, and that no `init_if_needed`/`realloc` path can mutate an existing receipt. |
 | Documentation | `docs/threat-model.md` includes a "Double-claim defense" section referencing `programs/susu/tests/claim_payout.rs` and `tests/atdd/story-4-5-double-claim-guard.static.red.test.mjs`. |
 
 ## Commands

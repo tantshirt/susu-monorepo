@@ -60,20 +60,22 @@ test('Story 4.5 does not add runtime claimed flags that can drift from receipt e
   );
 });
 
-test('Story 4.5 duplicate-claim tests lock no-second-transfer and receipt immutability expectations', () => {
+test('Story 4.5 duplicate-claim tests lock account-validation and per-rotation guard evidence', () => {
   const source = readFileSync(claimTestPath, 'utf8');
 
   for (const requiredToken of [
     'double_claim_rejection_uses_receipt_existence_guard',
-    'receipt_fields_remain_unchanged_after_duplicate_claim_failure',
+    'has_no_existing_receipt_mutation_path',
     'claimed_rotation_zero_does_not_block_rotation_one_receipt',
     'AlreadyClaimed',
-    'post_first_claim_vault_balance',
+    'init_if_needed',
+    'realloc',
     'transfer_checked',
   ]) {
     assert.match(source, new RegExp(requiredToken), `claim_payout tests must include ${requiredToken}`);
   }
 
+  assert.match(source, /receipt_init[\s\S]*accounts_start[\s\S]*handler_start/, 'tests must prove receipt init is account-validation-time');
   assert.match(source, /assert_ne!\([^;]*rotation_0_receipt[^;]*rotation_1_receipt/s, 'tests must prove per-rotation PDA isolation');
 });
 
