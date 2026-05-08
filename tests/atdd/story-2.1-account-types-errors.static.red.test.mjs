@@ -123,6 +123,7 @@ test('[P0] Group account locks the Story 2.1 state shape', async () => {
   assertRustField(source, 'bump', 'u8');
   assertRustField(source, 'start_timestamp', 'i64');
   assertRustField(source, 'contribution_window_duration', 'i64');
+  assertRustField(source, 'slash_grace_seconds', 'i64');
 
   for (const variant of ['Forming', 'Active', 'Cancelled', 'Completed']) {
     assert.match(source, new RegExp(`\\b${variant}\\b`), `missing GroupStatus.${variant}`);
@@ -290,6 +291,7 @@ test('[P0] IDL account type definitions match Story 2.1 account shapes', async (
     ['bump', 'u8'],
     ['start_timestamp', 'i64'],
     ['contribution_window_duration', 'i64'],
+    ['slash_grace_seconds', 'i64'],
   ]);
   assertIdlStructFields(idl, 'MemberSlot', [
     ['pubkey', 'pubkey'],

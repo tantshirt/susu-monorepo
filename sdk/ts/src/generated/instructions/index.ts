@@ -7,5 +7,6 @@ export * from './createGroup.js';
 export * from './inviteMembers.js';
 export * from './postCollateral.js';
 export * from './slashMember.js';
+export * from './startContributions.js';
 export * from './topUpCollateral.js';
 export * from './withdrawCollateral.js';

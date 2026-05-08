@@ -9,5 +9,8 @@
     "verify": "echo \"verify placeholder\"",
     "sdk:codegen": "node codama.config.mjs",
     "test:atdd": "node --test tests/atdd/*.red.test.mjs"
+  },
+  "devDependencies": {
+    "tsx": "^4.21.0"
   }
 }

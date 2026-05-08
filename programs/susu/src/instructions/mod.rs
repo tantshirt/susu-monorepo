@@ -6,5 +6,6 @@ pub mod create_group;
 pub mod invite_members;
 pub mod post_collateral;
 pub mod slash_member;
+pub mod start_contributions;
 pub mod top_up_collateral;
 pub mod withdraw_collateral;

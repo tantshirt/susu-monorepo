@@ -63,15 +63,15 @@ development_status:
   epic-2-retrospective: done
 
   # Epic 3: Curve Module, Contributions & Collateral Lifecycle
-  epic-3: in-progress
+  epic-3: done
   3-1-curve-module: done
-  3-2-post-collateral: ready-for-dev
-  3-3-pda-vault-init: ready-for-dev
+  3-2-post-collateral: done
+  3-3-pda-vault-init: done
   3-4-contribute: done # PR #94 review + MemberPosition raw-layout parity in TS queries
   3-5-top-up-collateral: done # merged via PR #96
-  3-6-slash-member: ready-for-dev
-  3-7-withdraw-collateral: ready-for-dev
-  3-8-all-collateralized-gate: ready-for-dev
+  3-6-slash-member: done
+  3-7-withdraw-collateral: done
+  3-8-all-collateralized-gate: done
   epic-3-retrospective: optional
 
   # Epic 4: Permissionless Rotation & Payout Claim

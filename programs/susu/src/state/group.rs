@@ -19,6 +19,8 @@ pub struct Group {
     pub start_timestamp: i64,
     /// Inclusive contribution window length for each rotation (seconds).
     pub contribution_window_duration: i64,
+    /// Seconds after a missed contribution deadline before `slash_member` is allowed.
+    pub slash_grace_seconds: i64,
 }
 
 #[derive(AnchorSerialize, AnchorDeserialize, Clone, Debug, Default, InitSpace)]

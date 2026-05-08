@@ -84,7 +84,7 @@ pnpm test
 bash scripts/check-idl-hash.sh
 bash scripts/check-patterns.sh
 bash scripts/check-sdk-parity.sh
-pnpm tsx scripts/check-i18n-parity.ts
+pnpm exec tsx scripts/check-i18n-parity.ts
 bash scripts/check-fincen-posture.sh
 ```
 
