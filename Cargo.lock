@@ -3621,6 +3621,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "solana-compute-budget-interface"
+version = "3.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "8292c436b269ad23cecc8b24f7da3ab07ca111661e25e00ce0e1d22771951ab9"
+dependencies = [
+ "solana-instruction",
+ "solana-sdk-ids",
+]
+
+[[package]]
 name = "solana-config-interface"
 version = "2.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -5475,13 +5485,19 @@ dependencies = [
 
 [[package]]
 name = "susu-client"
-version = "0.0.1"
+version = "0.1.0-alpha.0"
 dependencies = [
  "anchor-lang",
+ "anchor-spl",
+ "borsh",
  "solana-client",
  "solana-commitment-config",
+ "solana-compute-budget-interface",
  "solana-sdk",
+ "solana-signer",
+ "solana-transaction 3.1.0",
  "susu",
+ "thiserror 2.0.18",
 ]
 
 [[package]]

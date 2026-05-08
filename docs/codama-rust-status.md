@@ -30,6 +30,23 @@ Neither can be proven in this environment today.
 - Continue using deterministic fallback generation via `node codama.config.mjs` until toolchain is available.
 - Do not promote this status to `partial` or `working` until both commands above run successfully.
 
+## Story 6.4 Rust Client Fallback
+
+Story 6.4 keeps `sdk/rust/src/generated/` read-only and uses it as the Codama
+fallback surface for instruction names, account marker types, error names, and
+seed constants. The ergonomic Rust SDK layer is hand-rolled in:
+
+- `sdk/rust/src/client.rs` for `SusuClient`, explicit `Cluster`, and simulate-by-default transaction builders.
+- `sdk/rust/src/instructions.rs` for same-name Rust builders that call `generated::instructions::*` and use Anchor generated account/instruction structs for encoding.
+- `sdk/rust/src/accounts.rs` for account type re-exports and decoders.
+- `sdk/rust/src/pdas.rs` for canonical seed-constant PDA derivation through `susu::seeds`.
+- `sdk/rust/src/errors.rs` for `thiserror` SDK errors and Anchor custom error code parity.
+
+This is intentionally a fallback until Codama can render a complete Rust client
+from the frozen IDL. When Codama Rust output can replace these hand-rolled
+helpers, keep the public surface compatible and let Story 6.5 parity checks
+catch drift.
+
 ## Exit Criteria To Upgrade Status
 
 Run these on a machine with full toolchain:
