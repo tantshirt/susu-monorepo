@@ -8,11 +8,12 @@ export const defaultLocale: AppLocale = 'en';
 
 export const rtlLocales = ['ar'] as const;
 
-const ONE_YEAR_IN_SECONDS = 60 * 60 * 24 * 365;
+// Standard-year cookie max-age: 365 days.
+const STANDARD_YEAR_IN_SECONDS = 31_536_000;
 
 export const localeCookie = {
   name: 'NEXT_LOCALE',
-  maxAge: ONE_YEAR_IN_SECONDS,
+  maxAge: STANDARD_YEAR_IN_SECONDS,
   sameSite: 'lax' as const,
 };
 

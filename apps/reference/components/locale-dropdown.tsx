@@ -13,7 +13,13 @@ export function LocaleDropdown() {
   const pathname = usePathname();
 
   function onLocaleChange(nextLocale: string) {
-    const currentPathWithoutLocale = pathname.replace(/^\/[^/]+/, '');
+    const segments = pathname.split('/').filter(Boolean);
+    const [, ...rest] = segments;
+    const currentPathWithoutLocale = locales.includes(segments[0] as (typeof locales)[number])
+      ? rest.length > 0
+        ? `/${rest.join('/')}`
+        : ''
+      : pathname;
     router.replace(`/${nextLocale}${currentPathWithoutLocale}`);
   }
 
