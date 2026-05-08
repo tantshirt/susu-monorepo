@@ -91,7 +91,7 @@ test('Story 6.10 classifies required failure buckets with recovery docs', () => 
 });
 
 test('Story 6.10 keeps RPC failures out of the dependency bucket', async () => {
-  const { classifyDemoError } = await import(pathToFileURL(runnerPath).href);
+  const { classifyDemoError } = await import(pathToFileURL(classifierPath).href);
 
   assert.equal(
     classifyDemoError(new Error('Solana node connection refused')).bucket,

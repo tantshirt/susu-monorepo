@@ -34,6 +34,10 @@ Cursor Bugbot flagged that Solscan links still mapped every non-mainnet cluster 
 
 Cursor Bugbot flagged unreachable dependency-classifier alternatives for `required`, `requires`, and `mismatch`. The classifier now requires whitespace after the tool name for those phrases, and ATDD covers `anchor mismatch` and `solana required`.
 
+### Fixed: Classifier Test SDK Coupling
+
+Cursor Bugbot flagged that classifier ATDD imported through the SDK-backed runner. The test now imports `scripts/susu-demo-classify.mjs` directly, keeping classifier coverage independent of SDK build state.
+
 ## Evidence
 
 - `node --test tests/atdd/story-6-10-susu-demo-script.static.red.test.mjs`
