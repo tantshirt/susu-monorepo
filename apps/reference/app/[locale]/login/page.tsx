@@ -2,11 +2,12 @@
 
 import { useMemo, useState } from 'react';
 
-import { getPrivySigner, getPrivyState } from '../../../lib/auth/privy.js';
+import { getPrivyEmbeddedWallet, getPrivySigner, getPrivyState } from '../../../lib/auth/privy.js';
 import { useWalletStandardSigner } from '../../../lib/auth/wallet-standard.js';
 
 export default function LoginPage() {
   const privyState = useMemo(() => getPrivyState(), []);
+  const privyWallet = useMemo(() => getPrivyEmbeddedWallet(), []);
   const walletStandardSigner = useWalletStandardSigner();
   const [selectedPath, setSelectedPath] = useState<'privy' | 'wallet-standard'>(
     privyState.available ? 'privy' : 'wallet-standard',
@@ -14,10 +15,10 @@ export default function LoginPage() {
 
   const signer = useMemo(() => {
     if (selectedPath === 'privy') {
-      return getPrivySigner();
+      return getPrivySigner(privyWallet);
     }
     return walletStandardSigner;
-  }, [selectedPath, walletStandardSigner]);
+  }, [privyWallet, selectedPath, walletStandardSigner]);
 
   return (
     <main>

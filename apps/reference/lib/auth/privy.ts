@@ -16,8 +16,10 @@ export type PrivyState =
       config?: undefined;
     }>;
 
+type PrivyWindow = Window & { __SUSU_PRIVY_WALLET__?: WalletLike };
+
 export function getPrivyState(): PrivyState {
-  const privyAppId = getPublicEnv('NEXT_PUBLIC_PRIVY_APP_ID') ?? '';
+  const privyAppId = getPublicEnv('NEXT_PUBLIC_PRIVY_APP_ID');
   if (!privyAppId) {
     return { available: false, reason: 'missing_app_id' };
   }
@@ -42,6 +44,14 @@ export function getPrivyState(): PrivyState {
     // Provider init failures should not crash login; fallback stays Wallet-Standard-only.
     return { available: false, reason: 'provider_error' };
   }
+}
+
+export function getPrivyEmbeddedWallet(): WalletLike | undefined {
+  if (typeof window === 'undefined') {
+    return undefined;
+  }
+  const wallet = (window as PrivyWindow).__SUSU_PRIVY_WALLET__;
+  return wallet?.address ? wallet : undefined;
 }
 
 export function getPrivySigner(wallet?: WalletLike) {
