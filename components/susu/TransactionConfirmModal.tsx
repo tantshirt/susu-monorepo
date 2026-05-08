@@ -228,7 +228,7 @@ export function TransactionConfirmModal({
         style={{
           margin: 0,
           border: 'none',
-          width: isMobile ? '100%' : '100%',
+          width: '100%',
           maxWidth: isMobile ? '100%' : 560,
           minHeight: isMobile ? '100%' : 'auto',
           borderRadius: isMobile ? 0 : 12,
