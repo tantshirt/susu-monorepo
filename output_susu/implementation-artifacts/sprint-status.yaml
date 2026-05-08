@@ -106,7 +106,7 @@ development_status:
   6-5-sdk-parity-check: ready-for-dev
   6-6-example-with-privy: ready-for-dev
   6-7-example-with-squads: done
-  6-8-example-with-token-extensions: ready-for-dev
+  6-8-example-with-token-extensions: done # PR #180 CI + Cursor Bugbot clean on 2026-05-08
   6-9-integration-docs: ready-for-dev
   6-10-susu-demo-script: ready-for-dev
   6-11-verify-orchestrator: ready-for-dev
