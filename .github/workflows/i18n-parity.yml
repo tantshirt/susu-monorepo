@@ -1,0 +1,21 @@
+name: i18n-parity
+
+on:
+  pull_request:
+    paths:
+      - 'apps/reference/messages/*.json'
+
+jobs:
+  parity:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+
+      - name: Check i18n parity
+        run: node scripts/check-i18n-parity.ts

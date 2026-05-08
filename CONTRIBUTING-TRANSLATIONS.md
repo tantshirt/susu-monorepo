@@ -16,8 +16,31 @@ Locale bundles live in:
 ## Locale Stub Layout
 
 - Every key present in `en.json` must exist in every locale file.
-- Missing keys fail parity checks in CI.
+- Missing keys and extra keys fail parity checks in CI.
 - Keep nesting and key naming identical to the English source.
+- ICU MessageFormat strings are checked at the translation key level only (not plural/select branch internals).
+
+## Parity Check Error Format
+
+The parity script is `scripts/check-i18n-parity.ts` and CI runs it in `.github/workflows/i18n-parity.yml`.
+
+On failure it exits with code `1` and prints:
+
+```text
+check-i18n-parity: parity check failed
+[
+  { "locale": "<locale>", "missing_key": "<dot.path>" },
+  { "locale": "<locale>", "extra_key": "<dot.path>" }
+]
+```
+
+## Recovery Workflow
+
+1. Run `node scripts/check-i18n-parity.ts` locally.
+2. For each `missing_key`, add the key to the locale bundle with the same nesting as `en.json`.
+3. For each `extra_key`, remove it from the locale bundle (or add the matching key in `en.json` first if English is intentionally expanding).
+4. Re-run `node scripts/check-i18n-parity.ts` until it prints `check-i18n-parity: OK`.
+5. Push your translation updates so PR CI can confirm parity.
 
 ## Auto-translation Prohibition
 

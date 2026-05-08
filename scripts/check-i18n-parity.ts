@@ -3,7 +3,11 @@ import { resolve } from 'node:path';
 
 type JsonValue = null | boolean | number | string | JsonValue[] | { [key: string]: JsonValue };
 
-const messagesDir = resolve('apps/reference/messages');
+type ParityIssue =
+  | { locale: string; missing_key: string }
+  | { locale: string; extra_key: string };
+
+const messagesDir = resolve(process.env.SUSU_I18N_MESSAGES_DIR ?? 'apps/reference/messages');
 
 function isRecord(value: JsonValue): value is { [key: string]: JsonValue } {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
@@ -62,7 +66,7 @@ if (!localeFiles.includes('en.json')) {
 }
 
 const expectedKeys = collectKeys(readJson(resolve(messagesDir, 'en.json')));
-const issues: string[] = [];
+const issues: ParityIssue[] = [];
 
 for (const file of localeFiles) {
   if (file === 'en.json') {
@@ -74,19 +78,17 @@ for (const file of localeFiles) {
   const missing = [...expectedKeys].filter((key) => !keys.has(key));
   const extra = [...keys].filter((key) => !expectedKeys.has(key));
 
-  if (missing.length > 0) {
-    issues.push(`[${locale}] missing keys: ${missing.join(', ')}`);
-  }
-  if (extra.length > 0) {
-    issues.push(`[${locale}] extra keys: ${extra.join(', ')}`);
-  }
+  missing.forEach((missingKey) => {
+    issues.push({ locale, missing_key: missingKey });
+  });
+  extra.forEach((extraKey) => {
+    issues.push({ locale, extra_key: extraKey });
+  });
 }
 
 if (issues.length > 0) {
   console.error('check-i18n-parity: parity check failed');
-  for (const issue of issues) {
-    console.error(`  - ${issue}`);
-  }
+  console.error(JSON.stringify(issues, null, 2));
   process.exit(1);
 }
 
