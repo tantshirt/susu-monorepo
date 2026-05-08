@@ -1,7 +1,8 @@
 # Story 4.1: Deterministic on-chain rotation-slot assignment algorithm
 
-Status: review
+Status: done
 Issue: #38
+Merged: PR #157 on 2026-05-08
 
 ## Story
 

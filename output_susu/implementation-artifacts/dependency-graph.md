@@ -1,5 +1,5 @@
 # Story Dependency Graph
-_Last updated: 2026-05-08T02:54:40Z_
+_Last updated: 2026-05-08T03:42:30Z_
 
 ## Epic Readiness Summary
 
@@ -8,7 +8,7 @@ _Last updated: 2026-05-08T02:54:40Z_
 | 1 | `sprint-status.yaml` marks `epic-1` and stories 1.1-1.6 `done`; `epic-1-retrospective` is `done`. | Merged PRs found for Epic 1 story branches: #1, #2, #3, #4, #7, #8, #9, #10, #11. | Complete |
 | 2 | `sprint-status.yaml` marks `epic-2` and stories 2.1-2.6 `done`; `epic-2-retrospective` is `done`. | Merged PRs #12-#17. | Complete |
 | 3 | `sprint-status.yaml` marks `epic-3` and stories 3.1-3.8 `done`; retrospective remains optional. | Merged PRs #94, #95, #96, and #153. | Complete |
-| 4 | `sprint-status.yaml` marks `epic-4` `backlog`; story files 4.1-4.6 are `ready-for-dev`. | No Epic 4 implementation PRs expected yet. | Ready to start at 4.1 |
+| 4 | `sprint-status.yaml` marks `epic-4` `in-progress`; Story 4.1 is `done`; Stories 4.2-4.6 are `ready-for-dev`. | Story 4.1 merged via PR #157. | Ready to continue at 4.2 |
 
 ## Stories
 
@@ -34,8 +34,8 @@ _Last updated: 2026-05-08T02:54:40Z_
 | 3.6 | 3 | Implement slash_member instruction | done | — | #153 | merged | none | ✅ Done |
 | 3.7 | 3 | Implement withdraw_collateral instruction | done | — | #153 | merged | 2.5 | ✅ Done |
 | 3.8 | 3 | Enforce all-collateralized gate before contributions can start | done | — | #153 | merged | 3.4 | ✅ Done |
-| 4.1 | 4 | Deterministic on-chain rotation-slot assignment algorithm | ready-for-dev | #38 | — | — | 3.8 | ✅ Yes |
-| 4.2 | 4 | Implement claim_payout instruction | ready-for-dev | #39 | — | — | 4.1 | ❌ No (4.1 not merged) |
+| 4.1 | 4 | Deterministic on-chain rotation-slot assignment algorithm | done | #38 | #157 | merged | 3.8 | ✅ Done |
+| 4.2 | 4 | Implement claim_payout instruction | ready-for-dev | #39 | — | — | 4.1 | ✅ Yes |
 | 4.3 | 4 | claim_payout guard — non-recipient rejection | ready-for-dev | #40 | — | — | 4.2 | ❌ No (4.2 not merged) |
 | 4.4 | 4 | claim_payout guard — pre-deadline rejection | ready-for-dev | #41 | — | — | 4.3 | ❌ No (4.3 not merged) |
 | 4.5 | 4 | claim_payout guard — double-claim rejection via RotationReceipt PDA | ready-for-dev | #42 | — | — | 4.2 | ❌ No (4.2 not merged) |
@@ -162,7 +162,7 @@ _Last updated: 2026-05-08T02:54:40Z_
 - **9.4** depends on: 8.3, 9.2, 9.3
 
 ## Notes
-- GitHub was reconciled on 2026-05-08: Epics 1-3 are complete on `main` through PR #153 (`feat(program): Epic 3 collateral lifecycle (Stories 3.2-3.8)`).
-- **Ready to Work** for Epic 4 follows the stacked execution chain: 4.1 -> 4.2 -> {4.3, 4.5}; 4.4 depends on 4.3; 4.6 depends on 4.1-4.5 complete/merged.
+- GitHub was reconciled on 2026-05-08: Epics 1-3 are complete on `main` through PR #153 (`feat(program): Epic 3 collateral lifecycle (Stories 3.2-3.8)`). Story 4.1 merged via PR #157 (`feat(epic4): implement rotation slot algorithm`).
+- **Ready to Work** for Epic 4 now points to 4.2; 4.1 is merged via PR #157, then 4.3 and 4.5 unblock after 4.2; 4.4 depends on 4.3; 4.6 depends on 4.1-4.5 complete/merged.
 - **Ready to Work** for Epic 5+ remains blocked by epic ordering until Epic 4 is `done`.
 - Re-run this reconciliation after each Epic 4 story PR merges so BAD can select the next unblocked story batch.
