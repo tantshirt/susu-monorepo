@@ -40,7 +40,8 @@ test('legal engagement tracker records firm scope, SOW status, delivery, and PDF
 
   for (const required of [
     /firm/,
-    /sow signed date|sow status/,
+    /sow signed date/,
+    /sow status/,
     /expected delivery/,
     /status/,
     /docs\/legal-opinion\.pdf/,
@@ -82,7 +83,9 @@ test('placeholder PDF exists and documents delay without legal overclaiming', ()
   const sow = read(sowSummaryPath);
 
   assert.match(pdf, /%PDF-/, 'legal opinion artifact must be a PDF file');
-  assert.match(pdf, /Legal Opinion Placeholder|Firm Letter Delayed|docs\/legal-sow-summary\.md/, 'placeholder PDF must explain delay and link the SOW summary');
+  assert.match(pdf, /Legal Opinion Placeholder/, 'placeholder PDF must identify itself as a placeholder');
+  assert.match(pdf, /Firm Letter Delayed/, 'placeholder PDF must explain that the firm letter is delayed');
+  assert.match(pdf, /docs\/legal-sow-summary\.md/, 'placeholder PDF must link the SOW summary');
   assert.match(placeholderScript, /docs\/legal-opinion\.pdf/, 'placeholder renderer must target the public PDF path');
   assert.match(sow, /non-confidential/i, 'SOW summary must mark itself as non-confidential');
   assert.doesNotMatch(compact(pdf), /counsel concludes|legal opinion concludes|is not a money services business/, 'placeholder must not fabricate a legal conclusion');
