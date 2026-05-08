@@ -19,7 +19,15 @@ export function SkinToggle() {
     syncFromCookie();
   }, [syncFromCookie]);
 
-  const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+  const focusOption = (value: Skin) => {
+    if (typeof document === 'undefined') {
+      return;
+    }
+    const button = document.querySelector<HTMLButtonElement>(`button[data-skin-option="${value}"]`);
+    button?.focus();
+  };
+
+  const handleKeyDown = (event: KeyboardEvent<HTMLButtonElement>) => {
     if (!['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End'].includes(event.key)) {
       return;
     }
@@ -28,19 +36,23 @@ export function SkinToggle() {
 
     if (event.key === 'Home') {
       setSkin('neutral');
+      focusOption('neutral');
       return;
     }
 
     if (event.key === 'End') {
       setSkin('heritage');
+      focusOption('heritage');
       return;
     }
 
-    setSkin(skin === 'neutral' ? 'heritage' : 'neutral');
+    const nextSkin = skin === 'neutral' ? 'heritage' : 'neutral';
+    setSkin(nextSkin);
+    focusOption(nextSkin);
   };
 
   return (
-    <div aria-label="Skin" role="radiogroup" onKeyDown={handleKeyDown} className="skin-toggle" tabIndex={0}>
+    <div aria-label="Skin" role="radiogroup" className="skin-toggle">
       <span aria-hidden="true" className={`skin-toggle__thumb ${skin === 'heritage' ? 'skin-toggle__thumb--heritage' : ''}`} />
       {OPTIONS.map((option) => (
         <button
@@ -48,8 +60,11 @@ export function SkinToggle() {
           type="button"
           role="radio"
           aria-checked={skin === option.value}
+          tabIndex={skin === option.value ? 0 : -1}
+          data-skin-option={option.value}
           className={`skin-toggle__option ${skin === option.value ? 'skin-toggle__option--active' : ''}`}
           onClick={() => setSkin(option.value)}
+          onKeyDown={handleKeyDown}
         >
           {option.label}
         </button>

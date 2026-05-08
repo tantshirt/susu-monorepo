@@ -16,6 +16,7 @@ test('switch toggles palette and persists after reload', async ({ page }) => {
     )
     .toEqual(
       expect.objectContaining({
+        cookie: expect.stringContaining('skin=heritage'),
         localStorage: 'heritage',
       }),
     );

@@ -41,6 +41,12 @@ function persistSkin(skin: Skin): void {
   }
 }
 
+function syncStorageSkin(skin: Skin): void {
+  if (typeof window !== 'undefined') {
+    window.localStorage.setItem(SKIN_LOCAL_STORAGE_KEY, skin);
+  }
+}
+
 function getInitialSkin(): Skin {
   if (typeof document === 'undefined') {
     return FALLBACK_SKIN;
@@ -80,7 +86,7 @@ export const useSkinStore = create<SkinStore>((set) => ({
   syncFromCookie: () => {
     const cookieSkin = readCookieSkin() ?? FALLBACK_SKIN;
     applySkinToDom(cookieSkin);
-    persistSkin(cookieSkin);
+    syncStorageSkin(cookieSkin);
     set({ skin: cookieSkin });
   },
 }));
