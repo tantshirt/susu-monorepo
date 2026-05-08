@@ -1,6 +1,6 @@
 # Story 5.8: Audit firm engagement + report linking (FR57, NFR-S1)
 
-Status: ready-for-dev
+Status: review
 
 ## Story
 
@@ -19,33 +19,33 @@ So that the audit closure is operational and the report's existence becomes a li
 
 ## Tasks / Subtasks
 
-- [ ] Draft `audits/README.md` index (AC: 1)
-  - [ ] `# Audits` H1
-  - [ ] `## Engagement Status` table with columns: `Firm`, `Scope`, `Engagement Date`, `Expected Delivery`, `Status`, `Report Path`
-  - [ ] One row for the primary audit engagement
-  - [ ] `## Reproduction & Verification` points to adversary, invariant, threat-model, curve, and FinCEN artifacts
-  - [ ] `## Findings Tracker` documents public issue-label handling
-- [ ] Day-1 deliverable bundle (AC: 3)
-  - [ ] Create `scripts/audit-handoff.sh`
-  - [ ] Bundle frozen IDL commit/IDL JSON, invariant test, adversary report, threat model, coverage matrix, curve doc, FinCEN framing, and architecture doc
-  - [ ] Write `audits/handoff-YYYY-MM-DD.tar.gz` and keep it gitignored
-  - [ ] Include a bundle manifest for audit handoff review
-- [ ] SOW handling (AC: 2)
-  - [ ] If sharable, commit `audits/audit-sow.pdf`
-  - [ ] If confidential or not yet publishable, commit `audits/audit-sow-summary.md`
-  - [ ] Reference the selected SOW artifact from `audits/README.md`
-- [ ] Report landing scaffolding (AC: 4)
-  - [ ] Document report commit recipe at `audits/{firm-slug}-{YYYY-MM}.pdf`
-  - [ ] Add `scripts/check-audit-report-citations.sh` enforcing the two NFR-S1 path citations
-  - [ ] Cover positive and negative citation-check behavior with a static ATDD test
-- [ ] README badge transition workflow (AC: 5)
-  - [ ] Add TODO in `audits/README.md` for Epic 8 badge wiring
-  - [ ] Do not edit root `README.md` in this story
-- [ ] Findings tracker setup (AC: 6)
-  - [ ] Create or verify GitHub labels `audit-finding` and `audit-finding-resolved`
-  - [ ] Document mitigation status workflow in `audits/README.md`
-- [ ] Daily-log entry guidance
-  - [ ] Document Day-1 handoff and report-delivery log requirements
+- [x] Draft `audits/README.md` index (AC: 1)
+  - [x] `# Audits` H1
+  - [x] `## Engagement Status` table with columns: `Firm`, `Scope`, `Engagement Date`, `Expected Delivery`, `Status`, `Report Path`
+  - [x] One row for the primary audit engagement
+  - [x] `## Reproduction & Verification` points to adversary, invariant, threat-model, curve, and FinCEN artifacts
+  - [x] `## Findings Tracker` documents public issue-label handling
+- [x] Day-1 deliverable bundle (AC: 3)
+  - [x] Create `scripts/audit-handoff.sh`
+  - [x] Bundle frozen IDL commit/IDL JSON, invariant test, adversary report, threat model, coverage matrix, curve doc, FinCEN framing, and architecture doc
+  - [x] Write `audits/handoff-YYYY-MM-DD.tar.gz` and keep it gitignored
+  - [x] Include a bundle manifest for audit handoff review
+- [x] SOW handling (AC: 2)
+  - [x] If sharable, commit `audits/audit-sow.pdf`
+  - [x] If confidential or not yet publishable, commit `audits/audit-sow-summary.md`
+  - [x] Reference the selected SOW artifact from `audits/README.md`
+- [x] Report landing scaffolding (AC: 4)
+  - [x] Document report commit recipe at `audits/{firm-slug}-{YYYY-MM}.pdf`
+  - [x] Add `scripts/check-audit-report-citations.sh` enforcing the two NFR-S1 path citations
+  - [x] Cover positive and negative citation-check behavior with a static ATDD test
+- [x] README badge transition workflow (AC: 5)
+  - [x] Add TODO in `audits/README.md` for Epic 8 badge wiring
+  - [x] Do not edit root `README.md` in this story
+- [x] Findings tracker setup (AC: 6)
+  - [x] Create or verify GitHub labels `audit-finding` and `audit-finding-resolved`
+  - [x] Document mitigation status workflow in `audits/README.md`
+- [x] Daily-log entry guidance
+  - [x] Document Day-1 handoff and report-delivery log requirements
 
 ## Dev Notes
 
@@ -67,10 +67,45 @@ So that the audit closure is operational and the report's existence becomes a li
 
 ### Agent Model Used
 
-_TBD_
+GPT-5 Codex
 
 ### Debug Log References
 
+- Ran `node --test tests/atdd/story-5-8-audit-engagement.static.red.test.mjs`.
+- Ran `pnpm test:atdd`.
+- Ran `bash scripts/audit-handoff.sh --allow-missing --firm primary-audit-firm --date 2026-05-08` and removed the generated gitignored bundle artifacts after validation.
+- Created or verified GitHub labels `audit-finding` and `audit-finding-resolved`.
+
 ### Completion Notes List
 
+- Implemented `audits/README.md` as the audit engagement index with SOW handling, Day-1 handoff instructions, report landing checklist, badge transition source-of-truth, findings tracker policy, and log requirements.
+- Added `audits/audit-sow-summary.md` for confidential or not-yet-publishable SOW handling without committing firm-private terms.
+- Added `scripts/audit-handoff.sh` with strict default artifact validation, `--allow-missing` preflight support for concurrent Epic 5 root-story PRs, tarball output, and manifest output.
+- Added `scripts/check-audit-report-citations.sh` enforcing required NFR-S1 report citations.
+- Added fixture-based ATDD coverage for handoff tarball contents and citation-check positive/negative behavior.
+
 ### File List
+
+- `.gitignore`
+- `audits/README.md`
+- `audits/audit-sow-summary.md`
+- `output_susu/implementation-artifacts/5-8-audit-engagement.md`
+- `output_susu/test-artifacts/atdd-checklist-5-8-audit-engagement.md`
+- `scripts/audit-handoff.sh`
+- `scripts/check-audit-report-citations.sh`
+- `tests/atdd/story-5-8-audit-engagement.atdd.md`
+- `tests/atdd/story-5-8-audit-engagement.static.red.test.mjs`
+- `tests/fixtures/audit-handoff-complete/IDL_FREEZE.md`
+- `tests/fixtures/audit-handoff-complete/audits/adversary/adversary-report.json`
+- `tests/fixtures/audit-handoff-complete/docs/collateral-curve.md`
+- `tests/fixtures/audit-handoff-complete/docs/fincen-cvc-framing.md`
+- `tests/fixtures/audit-handoff-complete/docs/threat-model.md`
+- `tests/fixtures/audit-handoff-complete/output_susu/planning-artifacts/architecture.md`
+- `tests/fixtures/audit-handoff-complete/programs/susu/idl/susu.json`
+- `tests/fixtures/audit-handoff-complete/tests/coverage/threat-model.md`
+- `tests/fixtures/audit-handoff-complete/tests/invariants/no_strategic_default.rs`
+
+### Change Log
+
+- 2026-05-08: Added ATDD artifacts for Story 5.8 audit engagement workflow.
+- 2026-05-08: Implemented audit engagement docs, handoff tooling, citation check, fixtures, and validation record.

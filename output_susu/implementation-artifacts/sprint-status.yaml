@@ -93,7 +93,7 @@ development_status:
   5-5-collateral-curve-doc: ready-for-dev
   5-6-threat-model-doc: done
   5-7-fincen-cvc-framing-doc: done
-  5-8-audit-engagement: ready-for-dev
+  5-8-audit-engagement: review
   5-9-legal-opinion: ready-for-dev
   epic-5-retrospective: optional
 
