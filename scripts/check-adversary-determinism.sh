@@ -7,6 +7,7 @@ SEED="${COMMIT_SHA:-${GITHUB_SHA:-$(git rev-parse HEAD)}}"
 WORK_DIR="target/adversary-determinism"
 FIRST_REPORT="${WORK_DIR}/first/adversary-report.json"
 SECOND_REPORT="${WORK_DIR}/second/adversary-report.json"
+CANONICAL_REPORT="audits/adversary/adversary-report.json"
 
 rm -rf "${WORK_DIR}"
 mkdir -p "$(dirname "${FIRST_REPORT}")" "$(dirname "${SECOND_REPORT}")"
@@ -32,6 +33,10 @@ run_report "${FIRST_REPORT}"
 run_report "${SECOND_REPORT}"
 
 cmp -s "${FIRST_REPORT}" "${SECOND_REPORT}"
+
+if [ "${CHECK_CANONICAL:-0}" = "1" ]; then
+  cmp -s "${CANONICAL_REPORT}" "${FIRST_REPORT}"
+fi
 
 node -e '
 const fs = require("node:fs");
