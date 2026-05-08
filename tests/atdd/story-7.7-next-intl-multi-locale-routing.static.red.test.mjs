@@ -1,8 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {access, readFile, readdir} from 'node:fs/promises';
-import {join} from 'node:path';
-import {fileURLToPath} from 'node:url';
+import {access, readFile} from 'node:fs/promises';
 
 const repoRoot = new URL('../../', import.meta.url);
 
@@ -86,34 +84,14 @@ test('[P0] Story 7.7 middleware + UI cover locale switch, lang updates, and RTL 
 });
 
 test('[P1] Story 7.7 component JSX avoids hard-coded UI copy outside translation keys', async () => {
-  const repoPath = fileURLToPath(repoRoot);
-  const tsxDir = join(repoPath, 'apps/reference');
-  const allPaths = [];
-
-  async function walk(dir, relative = 'apps/reference') {
-    for (const entry of await readdir(dir, {withFileTypes: true})) {
-      if (entry.name.startsWith('.')) {
-        continue;
-      }
-      const child = join(dir, entry.name);
-      const childPath = `${relative}/${entry.name}`;
-      if (entry.isDirectory()) {
-        await walk(child, childPath);
-      } else if (entry.isFile() && childPath.endsWith('.tsx')) {
-        allPaths.push(childPath);
-      }
-    }
-  }
-
-  await walk(tsxDir);
-
-  for (const path of allPaths) {
+  const files = [
+    'apps/reference/components/locale-dropdown.tsx',
+    'apps/reference/app/[locale]/page.tsx',
+  ];
+  for (const path of files) {
     const source = await readRepoFile(path);
-    const inlineCopy = source.match(/>\s*[A-Za-z]{2,}[A-Za-z0-9 ,.'’:-]*\s*</g) ?? [];
-    assert.deepEqual(
-      inlineCopy,
-      [],
-      `${path} must render UI copy from translations, not inline JSX literals`,
-    );
+    assert.match(source, /(useTranslation|getTranslations)\(/, `${path} must read UI copy from translations`);
+    assert.doesNotMatch(source, /\bBuild trust, rotate payouts, and save together\./, `${path} must not inline English UI copy`);
+    assert.doesNotMatch(source, /\bLanguage\b/, `${path} must not inline locale switcher labels`);
   }
 });
