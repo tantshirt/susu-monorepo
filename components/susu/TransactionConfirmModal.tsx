@@ -162,8 +162,8 @@ export function TransactionConfirmModal({
 
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
+        event.preventDefault();
         if (!isSigning) {
-          event.preventDefault();
           onClose();
         }
         return;
