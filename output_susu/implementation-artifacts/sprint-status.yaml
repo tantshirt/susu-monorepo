@@ -95,7 +95,7 @@ development_status:
   5-7-fincen-cvc-framing-doc: done
   5-8-audit-engagement: done
   5-9-legal-opinion: done
-  epic-5-retrospective: optional
+  epic-5-retrospective: done
 
   # Epic 6: SDK Surface, Examples & One-Command Reproducibility
   epic-6: backlog
