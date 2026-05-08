@@ -1,6 +1,8 @@
 # Susu Protocol Monorepo
 
 > Placeholder hero for Epic 1. This section is intentionally brief and will be replaced in Epic 8 with the polished first-viewport narrative and demo embed.
+>
+> ![Static collateral curve hero](./static/curve-collateral.svg)
 
 Susu Protocol is a public-from-commit-zero monorepo for building rotating savings circles on Solana with auditable program constraints, multilingual onboarding, and SDK-first integration paths.
 

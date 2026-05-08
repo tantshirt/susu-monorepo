@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 320" width="720" height="320" role="img" aria-label="Collateral curve over rotation months">
+  <title>Collateral curve over rotation months</title>
+  <style>
+    .line { fill: none; stroke: #2f7d68; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1200; stroke-dashoffset: 1200; }
+    @supports (animation-timeline: view()) {
+      .line { animation: draw 1.2s ease-out both; animation-timeline: view(); animation-range: entry 10% cover 35%; }
+    }
+    @keyframes draw { to { stroke-dashoffset: 0; } }
+    @media (prefers-reduced-motion: reduce) {
+      .line { animation: none !important; stroke-dashoffset: 0 !important; }
+    }
+  </style>
+  <rect x="0" y="0" width="720" height="320" rx="14" fill="#f8fbfa"/>
+  <path d="M40,275 L130,246 L220,214 L310,184 L400,152 L490,121 L580,89 L680,55 L680,300 L40,300 Z" fill="rgba(47, 125, 104, 0.12)"/>
+  <polyline class="line" points="40,275 130,246 220,214 310,184 400,152 490,121 580,89 680,55"/>
+  <g fill="#2f7d68">
+    <circle cx="40" cy="275" r="4"/><circle cx="130" cy="246" r="4"/><circle cx="220" cy="214" r="4"/><circle cx="310" cy="184" r="4"/>
+    <circle cx="400" cy="152" r="4"/><circle cx="490" cy="121" r="4"/><circle cx="580" cy="89" r="4"/><circle cx="680" cy="55" r="4"/>
+  </g>
+</svg>
