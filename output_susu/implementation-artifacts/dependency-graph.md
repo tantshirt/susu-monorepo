@@ -8,7 +8,7 @@ _Last updated: 2026-05-08T05:18:48Z_
 | 1 | `sprint-status.yaml` marks `epic-1` and stories 1.1-1.6 `done`; `epic-1-retrospective` is `done`. | Merged PRs found for Epic 1 story branches: #1, #2, #3, #4, #7, #8, #9, #10, #11. | Complete |
 | 2 | `sprint-status.yaml` marks `epic-2` and stories 2.1-2.6 `done`; `epic-2-retrospective` is `done`. | Merged PRs #12-#17. | Complete |
 | 3 | `sprint-status.yaml` marks `epic-3` and stories 3.1-3.8 `done`; retrospective remains optional. | Merged PRs #94, #95, #96, and #153. | Complete |
-| 4 | `sprint-status.yaml` marks `epic-4` `in-progress`; Stories 4.1, 4.2, 4.3, 4.4, 4.5, and 4.6 are `done`. | Story 4.1 merged via PR #157; Story 4.2 merged via PR #158; Story 4.3 merged via PR #159; Story 4.4 merged via PR #161; Story 4.5 merged via PR #160; Story 4.6 merged via PR #162. | Complete |
+| 4 | `sprint-status.yaml` marks `epic-4` `done`; Stories 4.1, 4.2, 4.3, 4.4, 4.5, and 4.6 are `done`. | Story 4.1 merged via PR #157; Story 4.2 merged via PR #158; Story 4.3 merged via PR #159; Story 4.4 merged via PR #161; Story 4.5 merged via PR #160; Story 4.6 merged via PR #162. | Complete |
 
 ## Stories
 
