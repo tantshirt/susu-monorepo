@@ -90,7 +90,7 @@ development_status:
   5-2-adversary-cli-skeleton: done
   5-3-thirty-percent-cartel-scenario: done # PR #172 merged by user-approved manual override on 2026-05-08; Cursor remained queued/ambiguous
   5-4-deterministic-adversary-report: done
-  5-5-collateral-curve-doc: ready-for-dev
+  5-5-collateral-curve-doc: review
   5-6-threat-model-doc: done
   5-7-fincen-cvc-framing-doc: done
   5-8-audit-engagement: done
