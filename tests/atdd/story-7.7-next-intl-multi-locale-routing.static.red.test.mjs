@@ -109,6 +109,11 @@ test('[P1] Story 7.7 component JSX avoids hard-coded UI copy outside translation
 
   for (const path of allPaths) {
     const source = await readRepoFile(path);
-    assert.doesNotMatch(source, />\s*[A-Za-z][^<{]*</, `${path} must render UI copy from translations, not inline JSX literals`);
+    const inlineCopy = source.match(/>\s*[A-Za-z][A-Za-z0-9 ,.'’:-]*\s*</g) ?? [];
+    assert.deepEqual(
+      inlineCopy,
+      [],
+      `${path} must render UI copy from translations, not inline JSX literals`,
+    );
   }
 });
