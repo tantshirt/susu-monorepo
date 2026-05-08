@@ -146,6 +146,7 @@ jobs:
           curl -sL https://run.surfpool.run/ | bash
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
           echo "$HOME/.cargo/bin" >> "$GITHUB_PATH"
+          export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$PATH"
           surfpool --version
 
       - name: Install JS dependencies

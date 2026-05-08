@@ -117,7 +117,7 @@ GPT-5 Codex
 - `pnpm --filter @susu/sdk test`
 - `bash scripts/check-patterns.sh`
 - `bash scripts/check-sdk-parity.sh`
-- Cursor Bugbot PR #184 review: fixed budget-breach classification and narrowed dependency mismatch regexes.
+- Cursor Bugbot PR #184 reviews: fixed budget-breach classification, narrowed dependency mismatch regexes, and exported the Surfpool install PATH before the same-step version check.
 
 ### Completion Notes List
 
@@ -128,6 +128,7 @@ GPT-5 Codex
 - Test review added runtime coverage proving the shell exits non-zero when the NFR-P2 wall-clock budget is exceeded.
 - Code review hardened the Surfpool smoke job with `--ci --no-deploy` so CI starts only the forked RPC needed by the demo.
 - Cursor review recovery added a dedicated `performance-budget` failure bucket and narrowed dependency mismatch detection so RPC failures can reach the `rpc-reachability` bucket.
+- Cursor follow-up recovery exported `$HOME/.local/bin` and `$HOME/.cargo/bin` during the Surfpool install step before running `surfpool --version`.
 
 ### File List
 

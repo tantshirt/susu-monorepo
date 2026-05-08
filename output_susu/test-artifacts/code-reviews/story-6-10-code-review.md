@@ -14,6 +14,10 @@ The initial CI smoke started Surfpool from the repository root without disabling
 
 Cursor Bugbot flagged broad `node`, `solana`, and `version` matches that could classify ordinary RPC failures as dependency mismatches. The shell and runner now match dependency issues only for explicit missing module/package, missing command, unsupported toolchain, or version-mismatch signals, leaving transport failures to the `rpc-reachability` bucket.
 
+### Fixed: Surfpool Version Check Needed Current-Step PATH
+
+Cursor Bugbot flagged that appending Surfpool install paths to `GITHUB_PATH` only affects later workflow steps. The install step now exports `$HOME/.local/bin` and `$HOME/.cargo/bin` before running `surfpool --version`, matching the Solana CLI install pattern.
+
 ## Evidence
 
 - `node --test tests/atdd/story-6-10-susu-demo-script.static.red.test.mjs`

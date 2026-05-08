@@ -112,6 +112,11 @@ test('Story 6.10 adds a Surfpool-backed main-branch CI smoke job', () => {
   assert.match(workflow, /pnpm\s+susu:demo/, 'job must run pnpm susu:demo');
   assert.match(workflow, /Wall-clock:\s*\[0-9\]\+\?s|Wall-clock:.*([0-9]+)s/, 'job must parse the final wall-clock line');
   assert.match(workflow, /SUSU_DEMO_MAX_SECONDS:\s*60|MAX_SECONDS=60/, 'job must enforce the 60s budget');
+  assert.match(
+    workflow,
+    /Install Surfpool[\s\S]*echo "\$HOME\/\.local\/bin" >> "\$GITHUB_PATH"[\s\S]*export PATH="\$HOME\/\.local\/bin:\$HOME\/\.cargo\/bin:\$PATH"[\s\S]*surfpool --version/,
+    'Surfpool install step must export the current-step PATH before checking the binary',
+  );
 });
 
 test('Story 6.10 shell command fails when the wall-clock budget is exceeded', () => {
