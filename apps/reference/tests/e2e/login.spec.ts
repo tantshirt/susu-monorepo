@@ -25,6 +25,7 @@ test('Privy unavailable falls back to Wallet-Standard (mocked)', async ({ page }
 
   await page.goto('/en/login');
   await expect(page.getByTestId('privy-unavailable')).toBeVisible();
+  await expect(page.getByTestId('cta-privy-email')).toBeDisabled();
   await expect(page.getByTestId('cta-wallet-extension')).toBeVisible();
   await expect(page.getByTestId('selected-auth-path')).toContainText('wallet-standard');
 });
