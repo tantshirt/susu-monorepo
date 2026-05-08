@@ -53,6 +53,7 @@ As an auditor, I want `docs/threat-model.md` enumerating adversary models, attac
 
 - `output_susu/implementation-artifacts/5-6-threat-model-doc.md`
 - `output_susu/test-artifacts/atdd-checklist-5-6-threat-model-doc.md`
+- `output_susu/test-artifacts/code-reviews/story-5-6-code-review.md`
 - `output_susu/test-artifacts/test-reviews/story-5-6-test-review.md`
 - `tests/atdd/story-5-6-threat-model-doc.static.red.test.mjs`
 - `docs/threat-model.md`
@@ -63,3 +64,4 @@ As an auditor, I want `docs/threat-model.md` enumerating adversary models, attac
 - 2026-05-08: Initialized Story 5.6 from issue #49.
 - 2026-05-08: Implemented threat model and coverage traceability matrix; moved story to review.
 - 2026-05-08: Completed test-review workflow; reduced static ATDD test below maintainability line budget.
+- 2026-05-08: Completed code-review workflow; fixed all coverage-matrix cited-path rows, not just required attack rows.

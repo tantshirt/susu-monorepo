@@ -51,6 +51,14 @@ function parseMarkdownTable(source) {
   });
 }
 
+function assertCitedPathsExist(rows) {
+  for (const row of rows) {
+    assert.ok(row.test_file_path.length > 0, `${row.attack} row must include a test_file_path`);
+    const citedPaths = row.test_file_path.split(/<br\s*\/?>|,/i).map((path) => path.trim()).filter(Boolean);
+    for (const citedPath of citedPaths) assert.ok(existsSync(citedPath), `${row.attack} cites missing path: ${citedPath}`);
+  }
+}
+
 test('Story 5.6 threat model enumerates every required adversary with vector, mitigation, and residual risk', () => {
   assert.ok(existsSync(threatModelPath), 'docs/threat-model.md must exist');
   const source = read(threatModelPath);
@@ -75,6 +83,7 @@ test('Story 5.6 threat model records immutability as security feature and no-hot
 test('Story 5.6 coverage matrix maps every required adversary to existing test files', () => {
   assert.ok(existsSync(coveragePath), 'tests/coverage/threat-model.md must exist');
   const rows = parseMarkdownTable(read(coveragePath));
+  assertCitedPathsExist(rows);
 
   for (const [key] of requiredAttacks) {
     const matchingRows = rows.filter((row) => row.attack.toLowerCase().includes(key));
@@ -82,11 +91,6 @@ test('Story 5.6 coverage matrix maps every required adversary to existing test f
 
     for (const row of matchingRows) {
       assert.ok(row.mitigation.length > 0, `${key} row must include mitigation text`);
-      assert.ok(row.test_file_path.length > 0, `${key} row must include a test_file_path`);
-      const citedPaths = row.test_file_path.split(/<br\s*\/?>|,/i).map((path) => path.trim()).filter(Boolean);
-      for (const citedPath of citedPaths) {
-        assert.ok(existsSync(citedPath), `${key} cites missing path: ${citedPath}`);
-      }
     }
   }
 });
