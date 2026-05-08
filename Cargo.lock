@@ -5475,13 +5475,18 @@ dependencies = [
 
 [[package]]
 name = "susu-client"
-version = "0.0.1"
+version = "0.1.0-alpha.0"
 dependencies = [
  "anchor-lang",
+ "anchor-spl",
+ "borsh",
  "solana-client",
  "solana-commitment-config",
  "solana-sdk",
+ "solana-signer",
+ "solana-transaction 3.1.0",
  "susu",
+ "thiserror 2.0.18",
 ]
 
 [[package]]

@@ -1,14 +1,14 @@
 //! SDK read helpers for Group and MemberPosition accounts (Story 2.6).
 //! Account bytes are decoded with Anchor using the canonical `susu` program types.
 
+use anchor_lang::prelude::Pubkey;
 use anchor_lang::AccountDeserialize;
 use solana_client::client_error::{ClientError, Result as ClientResult};
 use solana_client::rpc_client::RpcClient;
 use solana_commitment_config::CommitmentConfig;
-use solana_sdk::pubkey::Pubkey;
 
-pub use susu::state::{Group, GroupStatus, MemberPosition, SlashStatus};
 use susu::seeds::{GROUP_SEED, MEMBER_SEED};
+pub use susu::state::{Group, GroupStatus, MemberPosition, SlashStatus};
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ParticipationRecord {
@@ -58,8 +58,7 @@ fn get_member_position_sync(
 ) -> ClientResult<Option<MemberPosition>> {
     let seeds: [&[u8]; 3] = [MEMBER_SEED, group_pda.as_ref(), member.as_ref()];
     let (member_pda, _) = Pubkey::find_program_address(&seeds, program_id);
-    let response =
-        rpc.get_account_with_commitment(&member_pda, CommitmentConfig::confirmed())?;
+    let response = rpc.get_account_with_commitment(&member_pda, CommitmentConfig::confirmed())?;
     let Some(account) = response.value else {
         return Ok(None);
     };
