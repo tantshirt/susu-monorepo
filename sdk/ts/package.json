@@ -16,13 +16,14 @@
       "import": "./dist/generated/index.js"
     }
   },
+  "dependencies": {
+    "@solana-program/compute-budget": "^0.11.0"
+  },
   "peerDependencies": {
-    "@solana-program/compute-budget": "^0.11.0",
     "@solana/kit": "^5.0.0",
     "@solana/web3-compat": "^0.0.21"
   },
   "devDependencies": {
-    "@solana-program/compute-budget": "^0.11.0",
     "@solana/kit": "^5.0.0",
     "vitest": "^4.1.5"
   },

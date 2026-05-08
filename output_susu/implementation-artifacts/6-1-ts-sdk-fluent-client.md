@@ -93,7 +93,7 @@ sdk/ts/tests/
 ### Project Structure Notes
 
 - This story depends on Story 1.3 (Codama TS codegen) producing `sdk/ts/src/generated/` and Story 1.2 (IDL freeze) producing the locked IDL hash. No re-freeze required for 6.1 — public surface is fixed.
-- Peer dependencies declared in `sdk/ts/package.json`: `@solana/kit`, `@solana/web3-compat`. Direct dep: nothing else (helpers are pure typed wrappers around generated code).
+- Peer dependencies declared in `sdk/ts/package.json`: `@solana/kit`, `@solana/web3-compat`. Direct dependency: `@solana-program/compute-budget` for the SDK's internal compute-budget instruction prepending.
 - The `package.json` name is `@susu/sdk`; `version` initially `0.1.0-alpha.0` (publish pipeline lands in Story 6.12).
 
 ### Forbidden patterns
@@ -147,6 +147,7 @@ GPT-5 Codex
 - Second recovery validation after the zero-limit fix passed `git diff --check`, `pnpm --filter @susu/sdk build`, `pnpm --filter @susu/sdk test` (20 passed, 1 todo), `pnpm test:atdd` (151 passed), `bash scripts/check-patterns.sh`, and `bash scripts/check-sdk-parity.sh`.
 - Cursor Bugbot follow-up finding on PR #177 was fixed during third recovery: `sendInstructions` now only accepts explicit own RPC send hooks, so standard kit RPC proxy methods do not bypass `SusuTransactionSendError`.
 - Third recovery validation after the proxy send-hook fix passed `git diff --check`, `pnpm --filter @susu/sdk build`, `pnpm --filter @susu/sdk test` (21 passed, 1 todo), `pnpm test:atdd` (151 passed), `bash scripts/check-patterns.sh`, and `bash scripts/check-sdk-parity.sh`.
+- Cursor Bugbot follow-up finding on PR #177 was fixed during fourth recovery: `@solana-program/compute-budget` is now a direct SDK dependency instead of a consumer-facing peer dependency.
 
 ### Completion Notes List
 
@@ -158,6 +159,7 @@ GPT-5 Codex
 - Test review completed with no remaining findings; strengthened state-helper tests to assert per-helper generated-builder argument bags.
 - Code review completed clean; no patch, decision, or deferred findings remain.
 - Recovery passes fixed all Cursor Bugbot findings observed before rerunning PR gates.
+- Fourth recovery pass moved the internal compute-budget package to runtime dependencies, keeping only `@solana/kit` and `@solana/web3-compat` as peer dependencies.
 
 ### File List
 
@@ -196,3 +198,4 @@ GPT-5 Codex
 - 2026-05-08: Recovered PR #177, fixed Cursor Bugbot findings, and reran story-local validation.
 - 2026-05-08: Fixed Cursor Bugbot zero-limit pagination follow-up and reran story-local validation.
 - 2026-05-08: Fixed Cursor Bugbot standard-RPC-proxy send-hook follow-up and reran story-local validation.
+- 2026-05-08: Fixed Cursor Bugbot dependency-classification follow-up before rerunning final PR gates.

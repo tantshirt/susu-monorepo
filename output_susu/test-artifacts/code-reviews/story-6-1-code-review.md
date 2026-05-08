@@ -55,6 +55,10 @@ Cursor Bugbot reported one issue on PR #177 commit `7346b15b8f1876b3325f17ac3156
 
 - Changed priority-fee/send hook detection to require explicit own RPC methods, so standard `@solana/kit` RPC proxies cannot bypass `SusuTransactionSendError` with generated method wrappers.
 
+Cursor Bugbot reported one issue on PR #177 commit `0dd76829d315c764aca392e2180eae521a86dd21`; it was fixed during the fourth recovery pass:
+
+- Moved `@solana-program/compute-budget` from peer/dev dependency declarations to a direct SDK runtime dependency because it is imported internally by `client.ts` and is not part of the consumer peer contract.
+
 ## Validation Evidence
 
 - `git diff --check` passed.
@@ -68,6 +72,7 @@ Cursor Bugbot reported one issue on PR #177 commit `7346b15b8f1876b3325f17ac3156
 - Recovery rerun after Cursor fixes passed `git diff --check`, `pnpm --filter @susu/sdk build`, `pnpm --filter @susu/sdk test`, `pnpm test:atdd`, `bash scripts/check-patterns.sh`, and `bash scripts/check-sdk-parity.sh`.
 - Second recovery rerun after the zero-limit fix passed `git diff --check`, `pnpm --filter @susu/sdk build`, `pnpm --filter @susu/sdk test`, `pnpm test:atdd`, `bash scripts/check-patterns.sh`, and `bash scripts/check-sdk-parity.sh`.
 - Third recovery rerun after the proxy send-hook fix passed `git diff --check`, `pnpm --filter @susu/sdk build`, `pnpm --filter @susu/sdk test`, `pnpm test:atdd`, `bash scripts/check-patterns.sh`, and `bash scripts/check-sdk-parity.sh`.
+- Fourth recovery rerun after the dependency-classification fix passed `git diff --check`, `pnpm install --frozen-lockfile`, `pnpm --filter @susu/sdk build`, `pnpm --filter @susu/sdk test`, `pnpm test:atdd`, `bash scripts/check-patterns.sh`, and `bash scripts/check-sdk-parity.sh`.
 
 ## Outcome
 
