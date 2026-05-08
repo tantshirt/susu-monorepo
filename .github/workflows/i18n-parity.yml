@@ -5,6 +5,9 @@ on:
     paths:
       - 'apps/reference/messages/*.json'
 
+permissions:
+  contents: read
+
 jobs:
   parity:
     runs-on: ubuntu-latest
