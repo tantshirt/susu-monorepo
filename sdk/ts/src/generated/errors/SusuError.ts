@@ -18,4 +18,13 @@ export enum SusuError {
   GroupIdMismatch = 'GroupIdMismatch',
   MemberPositionMismatch = 'MemberPositionMismatch',
   InsufficientCollateral = 'InsufficientCollateral',
+  GroupNotCompleted = 'GroupNotCompleted',
+  CollateralAlreadyWithdrawn = 'CollateralAlreadyWithdrawn',
+  CollateralForfeited = 'CollateralForfeited',
+  WithinGracePeriod = 'WithinGracePeriod',
+  AlreadySlashed = 'AlreadySlashed',
+  CannotSlashContributor = 'CannotSlashContributor',
+  NotAllCollateralized = 'NotAllCollateralized',
+  InvalidStatusTransition = 'InvalidStatusTransition',
+  InvalidMemberPositionList = 'InvalidMemberPositionList',
 }

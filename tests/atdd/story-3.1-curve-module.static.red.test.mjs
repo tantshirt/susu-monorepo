@@ -226,13 +226,25 @@ test('[P1] curve integration test crate reads the shared fixture', async () => {
   assert.match(source, /\#\[test\]/, 'curve.rs integration harness must expose at least one #[test]');
 });
 
-test('[P1] instruction handlers do not reimplement calculate_collateral or checked curve ladder', async () => {
+test('[P1] instruction handlers route collateral calculations through crate::curve', async () => {
+  const collateralCallers = new Set([
+    'programs/susu/src/instructions/post_collateral.rs',
+    'programs/susu/src/instructions/top_up_collateral.rs',
+    'programs/susu/src/instructions/slash_member.rs',
+    'programs/susu/src/instructions/start_contributions.rs',
+  ]);
+
   for (const path of await listInstructionRustFiles()) {
     const source = await readRepoFile(path);
-    assert.doesNotMatch(
+    if (!/\bcalculate_collateral\b/.test(source)) {
+      continue;
+    }
+
+    assert.ok(collateralCallers.has(path), `${path} unexpectedly references calculate_collateral`);
+    assert.match(
       source,
-      /\bcalculate_collateral\b/,
-      `${path} must route collateral math via crate::curve once Story 3.1 lands, not duplicate the symbol locally`,
+      /\bcrate::curve::calculate_collateral\b/,
+      `${path} must call collateral math via crate::curve::calculate_collateral`,
     );
   }
 });

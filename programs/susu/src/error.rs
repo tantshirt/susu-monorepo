@@ -38,4 +38,22 @@ pub enum SusuError {
     MemberPositionMismatch,
     #[msg("Posted collateral plus top-up is below the curve-required minimum.")]
     InsufficientCollateral,
+    #[msg("Cannot withdraw collateral until the group is completed or cancelled.")]
+    GroupNotCompleted,
+    #[msg("Collateral already withdrawn.")]
+    CollateralAlreadyWithdrawn,
+    #[msg("Collateral was forfeited due to slash; withdrawal is denied.")]
+    CollateralForfeited,
+    #[msg("Cannot slash yet; grace window after deadline has not ended.")]
+    WithinGracePeriod,
+    #[msg("This member has already been slashed.")]
+    AlreadySlashed,
+    #[msg("Member contributed for this rotation; slash is only for misses.")]
+    CannotSlashContributor,
+    #[msg("Not all accepted members posted required collateral yet.")]
+    NotAllCollateralized,
+    #[msg("Invalid group lifecycle transition.")]
+    InvalidStatusTransition,
+    #[msg("Provided member positions do not match ordered roster.")]
+    InvalidMemberPositionList,
 }

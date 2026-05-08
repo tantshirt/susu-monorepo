@@ -345,8 +345,41 @@
           }
         },
         {
+          "name": "mint_account"
+        },
+        {
+          "name": "vault",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  118,
+                  97,
+                  117,
+                  108,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "group"
+              }
+            ]
+          }
+        },
+        {
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
           "name": "system_program",
           "address": "11111111111111111111111111111111"
+        },
+        {
+          "name": "rent",
+          "address": "SysvarRent111111111111111111111111111111111"
         }
       ],
       "args": [
@@ -449,11 +482,109 @@
         88,
         112
       ],
-      "accounts": [],
+      "accounts": [
+        {
+          "name": "group",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  103,
+                  114,
+                  111,
+                  117,
+                  112
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "group.creator",
+                "account": "Group"
+              },
+              {
+                "kind": "account",
+                "path": "group.group_id",
+                "account": "Group"
+              }
+            ]
+          }
+        },
+        {
+          "name": "member_position",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  109,
+                  101,
+                  109,
+                  98,
+                  101,
+                  114
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "group"
+              },
+              {
+                "kind": "account",
+                "path": "member"
+              }
+            ]
+          }
+        },
+        {
+          "name": "member",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "member_token_account",
+          "writable": true
+        },
+        {
+          "name": "vault",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  118,
+                  97,
+                  117,
+                  108,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "group"
+              }
+            ]
+          }
+        },
+        {
+          "name": "mint"
+        },
+        {
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
       "args": [
         {
           "name": "group_id",
           "type": "u64"
+        },
+        {
+          "name": "rotation_slot",
+          "type": "u8"
         },
         {
           "name": "amount",
@@ -473,7 +604,100 @@
         106,
         186
       ],
-      "accounts": [],
+      "accounts": [
+        {
+          "name": "group",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  103,
+                  114,
+                  111,
+                  117,
+                  112
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "group.creator",
+                "account": "Group"
+              },
+              {
+                "kind": "account",
+                "path": "group.group_id",
+                "account": "Group"
+              }
+            ]
+          }
+        },
+        {
+          "name": "vault",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  118,
+                  97,
+                  117,
+                  108,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "group"
+              }
+            ]
+          }
+        },
+        {
+          "name": "defector_position",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  109,
+                  101,
+                  109,
+                  98,
+                  101,
+                  114
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "group"
+              },
+              {
+                "kind": "arg",
+                "path": "defector_pubkey"
+              }
+            ]
+          }
+        },
+        {
+          "name": "caller",
+          "signer": true
+        },
+        {
+          "name": "mint"
+        },
+        {
+          "name": "clock",
+          "address": "SysvarC1ock11111111111111111111111111111111"
+        },
+        {
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
       "args": [
         {
           "name": "group_id",
@@ -484,10 +708,69 @@
           "type": "pubkey"
         },
         {
-          "name": "penalty_amount",
-          "type": "u64"
+          "name": "rotation_index",
+          "type": "u8"
         }
       ]
+    },
+    {
+      "name": "start_contributions",
+      "discriminator": [
+        2,
+        196,
+        5,
+        49,
+        134,
+        226,
+        10,
+        96
+      ],
+      "accounts": [
+        {
+          "name": "group",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  103,
+                  114,
+                  111,
+                  117,
+                  112
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "group.creator",
+                "account": "Group"
+              },
+              {
+                "kind": "account",
+                "path": "group.group_id",
+                "account": "Group"
+              }
+            ]
+          }
+        },
+        {
+          "name": "caller",
+          "signer": true
+        },
+        {
+          "name": "mint"
+        },
+        {
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "name": "clock",
+          "address": "SysvarC1ock11111111111111111111111111111111"
+        }
+      ],
+      "args": []
     },
     {
       "name": "top_up_collateral",
@@ -504,7 +787,6 @@
       "accounts": [
         {
           "name": "group",
-          "writable": false,
           "pda": {
             "seeds": [
               {
@@ -617,7 +899,101 @@
         138,
         150
       ],
-      "accounts": [],
+      "accounts": [
+        {
+          "name": "group",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  103,
+                  114,
+                  111,
+                  117,
+                  112
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "group.creator",
+                "account": "Group"
+              },
+              {
+                "kind": "account",
+                "path": "group.group_id",
+                "account": "Group"
+              }
+            ]
+          }
+        },
+        {
+          "name": "member_position",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  109,
+                  101,
+                  109,
+                  98,
+                  101,
+                  114
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "group"
+              },
+              {
+                "kind": "account",
+                "path": "member"
+              }
+            ]
+          }
+        },
+        {
+          "name": "member",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "member_token_account",
+          "writable": true
+        },
+        {
+          "name": "vault",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  118,
+                  97,
+                  117,
+                  108,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "group"
+              }
+            ]
+          }
+        },
+        {
+          "name": "mint"
+        },
+        {
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
       "args": [
         {
           "name": "group_id",
@@ -761,6 +1137,51 @@
       "code": 6017,
       "name": "InsufficientCollateral",
       "msg": "Posted collateral plus top-up is below the curve-required minimum."
+    },
+    {
+      "code": 6018,
+      "name": "GroupNotCompleted",
+      "msg": "Cannot withdraw collateral until the group is completed or cancelled."
+    },
+    {
+      "code": 6019,
+      "name": "CollateralAlreadyWithdrawn",
+      "msg": "Collateral already withdrawn."
+    },
+    {
+      "code": 6020,
+      "name": "CollateralForfeited",
+      "msg": "Collateral was forfeited due to slash; withdrawal is denied."
+    },
+    {
+      "code": 6021,
+      "name": "WithinGracePeriod",
+      "msg": "Cannot slash yet; grace window after deadline has not ended."
+    },
+    {
+      "code": 6022,
+      "name": "AlreadySlashed",
+      "msg": "This member has already been slashed."
+    },
+    {
+      "code": 6023,
+      "name": "CannotSlashContributor",
+      "msg": "Member contributed for this rotation; slash is only for misses."
+    },
+    {
+      "code": 6024,
+      "name": "NotAllCollateralized",
+      "msg": "Not all accepted members posted required collateral yet."
+    },
+    {
+      "code": 6025,
+      "name": "InvalidStatusTransition",
+      "msg": "Invalid group lifecycle transition."
+    },
+    {
+      "code": 6026,
+      "name": "InvalidMemberPositionList",
+      "msg": "Provided member positions do not match ordered roster."
     }
   ],
   "types": [
@@ -865,6 +1286,13 @@
             "name": "contribution_window_duration",
             "docs": [
               "Inclusive contribution window length for each rotation (seconds)."
+            ],
+            "type": "i64"
+          },
+          {
+            "name": "slash_grace_seconds",
+            "docs": [
+              "Seconds after a missed contribution deadline before `slash_member` is allowed."
             ],
             "type": "i64"
           }

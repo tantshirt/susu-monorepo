@@ -13,6 +13,7 @@ const RUST_OUT = path.join(__dirname, 'sdk/rust/src/generated');
 const FALLBACK_INSTRUCTIONS = [
   'create_group',
   'accept_invite',
+  'start_contributions',
   'post_collateral',
   'contribute',
   'claim_payout',

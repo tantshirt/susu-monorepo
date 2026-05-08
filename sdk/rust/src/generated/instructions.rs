@@ -9,6 +9,7 @@ pub enum SusuInstructionKind {
     InviteMembers,
     PostCollateral,
     SlashMember,
+    StartContributions,
     TopUpCollateral,
     WithdrawCollateral,
 }
@@ -43,6 +44,10 @@ pub fn post_collateral() -> SusuInstructionKind {
 
 pub fn slash_member() -> SusuInstructionKind {
     SusuInstructionKind::SlashMember
+}
+
+pub fn start_contributions() -> SusuInstructionKind {
+    SusuInstructionKind::StartContributions
 }
 
 pub fn top_up_collateral() -> SusuInstructionKind {

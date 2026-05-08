@@ -5,7 +5,8 @@ use anchor_lang::prelude::*;
 use instructions::{
     accept_invite::AcceptInvite, cancel_group::CancelGroup, claim_payout::ClaimPayout,
     contribute::Contribute, create_group::CreateGroup, post_collateral::PostCollateral,
-    invite_members::InviteMembers, slash_member::SlashMember, top_up_collateral::TopUpCollateral,
+    invite_members::InviteMembers, slash_member::SlashMember,
+    start_contributions::StartContributions, top_up_collateral::TopUpCollateral,
     withdraw_collateral::WithdrawCollateral,
 };
 
@@ -26,6 +27,7 @@ use instructions::{
     invite_members::__client_accounts_invite_members,
     post_collateral::__client_accounts_post_collateral,
     slash_member::__client_accounts_slash_member,
+    start_contributions::__client_accounts_start_contributions,
     top_up_collateral::__client_accounts_top_up_collateral,
     withdraw_collateral::__client_accounts_withdraw_collateral,
 };
@@ -67,9 +69,10 @@ pub mod susu {
     pub fn post_collateral(
         ctx: Context<PostCollateral>,
         group_id: u64,
+        rotation_slot: u8,
         amount: u64,
     ) -> Result<()> {
-        instructions::post_collateral::handler(ctx, group_id, amount)
+        instructions::post_collateral::handler(ctx, group_id, rotation_slot, amount)
     }
 
     pub fn contribute(
@@ -105,13 +108,17 @@ pub mod susu {
         instructions::withdraw_collateral::handler(ctx, group_id, amount)
     }
 
-    pub fn slash_member(
-        ctx: Context<SlashMember>,
+    pub fn slash_member<'info>(
+        ctx: Context<'info, SlashMember<'info>>,
         group_id: u64,
         member: Pubkey,
-        penalty_amount: u64,
+        rotation_index: u8,
     ) -> Result<()> {
-        instructions::slash_member::handler(ctx, group_id, member, penalty_amount)
+        instructions::slash_member::handler(ctx, group_id, member, rotation_index)
+    }
+
+    pub fn start_contributions(ctx: Context<StartContributions>) -> Result<()> {
+        instructions::start_contributions::handler(ctx)
     }
 
     pub fn cancel_group(

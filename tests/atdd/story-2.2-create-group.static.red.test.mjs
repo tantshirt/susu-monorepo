@@ -108,40 +108,50 @@ test('[P0] create_group initializes exact Group fields and emits group_created a
   assert.ok(compact.includes('Clock::get()?.unix_timestamp'), 'Group.created_at must come from Clock::get()?.unix_timestamp');
   assert.ok(compact.includes('group.creator=ctx.accounts.creator.key();'), 'Group.creator must be the signer');
   assert.ok(compact.includes('group.group_id=group_id;'), 'Group.group_id must decode exactly');
-  assertMatch(source, /msg!\s*\(\s*"group_created[^"]*group_pda=\{\}[^"]*creator=\{\}[^"]*n=\{\}[^"]*mint=\{\}[^"]*group_id=\{\}"/s, 'handler must emit group_created with group_pda, creator, n, mint, and group_id');
+  assert.ok(compact.includes('group.bump=ctx.bumps.group;'), 'Group bump must persist ctx.bumps.group');
+  assert.ok(compact.includes('group.start_timestamp=group.created_at;'), 'Group.start_timestamp must bootstrap from creation time');
+  assert.ok(compact.includes('group.contribution_window_duration=contribution_period;'), 'Group.contribution_window_duration must follow contribution_period');
+  assert.ok(compact.includes('group.slash_grace_seconds=contribution_period;'), 'Group.slash_grace_seconds must default to contribution_period');
+  assertMatch(source, /msg!\s*\(\s*"group_created[^"]*vault=\{\}"/s, 'handler must emit group_created audit log referencing the vault parameter');
 });
 
-test('[P0] create_group remains metadata-only with no token custody, fee, or yield scope', async () => {
+test('[P0] create_group initializes the collateral vault TokenAccount scoped to Group PDA authority', async () => {
+  const source = await readRepoFile('programs/susu/src/instructions/create_group.rs');
+  const compact = removeWhitespace(source);
+
+  assertMatch(source, /use\s+anchor_spl::token::\{/, 'create_group must use anchor SPL token types for vault init');
+  assertMatch(source, /pub\s+vault\s*:\s*Account\s*<\s*'info\s*,\s*TokenAccount\s*>/, 'vault must be an SPL TokenAccount');
+  assertMatch(source, /VAULT_SEED/, 'vault seeds must derive from VAULT_SEED');
+  assert.ok(compact.includes('token::mint=mint_account'), 'vault mint must bind to validated mint_account');
+  assert.ok(compact.includes('token::authority=group'), 'vault authority must remain the Group PDA');
+});
+
+test('[P0] create_group does not perform token transfers or CPI beyond vault account init', async () => {
   const source = await readRepoFile('programs/susu/src/instructions/create_group.rs');
   const lower = source.toLowerCase();
 
   for (const forbidden of [
-    'anchor_spl',
-    'tokenaccount',
-    'token_program',
-    'associated_token',
-    'transfer',
     'transfer_checked',
+    'transfer',
     'cpi',
     'invoke',
-    'vault',
-    'custody',
     'fee',
     'yield',
+    'associated_token',
   ]) {
-    assert.ok(!lower.includes(forbidden), `create_group must not introduce ${forbidden} behavior`);
+    assert.ok(!lower.includes(forbidden), `create_group must not introduce ${forbidden}`);
   }
 });
 
-test('[P0] IDL exposes the Story 2.2 create_group account and argument contract', async () => {
+test('[P0] IDL exposes the Story 2.2 + Epic 3.3 create_group account and argument contract', async () => {
   const idl = await readJson('programs/susu/idl/susu.json');
   const instruction = (idl.instructions ?? []).find((item) => item.name === 'create_group');
 
   assert.ok(instruction, 'IDL must expose create_group');
   assert.deepEqual(
     (instruction.accounts ?? []).map((account) => account.name),
-    ['creator', 'group', 'system_program'],
-    'IDL create_group accounts must expose creator, group, and system_program',
+    ['creator', 'group', 'mint_account', 'vault', 'token_program', 'system_program', 'rent'],
+    'IDL create_group accounts must include vault + mint bindings from Story 3.3',
   );
   assert.deepEqual(
     (instruction.args ?? []).map((arg) => [arg.name, typeof arg.type === 'string' ? arg.type : arg.type?.defined?.name]),
@@ -172,7 +182,7 @@ test('[P1] LiteSVM acceptance coverage is present or intentionally blocked by th
     'test_create_group_accepts_member_count_bounds',
     'test_create_group_accepts_all_allowlisted_mints',
     'test_create_group_rejects_default_pubkey_mint',
-    'test_create_group_has_no_token_custody_fee_or_yield_proxy',
+    'test_create_group_avoids_yield_fees_and_token_transfers',
   ]) {
     assertMatch(source, new RegExp(`fn\\s+${expected}\\b`), `${path} must cover ${expected}`);
   }

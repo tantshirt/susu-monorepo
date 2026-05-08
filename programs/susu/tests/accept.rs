@@ -41,6 +41,7 @@ fn group_fixture(n: u8, status: GroupStatus, members: Vec<MemberSlot>) -> Group 
         bump: 255,
         start_timestamp: 1,
         contribution_window_duration: 30,
+        slash_grace_seconds: 30,
     }
 }
 

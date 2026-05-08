@@ -19,4 +19,13 @@ pub enum SusuError {
     GroupIdMismatch,
     MemberPositionMismatch,
     InsufficientCollateral,
+    GroupNotCompleted,
+    CollateralAlreadyWithdrawn,
+    CollateralForfeited,
+    WithinGracePeriod,
+    AlreadySlashed,
+    CannotSlashContributor,
+    NotAllCollateralized,
+    InvalidStatusTransition,
+    InvalidMemberPositionList,
 }

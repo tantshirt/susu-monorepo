@@ -7,17 +7,13 @@ use susu::ID;
 const GROUP_CREATED_LOG: &str = "group_created";
 const DUPLICATE_CREATE_RUNTIME_ERROR: &str = "AccountAlreadyInitialized";
 const CREATE_GROUP_SOURCE: &str = include_str!("../src/instructions/create_group.rs");
-const FORBIDDEN_CREATE_GROUP_TOKEN_SIDE_EFFECT_TERMS: [&str; 12] = [
-    "anchor_spl",
-    "tokenaccount",
-    "token_program",
+/// Story 3.3 initializes the vault inside `create_group`; still forbid CPI moves, fees, and yield proxies.
+const FORBIDDEN_CREATE_GROUP_TOKEN_SIDE_EFFECT_TERMS: [&str; 7] = [
     "associated_token",
     "transfer",
     "transfer_checked",
     "cpi",
     "invoke",
-    "vault",
-    "custody",
     "fee",
     "yield",
 ];
@@ -123,7 +119,7 @@ fn test_create_group_double_create_fails() {
 }
 
 #[test]
-fn test_create_group_has_no_token_custody_fee_or_yield_proxy() {
+fn test_create_group_avoids_yield_fees_and_token_transfers() {
     let lower = CREATE_GROUP_SOURCE.to_lowercase();
 
     for forbidden in FORBIDDEN_CREATE_GROUP_TOKEN_SIDE_EFFECT_TERMS {
