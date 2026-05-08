@@ -21,7 +21,7 @@ inputDocuments:
 
 # Story 5.9 Test Review
 
-Date: 2026-05-08  
+Date: 2026-05-08
 Scope: `tests/atdd/story-5-9-legal-opinion.static.red.test.mjs`, Story 5.9 ATDD checklist, and legal publication artifacts.
 
 ## Score Summary
@@ -41,7 +41,7 @@ Coverage boundary: this `test-review` evaluates test quality only. Acceptance co
 
 ### Fixed: Placeholder PDF assertion used alternation instead of requiring all required signals
 
-Initial severity: Medium  
+Initial severity: Medium
 Location: `tests/atdd/story-5-9-legal-opinion.static.red.test.mjs`
 
 The placeholder PDF assertion accepted any one of `Legal Opinion Placeholder`, `Firm Letter Delayed`, or `docs/legal-sow-summary.md`. The acceptance criterion requires the placeholder to document delay and link to the SOW summary, so the test needed separate assertions for all three strings.
@@ -50,7 +50,7 @@ Resolution: replaced the alternation with three explicit assertions. The test no
 
 ### Fixed: SOW tracker assertion allowed status or signed date
 
-Initial severity: Low  
+Initial severity: Low
 Location: `tests/atdd/story-5-9-legal-opinion.static.red.test.mjs`
 
 The legal engagement tracker test accepted either `SOW status` or `SOW signed date`, but Story 5.9 requires tracking both. The test now asserts both fields independently.

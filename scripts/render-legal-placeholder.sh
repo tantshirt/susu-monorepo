@@ -52,9 +52,9 @@ for (const object of objects) {
 }
 const xrefOffset = Buffer.byteLength(pdf, 'latin1');
 pdf += `xref\n0 ${objects.length + 1}\n`;
-pdf += '0000000000 65535 f \n';
+pdf += '0000000000 65535 f\n';
 for (let i = 1; i <= objects.length; i += 1) {
-  pdf += `${String(offsets[i]).padStart(10, '0')} 00000 n \n`;
+  pdf += `${String(offsets[i]).padStart(10, '0')} 00000 n\n`;
 }
 pdf += `trailer\n<< /Size ${objects.length + 1} /Root 1 0 R >>\nstartxref\n${xrefOffset}\n%%EOF\n`;
 
