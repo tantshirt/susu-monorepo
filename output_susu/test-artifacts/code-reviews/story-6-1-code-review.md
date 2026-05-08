@@ -59,6 +59,10 @@ Cursor Bugbot reported one issue on PR #177 commit `0dd76829d315c764aca392e2180e
 
 - Moved `@solana-program/compute-budget` from peer/dev dependency declarations to a direct SDK runtime dependency because it is imported internally by `client.ts` and is not part of the consumer peer contract.
 
+Cursor Bugbot reported one issue on PR #177 commit `87decd1e2cce99b093b24b7044cf55ff175d1f54`; it was fixed during the fifth recovery pass:
+
+- Changed plugin patch merging to use own-property presence checks, so explicit `undefined` can clear `computeUnits` and `priorityFee` overrides instead of being treated as absent patch fields.
+
 ## Validation Evidence
 
 - `git diff --check` passed.
@@ -73,6 +77,7 @@ Cursor Bugbot reported one issue on PR #177 commit `0dd76829d315c764aca392e2180e
 - Second recovery rerun after the zero-limit fix passed `git diff --check`, `pnpm --filter @susu/sdk build`, `pnpm --filter @susu/sdk test`, `pnpm test:atdd`, `bash scripts/check-patterns.sh`, and `bash scripts/check-sdk-parity.sh`.
 - Third recovery rerun after the proxy send-hook fix passed `git diff --check`, `pnpm --filter @susu/sdk build`, `pnpm --filter @susu/sdk test`, `pnpm test:atdd`, `bash scripts/check-patterns.sh`, and `bash scripts/check-sdk-parity.sh`.
 - Fourth recovery rerun after the dependency-classification fix passed `git diff --check`, `pnpm install --frozen-lockfile`, `pnpm --filter @susu/sdk build`, `pnpm --filter @susu/sdk test`, `pnpm test:atdd`, `bash scripts/check-patterns.sh`, and `bash scripts/check-sdk-parity.sh`.
+- Fifth recovery rerun after the plugin-reset fix passed `git diff --check`, `pnpm --filter @susu/sdk build`, `pnpm --filter @susu/sdk test`, `pnpm test:atdd`, `bash scripts/check-patterns.sh`, and `bash scripts/check-sdk-parity.sh`.
 
 ## Outcome
 

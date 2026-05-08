@@ -38,6 +38,18 @@ describe('Susu fluent client', () => {
     expect(withRpc.rpc).toBeDefined();
   });
 
+  it('lets plugins clear compute budget overrides back to defaults', () => {
+    const rpc = { sendInstructions: vi.fn() };
+    const base = createSusuClient({ cluster: 'devnet', rpc, computeUnits: 250_000, priorityFee: 7_500n });
+    const unchanged = base.use(() => ({}));
+    const cleared = base.use(() => ({ computeUnits: undefined, priorityFee: undefined }));
+
+    expect(unchanged.computeUnits).toBe(250_000);
+    expect(unchanged.priorityFee).toBe(7_500n);
+    expect(cleared.computeUnits).toBe(DEFAULT_COMPUTE_UNITS);
+    expect(cleared.priorityFee).toBeUndefined();
+  });
+
   it('throws a typed config error when helpers run without cluster or rpc', async () => {
     const { contribute } = await import('../src/helpers/contribute.js');
 

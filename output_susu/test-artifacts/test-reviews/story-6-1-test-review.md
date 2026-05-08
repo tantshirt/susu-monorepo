@@ -54,6 +54,7 @@ One test-review cleanup item was fixed during this review:
 - Recovery pass after Cursor Bugbot updated `sdk/ts/tests/read-helpers.test.ts` so `queryHistory(..., { before })` asserts entries before the cursor, preventing regression to after-cursor semantics.
 - Second recovery pass added a `limit: 0` assertion for `queryHistory` so zero-value pagination returns an empty page.
 - Third recovery pass added a client test proving proxy-generated standard RPC methods do not satisfy Susu send hooks.
+- Fifth recovery pass added a client test proving plugins can clear compute-budget overrides back to SDK defaults/estimation.
 
 ## Validation
 
@@ -61,6 +62,7 @@ One test-review cleanup item was fixed during this review:
 - `pnpm --filter @susu/sdk test` passed after the recovery pagination test update: 20 passed, 1 todo.
 - `pnpm --filter @susu/sdk test` passed after the zero-limit pagination fix: 20 passed, 1 todo.
 - `pnpm --filter @susu/sdk test` passed after the proxy send-hook fix: 21 passed, 1 todo.
+- `pnpm --filter @susu/sdk test` passed after the plugin-reset fix: 22 passed, 1 todo.
 - Prior implementation validation also passed `pnpm --filter @susu/sdk build`, `pnpm test:atdd`, `bash scripts/check-patterns.sh`, and `bash scripts/check-sdk-parity.sh`.
 - CLI sessions cleaned up: N/A, no browser automation used.
 - Temp artifacts stored in story test artifacts: yes.

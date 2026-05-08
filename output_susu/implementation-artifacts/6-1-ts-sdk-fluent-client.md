@@ -148,6 +148,7 @@ GPT-5 Codex
 - Cursor Bugbot follow-up finding on PR #177 was fixed during third recovery: `sendInstructions` now only accepts explicit own RPC send hooks, so standard kit RPC proxy methods do not bypass `SusuTransactionSendError`.
 - Third recovery validation after the proxy send-hook fix passed `git diff --check`, `pnpm --filter @susu/sdk build`, `pnpm --filter @susu/sdk test` (21 passed, 1 todo), `pnpm test:atdd` (151 passed), `bash scripts/check-patterns.sh`, and `bash scripts/check-sdk-parity.sh`.
 - Cursor Bugbot follow-up finding on PR #177 was fixed during fourth recovery: `@solana-program/compute-budget` is now a direct SDK dependency instead of a consumer-facing peer dependency.
+- Cursor Bugbot follow-up finding on PR #177 was fixed during fifth recovery: fluent plugins can now explicitly clear `computeUnits` and `priorityFee` overrides back to SDK defaults/estimation by returning those keys with `undefined`.
 
 ### Completion Notes List
 
@@ -160,6 +161,7 @@ GPT-5 Codex
 - Code review completed clean; no patch, decision, or deferred findings remain.
 - Recovery passes fixed all Cursor Bugbot findings observed before rerunning PR gates.
 - Fourth recovery pass moved the internal compute-budget package to runtime dependencies, keeping only `@solana/kit` and `@solana/web3-compat` as peer dependencies.
+- Fifth recovery pass changed plugin merging to distinguish absent patch keys from explicit `undefined`, preserving immutability while allowing compute-budget override resets.
 
 ### File List
 
@@ -199,3 +201,4 @@ GPT-5 Codex
 - 2026-05-08: Fixed Cursor Bugbot zero-limit pagination follow-up and reran story-local validation.
 - 2026-05-08: Fixed Cursor Bugbot standard-RPC-proxy send-hook follow-up and reran story-local validation.
 - 2026-05-08: Fixed Cursor Bugbot dependency-classification follow-up before rerunning final PR gates.
+- 2026-05-08: Fixed Cursor Bugbot plugin-reset follow-up before rerunning final PR gates.

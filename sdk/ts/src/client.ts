@@ -101,12 +101,12 @@ export class SusuClient {
   use(plugin: SusuPlugin): SusuClient {
     const patch = plugin(this) ?? {};
     return new SusuClient({
-      cluster: patch.cluster ?? this.cluster,
-      rpc: patch.rpc ?? this.rpc,
-      signer: patch.signer ?? this.signer,
-      programId: patch.programId ?? this.programId,
-      computeUnits: patch.computeUnits ?? this.computeUnits,
-      priorityFee: patch.priorityFee ?? this.priorityFee,
+      cluster: hasOwn(patch, 'cluster') ? patch.cluster : this.cluster,
+      rpc: hasOwn(patch, 'rpc') ? patch.rpc : this.rpc,
+      signer: hasOwn(patch, 'signer') ? patch.signer : this.signer,
+      programId: hasOwn(patch, 'programId') ? patch.programId : this.programId,
+      computeUnits: hasOwn(patch, 'computeUnits') ? patch.computeUnits : this.computeUnits,
+      priorityFee: hasOwn(patch, 'priorityFee') ? patch.priorityFee : this.priorityFee,
     });
   }
 }
@@ -269,6 +269,10 @@ async function resolveSendable<T>(value: RpcSendable<T>): Promise<T> {
 
 function isSendable<T>(value: T | Readonly<{ send: () => Promise<T> }>): value is Readonly<{ send: () => Promise<T> }> {
   return typeof value === 'object' && value !== null && 'send' in value && typeof value.send === 'function';
+}
+
+function hasOwn<K extends PropertyKey>(value: object, key: K): boolean {
+  return Object.prototype.hasOwnProperty.call(value, key);
 }
 
 function getOwnRpcMethod<K extends 'getPriorityFeeEstimate' | 'sendInstructions' | 'sendTransaction'>(
