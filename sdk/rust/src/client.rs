@@ -3,6 +3,7 @@
 use anchor_lang::prelude::Pubkey;
 use anchor_lang::solana_program::instruction::Instruction;
 use solana_client::rpc_client::RpcClient;
+use solana_compute_budget_interface::ComputeBudgetInstruction;
 use solana_sdk::signature::Signature;
 use solana_signer::signers::Signers;
 use solana_transaction::Transaction;
@@ -192,7 +193,12 @@ impl SusuClient {
         Ok(queries::query_participation_history(&self.rpc, &self.program_id, wallet).await?)
     }
 
-    fn transaction(&self, instructions: Vec<Instruction>) -> TransactionBuilder<'_> {
+    fn transaction(&self, mut instructions: Vec<Instruction>) -> TransactionBuilder<'_> {
+        instructions.insert(
+            0,
+            ComputeBudgetInstruction::set_compute_unit_limit(self.compute_units),
+        );
+
         TransactionBuilder {
             client: self,
             instructions,

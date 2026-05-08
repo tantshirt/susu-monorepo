@@ -1,8 +1,11 @@
 use std::str::FromStr;
 
 use anchor_lang::prelude::Pubkey;
+use solana_client::rpc_client::RpcClient;
+use solana_compute_budget_interface::id as compute_budget_id;
 use susu_client::{
-    group_pda, member_pda, rotation_history_pda, vault_pda, DEFAULT_SUSU_PROGRAM_ID,
+    group_pda, member_pda, rotation_history_pda, vault_pda, AcceptInviteAccounts, Cluster,
+    SusuClient, DEFAULT_SUSU_PROGRAM_ID,
 };
 
 const CREATOR: &str = "11111111111111111111111111111111";
@@ -39,4 +42,26 @@ fn pda_derivations_match_story_6_4_ts_vector() {
     let rotation = rotation_history_pda(&DEFAULT_SUSU_PROGRAM_ID, &group.address, ROTATION_INDEX);
     assert_eq!(rotation.address.to_string(), EXPECTED_ROTATION_HISTORY_PDA);
     assert_eq!(rotation.bump, EXPECTED_ROTATION_HISTORY_BUMP);
+}
+
+#[test]
+fn client_applies_configured_compute_unit_limit() {
+    let compute_units = 345_678;
+    let client = SusuClient::new(Cluster::Localnet, RpcClient::new("http://localhost:8899"))
+        .with_compute_units(compute_units);
+    let program_ix = client.accept_invite(AcceptInviteAccounts {
+        group: Pubkey::new_unique(),
+        member_position: Pubkey::new_unique(),
+        member: Pubkey::new_unique(),
+        system_program: Pubkey::new_unique(),
+    });
+
+    let instructions = program_ix.instructions();
+    assert_eq!(instructions.len(), 2);
+    assert_eq!(instructions[0].program_id, compute_budget_id());
+    assert_eq!(instructions[0].accounts, vec![]);
+    let mut expected_data = vec![2];
+    expected_data.extend_from_slice(&compute_units.to_le_bytes());
+    assert_eq!(instructions[0].data, expected_data);
+    assert_eq!(instructions[1].program_id, DEFAULT_SUSU_PROGRAM_ID);
 }
