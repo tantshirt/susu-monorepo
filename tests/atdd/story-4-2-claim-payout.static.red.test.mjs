@@ -3,6 +3,7 @@ import { readFileSync } from 'node:fs';
 import test from 'node:test';
 
 const claimPath = 'programs/susu/src/instructions/claim_payout.rs';
+const idlPath = 'programs/susu/idl/susu.json';
 const receiptPath = 'programs/susu/src/state/rotation_receipt.rs';
 const seedsPath = 'programs/susu/src/seeds.rs';
 
@@ -85,3 +86,29 @@ test('Story 4.2 has no scheduler, keeper, oracle, or automation dependency', () 
   assert.doesNotMatch(source, /scheduler|keeper|cron|clockwork|chainlink|oracle|automation|bot/i);
 });
 
+test('Story 4.2 checked-in IDL exposes the full claim_payout account surface and errors', () => {
+  const idl = JSON.parse(readFileSync(idlPath, 'utf8'));
+  const claim = idl.instructions.find((instruction) => instruction.name === 'claim_payout');
+  assert.ok(claim, 'IDL must include claim_payout');
+
+  assert.deepEqual(
+    claim.accounts.map((account) => account.name),
+    [
+      'group',
+      'member_position',
+      'member',
+      'recipient_token_account',
+      'vault',
+      'mint',
+      'rotation_receipt',
+      'token_program',
+      'system_program',
+      'clock',
+    ],
+  );
+
+  const errors = new Set(idl.errors.map((entry) => entry.name));
+  for (const errorName of ['ArithmeticOverflow', 'NotRotationRecipient', 'RotationNotClosed']) {
+    assert.ok(errors.has(errorName), `IDL must expose ${errorName}`);
+  }
+});
