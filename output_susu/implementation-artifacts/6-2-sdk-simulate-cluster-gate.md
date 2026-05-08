@@ -119,6 +119,8 @@ GPT-5 Codex
 - `bash scripts/check-patterns.sh` passed after code-review fix.
 - `bash scripts/check-sdk-parity.sh` passed after code-review fix and did not modify generated files.
 - `rg -n "@solana/web3\\.js" sdk/ts/src` returned no matches after code-review fix.
+- Cursor Bugbot reported a high-severity truncated-mainnet-genesis-hash finding on PR #178 head `2f200c86317712a11d13ba2a716420aa6bd25791`; fixed by using the full Solana mainnet-beta genesis hash and adding a constant regression test.
+- Cursor fix validation passed `pnpm --filter @susu/sdk build`, `pnpm --filter @susu/sdk test` (30 passed, 1 todo), `node --test tests/atdd/story-6-2-sdk-simulate-cluster-gate.static.red.test.mjs`, `pnpm test:atdd` (155 passed), and `git diff --check`.
 
 ### Completion Notes List
 
@@ -132,6 +134,7 @@ GPT-5 Codex
 - Added `typescript` as an SDK dev dependency so `pnpm --filter @susu/sdk build` has a direct `tsc` binary.
 - Test review fixed the duplicated simulation-failure invocation and left no remaining findings.
 - Code review fixed simulation-error normalization for logs-only failures and rejected simulation RPC calls; no remaining findings.
+- Cursor Bugbot fix corrected `MAINNET_BETA_GENESIS_HASH` to the full 44-character mainnet-beta genesis hash.
 
 ### File List
 
@@ -171,3 +174,4 @@ GPT-5 Codex
 - 2026-05-08: Implemented simulate-by-default transaction execution, explicit cluster gate, typed errors, docs, and unit coverage. Moved story to review pending BAD review/PR gates.
 - 2026-05-08: Ran test review, fixed the duplicated simulation-failure helper invocation, and recorded no remaining findings.
 - 2026-05-08: Ran code review, fixed simulation-error normalization edge cases, and recorded no remaining findings.
+- 2026-05-08: Fixed Cursor Bugbot truncated mainnet genesis hash finding and reran story-local validation.

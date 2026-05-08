@@ -13,7 +13,7 @@ import { SusuClusterError } from './errors.js';
 
 export const DEFAULT_SUSU_PROGRAM_ID = address('2f6CBrNHZp8oyXPFRXfzroGx5pZ7WyLA6dUqFFpYsX2N');
 export const DEFAULT_COMPUTE_UNITS = 200_000;
-export const MAINNET_BETA_GENESIS_HASH = '5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp';
+export const MAINNET_BETA_GENESIS_HASH = '5eykt4UsFv8P8NJdTREpY1vzqKqZKvdpKuc147dw2N9d';
 
 export type Cluster = 'localnet' | 'devnet' | 'testnet' | 'mainnet-beta';
 export type TransactionSignature = Signature;

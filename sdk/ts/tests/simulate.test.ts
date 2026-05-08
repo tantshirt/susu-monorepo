@@ -25,6 +25,10 @@ describe('simulate-by-default transaction execution', () => {
     vi.clearAllMocks();
   });
 
+  it('uses the full Solana mainnet-beta genesis hash constant', () => {
+    expect(MAINNET_BETA_GENESIS_HASH).toBe('5eykt4UsFv8P8NJdTREpY1vzqKqZKvdpKuc147dw2N9d');
+  });
+
   it('simulation-success path simulates before sending and returns the signature', async () => {
     const rpc = createRpc();
     const { contribute, createSusuClient } = await import('../src/index.js');
