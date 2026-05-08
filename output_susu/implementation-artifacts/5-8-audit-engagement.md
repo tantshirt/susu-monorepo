@@ -95,6 +95,7 @@ GPT-5 Codex
 - `audits/audit-sow-summary.md`
 - `output_susu/implementation-artifacts/5-8-audit-engagement.md`
 - `output_susu/test-artifacts/atdd-checklist-5-8-audit-engagement.md`
+- `output_susu/test-artifacts/code-reviews/story-5-8-code-review.md`
 - `output_susu/test-artifacts/test-reviews/story-5-8-test-review.md`
 - `scripts/audit-handoff.sh`
 - `scripts/check-audit-report-citations.sh`
@@ -116,3 +117,4 @@ GPT-5 Codex
 - 2026-05-08: Added ATDD artifacts for Story 5.8 audit engagement workflow.
 - 2026-05-08: Implemented audit engagement docs, handoff tooling, citation check, fixtures, and validation record.
 - 2026-05-08: Addressed BMad test-review findings for maintainability and deterministic scratch output.
+- 2026-05-08: Completed clean BMad code review; status remains `review` pending PR CI and Cursor gates.
