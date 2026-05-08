@@ -154,7 +154,7 @@ jobs:
       - name: Start Surfpool devnet fork
         run: |
           set -euo pipefail
-          surfpool start --network devnet --port 8899 --no-tui --no-studio > /tmp/surfpool.log 2>&1 &
+          surfpool start --network devnet --port 8899 --ci --no-deploy --no-tui --no-studio > /tmp/surfpool.log 2>&1 &
           echo "$!" > /tmp/surfpool.pid
           for attempt in $(seq 1 30); do
             if curl -fsS -X POST http://127.0.0.1:8899 \

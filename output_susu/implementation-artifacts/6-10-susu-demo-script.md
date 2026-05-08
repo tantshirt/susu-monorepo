@@ -115,6 +115,8 @@ GPT-5 Codex
 - `SUSU_DEMO_SKIP_PREFLIGHT=1 SUSU_DEMO_MAX_SECONDS=60 pnpm susu:demo`
 - `pnpm test:atdd`
 - `pnpm --filter @susu/sdk test`
+- `bash scripts/check-patterns.sh`
+- `bash scripts/check-sdk-parity.sh`
 
 ### Completion Notes List
 
@@ -123,6 +125,7 @@ GPT-5 Codex
 - Documented RPC, airdrop, and dependency mismatch recovery paths in `docs/troubleshooting.md`.
 - Added a `susu-demo-smoke` GitHub Actions job for main-branch Surfpool devnet-fork execution and wall-clock parsing.
 - Test review added runtime coverage proving the shell exits non-zero when the NFR-P2 wall-clock budget is exceeded.
+- Code review hardened the Surfpool smoke job with `--ci --no-deploy` so CI starts only the forked RPC needed by the demo.
 
 ### File List
 
@@ -137,3 +140,4 @@ GPT-5 Codex
 - `output_susu/implementation-artifacts/6-10-susu-demo-script.md`
 - `output_susu/test-artifacts/atdd-checklist-6-10-susu-demo-script.md`
 - `output_susu/test-artifacts/test-reviews/story-6-10-test-review.md`
+- `output_susu/test-artifacts/code-reviews/story-6-10-code-review.md`
