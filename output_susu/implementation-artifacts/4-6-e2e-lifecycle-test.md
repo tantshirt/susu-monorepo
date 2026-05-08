@@ -2,7 +2,7 @@
 
 ## Status
 
-Implemented in branch `story-4.6-e2e-lifecycle-test`.
+Done in PR #162 (`story-4.6-e2e-lifecycle-test`).
 
 ## Scope
 
