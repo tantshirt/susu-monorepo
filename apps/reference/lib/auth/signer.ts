@@ -3,7 +3,7 @@ import type { Signer } from '../../../../../sdk/ts/src/helpers/signer.js';
 type SignMessage = (message: Uint8Array) => Promise<Uint8Array>;
 type SignTransaction = <TTransaction>(transaction: TTransaction) => Promise<TTransaction>;
 
-type WalletLike = Readonly<{
+export type WalletLike = Readonly<{
   address?: string;
   accounts?: ReadonlyArray<Readonly<{ address: string }>>;
   signMessage?: SignMessage;

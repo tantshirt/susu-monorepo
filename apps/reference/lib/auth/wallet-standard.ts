@@ -4,15 +4,12 @@ import { useMemo } from 'react';
 
 import { useWallets } from '@solana/react-hooks';
 
-import { signerFromWalletStandard } from './signer.js';
+import { signerFromWalletStandard, type WalletLike } from './signer.js';
 
 const KNOWN_EXTENSION_WALLETS = new Set(['Phantom', 'Backpack', 'Solflare']);
 
-type BrowserWallet = Readonly<{
+type BrowserWallet = WalletLike & Readonly<{
   name: string;
-  accounts?: ReadonlyArray<Readonly<{ address: string }>>;
-  signMessage?: (input: Uint8Array) => Promise<Uint8Array>;
-  signTransaction?: <T>(input: T) => Promise<T>;
 }>;
 
 export function useWalletStandardWallets(): ReadonlyArray<BrowserWallet> {

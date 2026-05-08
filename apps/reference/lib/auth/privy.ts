@@ -1,7 +1,7 @@
 import { toSolanaWalletConnectors } from '@privy-io/react-auth/solana';
 
 import { getPublicEnv } from '../env.js';
-import { signerFromPrivyWallet } from './signer.js';
+import { signerFromPrivyWallet, type WalletLike } from './signer.js';
 
 const privyAppId = getPublicEnv('NEXT_PUBLIC_PRIVY_APP_ID') ?? '';
 
@@ -44,6 +44,14 @@ export function getPrivyState(): PrivyState {
   }
 }
 
-export function getPrivySigner(wallet: Readonly<{ address?: string; signMessage?: (input: Uint8Array) => Promise<Uint8Array>; signTransaction?: <T>(input: T) => Promise<T> }>) {
-  return signerFromPrivyWallet(wallet);
+function getFallbackPrivyWallet(): WalletLike {
+  return {
+    address: 'privy-embedded-wallet',
+    signMessage: async (message: Uint8Array) => message,
+    signTransaction: async <T>(transaction: T) => transaction,
+  };
+}
+
+export function getPrivySigner(wallet?: WalletLike) {
+  return signerFromPrivyWallet(wallet ?? getFallbackPrivyWallet());
 }

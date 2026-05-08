@@ -20,7 +20,7 @@ export default function LoginPage() {
 
   const signer = useMemo(() => {
     if (selectedPath === 'privy') {
-      return getPrivySigner({});
+      return getPrivySigner();
     }
     return walletStandardSigner;
   }, [selectedPath, walletStandardSigner]);
