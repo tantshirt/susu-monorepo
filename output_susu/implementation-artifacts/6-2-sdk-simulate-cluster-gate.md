@@ -1,6 +1,6 @@
 # Story 6.2: SDK simulate-by-default + explicit-cluster gate
 
-Status: review
+Status: done
 
 ## Story
 
@@ -121,6 +121,7 @@ GPT-5 Codex
 - `rg -n "@solana/web3\\.js" sdk/ts/src` returned no matches after code-review fix.
 - Cursor Bugbot reported a high-severity truncated-mainnet-genesis-hash finding on PR #178 head `2f200c86317712a11d13ba2a716420aa6bd25791`; fixed by using the full Solana mainnet-beta genesis hash and adding a constant regression test.
 - Cursor fix validation passed `pnpm --filter @susu/sdk build`, `pnpm --filter @susu/sdk test` (30 passed, 1 todo), `node --test tests/atdd/story-6-2-sdk-simulate-cluster-gate.static.red.test.mjs`, `pnpm test:atdd` (155 passed), and `git diff --check`.
+- Pre-done PR gate check on PR #178 passed for head `6310bc36fa0154083489cd3c5fa97a64f3345ad0`: `lint-and-build` succeeded at `https://github.com/tantshirt/susu-monorepo/actions/runs/25567448622/job/75054410914`, Cursor Bugbot completed `SUCCESS`, and GraphQL review-thread audit found the Cursor thread resolved/outdated with no unresolved current-head Cursor threads, no PR comments, and only the old Cursor review on commit `2f200c86317712a11d13ba2a716420aa6bd25791`.
 
 ### Completion Notes List
 
@@ -135,6 +136,7 @@ GPT-5 Codex
 - Test review fixed the duplicated simulation-failure invocation and left no remaining findings.
 - Code review fixed simulation-error normalization for logs-only failures and rejected simulation RPC calls; no remaining findings.
 - Cursor Bugbot fix corrected `MAINNET_BETA_GENESIS_HASH` to the full 44-character mainnet-beta genesis hash.
+- Marked Story 6.2 done after clean implementation-head CI and Cursor evidence; the status-only commit will be re-gated before merge.
 
 ### File List
 
@@ -175,3 +177,4 @@ GPT-5 Codex
 - 2026-05-08: Ran test review, fixed the duplicated simulation-failure helper invocation, and recorded no remaining findings.
 - 2026-05-08: Ran code review, fixed simulation-error normalization edge cases, and recorded no remaining findings.
 - 2026-05-08: Fixed Cursor Bugbot truncated mainnet genesis hash finding and reran story-local validation.
+- 2026-05-08: Marked Story 6.2 done after clean PR CI and Cursor evidence; pending status-only PR re-gate before merge.
