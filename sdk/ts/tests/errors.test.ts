@@ -166,6 +166,26 @@ describe('typed SDK error taxonomy', () => {
   });
 
   it('narrows typed errors with switch (err.kind)', () => {
+    function describeUnknownSusuError(err: unknown): string {
+      if (!isSusuError(err)) {
+        return 'not-susu';
+      }
+
+      switch (err.kind) {
+        case 'program':
+          return `${err.kind}:${err.code}:${err.name}`;
+        case 'simulation':
+          return `${err.kind}:${err.logs.length}:${err.programLogs.length}`;
+        case 'rpc':
+          return `${err.kind}:${err.endpoint ?? 'unknown'}:${err.status ?? 'none'}`;
+        case 'cluster':
+          return `${err.kind}:${err.expected ?? 'unknown'}:${err.actual ?? 'unknown'}`;
+      }
+
+      const exhaustive: never = err;
+      return exhaustive;
+    }
+
     function describeSusuError(err: SusuSdkError): string {
       switch (err.kind) {
         case 'program':
@@ -183,6 +203,7 @@ describe('typed SDK error taxonomy', () => {
     }
 
     expect(isSusuError(new SusuRpcError('timeout'))).toBe(true);
+    expect(describeUnknownSusuError(new SusuError({ code: 6000, name: 'GroupFull' }))).toBe('program:6000:GroupFull');
     expect(describeSusuError(new SusuError({ code: 6000, name: 'GroupFull' }))).toBe('program:6000:GroupFull');
     expect(describeSusuError(new SusuSimulationError({ logs: ['a'], programLogs: ['b'] }))).toBe('simulation:1:1');
     expect(describeSusuError(new SusuRpcError('timeout', { endpoint: 'https://api.devnet.solana.com' }))).toBe(

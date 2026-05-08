@@ -114,7 +114,7 @@ export class SusuClusterError extends SusuErrorBase {
 
 export type SusuSdkError = SusuError | SusuSimulationError | SusuRpcError | SusuClusterError;
 
-export function isSusuError(error: unknown): error is SusuErrorBase {
+export function isSusuError(error: unknown): error is SusuSdkError {
   return isRecord(error) && isSusuErrorKind(error.kind);
 }
 

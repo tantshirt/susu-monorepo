@@ -48,6 +48,7 @@ Cursor Bugbot findings fixed during PR gate:
 
 - Medium: duplicated `extractRpcEndpoint`, `extractRpcStatus`, and `asRecord` helpers in `client.ts` and `executeTx.ts`; fixed by adding shared `sdk/ts/src/lib/rpcErrors.ts`.
 - Medium: decoded program errors used empty `logs` for `simulationLogs` when decoding from non-empty `programLogs`; fixed by preserving the logs actually used for decode and adding unit coverage.
+- High: `isSusuError` narrowed to `SusuErrorBase`, preventing documented `switch (err.kind)` access to subclass fields; fixed by narrowing to `SusuSdkError` and adding guard-based switch coverage.
 - Low: redundant exported `lookupSusuProgramError`; fixed by keeping it module-private and exporting only `decodeSusuProgramError`.
 - Low: unreachable Anchor `ErrorNumber` regex fallback; fixed by using one `Error\s*Number` regex with a short clarifying comment.
 

@@ -112,7 +112,7 @@ GPT-5 Codex
 - Added IDL-sourced `sdk/ts/src/lib/programErrors.ts` fallback because the generated TypeScript enum has names but no numeric code map.
 - Updated `executeTx` to decode Anchor program errors from simulation logs, preserve diagnostic logs, and wrap RPC transport/config failures in `SusuRpcError`.
 - Removed bare `throw new Error(...)` paths from `sdk/ts/src`, documented `switch (err.kind)`, and added Story 6.3 ATDD/unit coverage.
-- Addressed Cursor Bugbot findings on PR #179; latest `lint-and-build` and Cursor Bugbot checks passed on commit `51f6cf40b58ccb44d96ffa863ab081a7a6e92efa`.
+- Addressed Cursor Bugbot findings on PR #179, including the final guard-narrowing issue found after the BAD status update.
 
 ### File List
 
