@@ -4,7 +4,7 @@
 use anchor_lang::prelude::Pubkey;
 use anchor_lang::AccountDeserialize;
 use solana_client::client_error::{ClientError, Result as ClientResult};
-use solana_client::rpc_client::RpcClient;
+use solana_client::nonblocking::rpc_client::RpcClient;
 use solana_commitment_config::CommitmentConfig;
 
 use susu::seeds::{GROUP_SEED, MEMBER_SEED};
@@ -19,8 +19,10 @@ pub struct ParticipationRecord {
     pub completed: bool,
 }
 
-fn get_group_sync(rpc: &RpcClient, group_pda: &Pubkey) -> ClientResult<Option<Group>> {
-    let response = rpc.get_account_with_commitment(group_pda, CommitmentConfig::confirmed())?;
+pub async fn get_group(rpc: &RpcClient, group_pda: &Pubkey) -> ClientResult<Option<Group>> {
+    let response = rpc
+        .get_account_with_commitment(group_pda, CommitmentConfig::confirmed())
+        .await?;
     let Some(account) = response.value else {
         return Ok(None);
     };
@@ -32,10 +34,6 @@ fn get_group_sync(rpc: &RpcClient, group_pda: &Pubkey) -> ClientResult<Option<Gr
         ))
     })?;
     Ok(Some(group))
-}
-
-pub async fn get_group(rpc: &RpcClient, group_pda: &Pubkey) -> ClientResult<Option<Group>> {
-    get_group_sync(rpc, group_pda)
 }
 
 pub async fn get_group_by_creator(
@@ -50,7 +48,7 @@ pub async fn get_group_by_creator(
     get_group(rpc, &group_pda).await
 }
 
-fn get_member_position_sync(
+pub async fn get_member_position(
     rpc: &RpcClient,
     program_id: &Pubkey,
     group_pda: &Pubkey,
@@ -58,7 +56,9 @@ fn get_member_position_sync(
 ) -> ClientResult<Option<MemberPosition>> {
     let seeds: [&[u8]; 3] = [MEMBER_SEED, group_pda.as_ref(), member.as_ref()];
     let (member_pda, _) = Pubkey::find_program_address(&seeds, program_id);
-    let response = rpc.get_account_with_commitment(&member_pda, CommitmentConfig::confirmed())?;
+    let response = rpc
+        .get_account_with_commitment(&member_pda, CommitmentConfig::confirmed())
+        .await?;
     let Some(account) = response.value else {
         return Ok(None);
     };
@@ -72,15 +72,6 @@ fn get_member_position_sync(
     Ok(Some(pos))
 }
 
-pub async fn get_member_position(
-    rpc: &RpcClient,
-    program_id: &Pubkey,
-    group_pda: &Pubkey,
-    member: &Pubkey,
-) -> ClientResult<Option<MemberPosition>> {
-    get_member_position_sync(rpc, program_id, group_pda, member)
-}
-
 /// Uses full `get_program_accounts` then filters by `member_pubkey` at byte offset **40**
 /// (8-byte discriminator + 32-byte group). Prefer server-side memcmp in hot paths (future).
 pub async fn query_participation_history(
@@ -88,7 +79,7 @@ pub async fn query_participation_history(
     program_id: &Pubkey,
     wallet: &Pubkey,
 ) -> ClientResult<Vec<ParticipationRecord>> {
-    let all = rpc.get_program_accounts(program_id)?;
+    let all = rpc.get_program_accounts(program_id).await?;
     let mut records = Vec::new();
 
     for (_pda, account) in all {

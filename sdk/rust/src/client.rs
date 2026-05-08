@@ -2,6 +2,7 @@
 
 use anchor_lang::prelude::Pubkey;
 use anchor_lang::solana_program::instruction::Instruction;
+use solana_client::nonblocking::rpc_client::RpcClient as AsyncRpcClient;
 use solana_client::rpc_client::RpcClient;
 use solana_compute_budget_interface::ComputeBudgetInstruction;
 use solana_sdk::signature::Signature;
@@ -43,6 +44,7 @@ impl Cluster {
 pub struct SusuClient {
     pub cluster: Cluster,
     pub rpc: RpcClient,
+    pub async_rpc: AsyncRpcClient,
     pub program_id: Pubkey,
     pub compute_units: u32,
 }
@@ -59,9 +61,11 @@ impl core::fmt::Debug for SusuClient {
 
 impl SusuClient {
     pub fn new(cluster: Cluster, rpc: RpcClient) -> Self {
+        let async_rpc = AsyncRpcClient::new_with_commitment(rpc.url(), rpc.commitment());
         Self {
             cluster,
             rpc,
+            async_rpc,
             program_id: DEFAULT_SUSU_PROGRAM_ID,
             compute_units: DEFAULT_COMPUTE_UNITS,
         }
@@ -175,7 +179,7 @@ impl SusuClient {
     }
 
     pub async fn get_group(&self, group: &Pubkey) -> Result<Option<Group>, SusuError> {
-        Ok(queries::get_group(&self.rpc, group).await?)
+        Ok(queries::get_group(&self.async_rpc, group).await?)
     }
 
     pub async fn get_member_position(
@@ -183,14 +187,14 @@ impl SusuClient {
         group: &Pubkey,
         member: &Pubkey,
     ) -> Result<Option<MemberPosition>, SusuError> {
-        Ok(queries::get_member_position(&self.rpc, &self.program_id, group, member).await?)
+        Ok(queries::get_member_position(&self.async_rpc, &self.program_id, group, member).await?)
     }
 
     pub async fn query_history(
         &self,
         wallet: &Pubkey,
     ) -> Result<Vec<ParticipationRecord>, SusuError> {
-        Ok(queries::query_participation_history(&self.rpc, &self.program_id, wallet).await?)
+        Ok(queries::query_participation_history(&self.async_rpc, &self.program_id, wallet).await?)
     }
 
     fn transaction(&self, mut instructions: Vec<Instruction>) -> TransactionBuilder<'_> {
