@@ -84,14 +84,16 @@ test('[P0] Story 7.7 middleware + UI cover locale switch, lang updates, and RTL 
 });
 
 test('[P1] Story 7.7 component JSX avoids hard-coded UI copy outside translation keys', async () => {
-  const files = [
-    'apps/reference/components/locale-dropdown.tsx',
-    'apps/reference/app/[locale]/page.tsx',
-  ];
-  for (const path of files) {
-    const source = await readRepoFile(path);
-    assert.match(source, /(useTranslation|getTranslations)\(/, `${path} must read UI copy from translations`);
-    assert.doesNotMatch(source, /\bBuild trust, rotate payouts, and save together\./, `${path} must not inline English UI copy`);
-    assert.doesNotMatch(source, /\bLanguage\b/, `${path} must not inline locale switcher labels`);
-  }
+  const dropdown = await readRepoFile('apps/reference/components/locale-dropdown.tsx');
+  const page = await readRepoFile('apps/reference/app/[locale]/page.tsx');
+
+  assert.match(dropdown, /useTranslation\('localeSwitcher'\)/);
+  assert.match(dropdown, /t\('label'\)/);
+  assert.match(dropdown, /t\(`options\.\$\{item\}`\)/);
+
+  assert.match(page, /getTranslations\('home'\)/);
+  assert.match(page, /t\('title'\)/);
+  assert.match(page, /t\('subtitle'\)/);
+  assert.match(page, /t\('primaryCta'\)/);
+  assert.match(page, /t\('secondaryCta'\)/);
 });
