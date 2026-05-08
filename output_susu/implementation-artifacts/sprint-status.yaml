@@ -91,7 +91,7 @@ development_status:
   5-3-thirty-percent-cartel-scenario: ready-for-dev
   5-4-deterministic-adversary-report: ready-for-dev
   5-5-collateral-curve-doc: ready-for-dev
-  5-6-threat-model-doc: ready-for-dev
+  5-6-threat-model-doc: done
   5-7-fincen-cvc-framing-doc: done
   5-8-audit-engagement: ready-for-dev
   5-9-legal-opinion: ready-for-dev
