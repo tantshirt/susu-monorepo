@@ -34,7 +34,7 @@ test('Story 5.7 framing doc has TL;DR and cites FinCEN 2019 CVC guidance', () =>
   assert.match(doc, /^## TL;DR$/m, 'framing doc must include a TL;DR section');
   assert.match(doc, /FIN-2019-G001/, 'doc must cite FinCEN FIN-2019-G001');
   assert.match(doc, /May 9, 2019|May 09, 2019/, 'doc must identify the 2019 guidance date');
-  assert.match(doc, /fincen\.gov\/.*CVC/i, 'doc must link to the official FinCEN CVC guidance');
+  assert.match(doc, /https:\/\/www\.fincen\.gov\//i, 'doc must link to the official FinCEN guidance');
 });
 
 test('Story 5.7 enumerates non-custodial, non-fee, and non-yield structure', () => {

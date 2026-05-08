@@ -1,6 +1,6 @@
 # Story 5.7: FinCEN CVC framing doc
 
-Status: in-progress
+Status: review
 Issue: #50
 
 ## Story
@@ -22,19 +22,19 @@ so that the regulatory framing is legible without a 30-minute legal-doc dive.
 
 ## Tasks / Subtasks
 
-- [ ] Generate Story 5.7 ATDD artifacts.
-  - [ ] Create a static acceptance scaffold for the framing doc.
-  - [ ] Create an ATDD checklist mapping issue #50 ACs to tests.
-- [ ] Author `docs/fincen-cvc-framing.md`.
-  - [ ] Include `## TL;DR`.
-  - [ ] Cite FinCEN 2019 CVC guidance.
-  - [ ] Enumerate non-custodial, non-fee, and non-yield structural clauses.
-  - [ ] Cite `scripts/check-fincen-posture.sh`.
-  - [ ] List posture-forfeiting changes and re-review triggers.
-  - [ ] Point to Story 5.9 legal opinion without making legal conclusions.
-- [ ] Run local verification.
-  - [ ] `node --test tests/atdd/story-5-7-fincen-cvc-framing-doc.static.red.test.mjs`
-  - [ ] `bash scripts/check-fincen-posture.sh`
+- [x] Generate Story 5.7 ATDD artifacts.
+  - [x] Create a static acceptance scaffold for the framing doc.
+  - [x] Create an ATDD checklist mapping issue #50 ACs to tests.
+- [x] Author `docs/fincen-cvc-framing.md`.
+  - [x] Include `## TL;DR`.
+  - [x] Cite FinCEN 2019 CVC guidance.
+  - [x] Enumerate non-custodial, non-fee, and non-yield structural clauses.
+  - [x] Cite `scripts/check-fincen-posture.sh`.
+  - [x] List posture-forfeiting changes and re-review triggers.
+  - [x] Point to Story 5.9 legal opinion without making legal conclusions.
+- [x] Run local verification.
+  - [x] `node --test tests/atdd/story-5-7-fincen-cvc-framing-doc.static.red.test.mjs`
+  - [x] `bash scripts/check-fincen-posture.sh`
 
 ## Dev Notes
 
@@ -66,12 +66,19 @@ GPT-5 Codex
 
 ### Completion Notes List
 
-- Pending.
+- Added `docs/fincen-cvc-framing.md` with TL;DR, official FinCEN FIN-2019-G001 citation, structural clauses, posture enforcement reference, forfeiture triggers, and Story 5.9 legal-opinion boundary.
+- Added active static ATDD coverage for issue #50 acceptance criteria.
+- Linked the framing doc from `docs/README.md`.
 
 ### File List
 
-- Pending.
+- `docs/fincen-cvc-framing.md`
+- `docs/README.md`
+- `tests/atdd/story-5-7-fincen-cvc-framing-doc.static.red.test.mjs`
+- `output_susu/test-artifacts/atdd-checklist-5-7-fincen-cvc-framing-doc.md`
+- `output_susu/implementation-artifacts/5-7-fincen-cvc-framing-doc.md`
 
 ### Change Log
 
 - 2026-05-08: Story artifact created from issue #50 and ATDD handoff scope.
+- 2026-05-08: Implemented FinCEN CVC framing doc and moved story to review.
