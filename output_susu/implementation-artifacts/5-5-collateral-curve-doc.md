@@ -101,6 +101,7 @@ GPT-5 Codex
 - Linked the public proof claim to `tests/invariants/no_strategic_default.rs` and `audits/adversary/adversary-report.json`.
 - Captured an independent non-cryptoeconomist comprehension review record in this story file.
 - Completed test-review follow-up by reducing the Story 5.5 static guard to 100 lines and tightening the payoff assertion.
+- Addressed code-review finding by adding the Epic 5 test-design citation to `crates/susu-adversary/src/scenarios/thirty_percent_cartel.rs`.
 
 ### Comprehension Review
 
@@ -115,6 +116,7 @@ GPT-5 Codex
 - `output_susu/implementation-artifacts/5-5-collateral-curve-doc.md`
 - `output_susu/implementation-artifacts/sprint-status.yaml`
 - `output_susu/test-artifacts/atdd-checklist-5-5-collateral-curve-doc.md`
+- `output_susu/test-artifacts/code-reviews/story-5-5-code-review.md`
 - `output_susu/test-artifacts/test-reviews/story-5-5-test-review.md`
 - `tests/atdd/story-5-5-collateral-curve-doc.atdd.md`
 - `tests/atdd/story-5-5-collateral-curve-doc.static.red.test.mjs`
@@ -124,3 +126,4 @@ GPT-5 Codex
 - 2026-05-08: Initialized Story 5.5 from issue #48 and upstream Epic 5 evidence artifacts.
 - 2026-05-08: Implemented `docs/collateral-curve.md`, recorded comprehension review evidence, and moved story to review.
 - 2026-05-08: Completed test-review workflow and fixed all findings.
+- 2026-05-08: Completed code-review workflow and fixed all findings.

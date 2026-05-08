@@ -27,6 +27,7 @@ Given the public claim cites executable evidence
 When the static acceptance test checks cited paths
 Then `tests/invariants/no_strategic_default.rs` exists
 And `audits/adversary/adversary-report.json` exists
+And `crates/susu-adversary/src/scenarios/thirty_percent_cartel.rs` exists
 And the adversary report has `summary.max_defector_profit_lamports == 0`.
 
 ## Scenario 5: Comprehension review is recorded

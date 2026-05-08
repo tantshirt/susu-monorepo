@@ -7,11 +7,11 @@ const storyPath = 'output_susu/implementation-artifacts/5-5-collateral-curve-doc
 const curvePath = 'programs/susu/src/curve.rs';
 const invariantPath = 'tests/invariants/no_strategic_default.rs';
 const reportPath = 'audits/adversary/adversary-report.json';
+const cartelScenarioPath = 'crates/susu-adversary/src/scenarios/thirty_percent_cartel.rs';
 
 function read(path) {
   return readFileSync(path, 'utf8');
 }
-
 function firstSectionHeading(markdown) {
   const headings = markdown
     .split('\n')
@@ -24,7 +24,6 @@ function firstSectionHeading(markdown) {
 function requiredCollateral(contribution, n, slot) {
   return contribution * (2 * n - 1 - slot);
 }
-
 test('Story 5.5 doc starts with TL;DR and states the Curve Invariant', () => {
   assert.ok(existsSync(docPath), `${docPath} must exist`);
 
@@ -77,7 +76,7 @@ test('Story 5.5 worked USDC examples match the closed-form curve values', () => 
 });
 
 test('Story 5.5 doc cites verifier paths that resolve to real evidence', () => {
-  for (const path of [docPath, invariantPath, reportPath]) {
+  for (const path of [docPath, invariantPath, reportPath, cartelScenarioPath]) {
     assert.ok(existsSync(path), `${path} must exist`);
   }
 
@@ -86,6 +85,7 @@ test('Story 5.5 doc cites verifier paths that resolve to real evidence', () => {
 
   assert.match(doc, /tests\/invariants\/no_strategic_default\.rs/, 'doc must cite invariant proptest path');
   assert.match(doc, /audits\/adversary\/adversary-report\.json/, 'doc must cite adversary report path');
+  assert.match(doc, /crates\/susu-adversary\/src\/scenarios\/thirty_percent_cartel\.rs/, 'doc must cite 30% Cartel scenario path');
   assert.equal(report.summary.max_defector_profit_lamports, 0, 'canonical adversary report must show no profitable defector');
 });
 

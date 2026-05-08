@@ -79,3 +79,4 @@ This is a proof sketch rather than a full mechanized proof. The executable invar
 - `programs/susu/src/curve.rs` is the canonical curve implementation.
 - `tests/invariants/no_strategic_default.rs` is the property-test evidence for `expected_default_payoff(i) < 0`.
 - `audits/adversary/adversary-report.json` is the canonical adversary report evidence for the current simulation run.
+- `crates/susu-adversary/src/scenarios/thirty_percent_cartel.rs` is the named adversary scenario backing the report's 30% Cartel coverage.

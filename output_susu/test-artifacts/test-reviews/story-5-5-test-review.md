@@ -16,6 +16,7 @@ inputDocuments:
   - tests/atdd/story-5-5-collateral-curve-doc.static.red.test.mjs
   - tests/atdd/story-5-5-collateral-curve-doc.atdd.md
   - docs/collateral-curve.md
+  - crates/susu-adversary/src/scenarios/thirty_percent_cartel.rs
 ---
 
 # Test Review: Story 5.5 Collateral Curve Doc
