@@ -1,5 +1,5 @@
 # Story Dependency Graph
-_Last updated: 2026-05-08T05:18:48Z_
+_Last updated: 2026-05-08T06:00:30Z_
 
 ## Epic Readiness Summary
 
@@ -35,20 +35,20 @@ _Last updated: 2026-05-08T05:18:48Z_
 | 3.7 | 3 | Implement withdraw_collateral instruction | done | — | #153 | merged | 2.5 | ✅ Done |
 | 3.8 | 3 | Enforce all-collateralized gate before contributions can start | done | — | #153 | merged | 3.4 | ✅ Done |
 | 4.1 | 4 | Deterministic on-chain rotation-slot assignment algorithm | done | #38 | #157 | merged | 3.8 | ✅ Done |
-| 4.2 | 4 | Implement claim_payout instruction | done | #39 | #158 | merged | 4.1 | — |
+| 4.2 | 4 | Implement claim_payout instruction | done | #39 | #158 | merged | 4.1 | ✅ Done |
 | 4.3 | 4 | claim_payout guard — non-recipient rejection | done | #40 | #159 | merged | 4.2 | ✅ Done |
 | 4.4 | 4 | claim_payout guard — pre-deadline rejection | done | #41 | #161 | merged | 4.3 | ✅ Done |
 | 4.5 | 4 | claim_payout guard — double-claim rejection via RotationReceipt PDA | done | #42 | #160 | merged | 4.2 | ✅ Done |
 | 4.6 | 4 | End-to-end full ROSCA lifecycle integration test on Surfpool | done | #43 | #162 | merged | 4.1, 4.2, 4.3, 4.4, 4.5 | ✅ Done |
-| 5.1 | 5 | tests/invariants/no_strategic_default.rs proptest (FR21) | ready-for-dev | — | — | — | 3.1 | ❌ No (Epic 4 not complete) |
-| 5.2 | 5 | susu-adversary CLI binary skeleton (FR22 part 1) | ready-for-dev | — | — | — | none | ❌ No (Epic 4 not complete) |
-| 5.3 | 5 | 30% Cartel scenario named as headline test (FR23) | ready-for-dev | — | — | — | 5.2 | ❌ No (Epic 4 not complete) |
-| 5.4 | 5 | Byte-deterministic adversary-report.json from --seed $COMMIT_SHA (FR22 part 2 + NFR-Re1) | ready-for-dev | — | — | — | 5.2, 5.3 | ❌ No (Epic 4 not complete) |
-| 5.5 | 5 | docs/collateral-curve.md formal write-up (FR24) | ready-for-dev | — | — | — | 5.1, 5.4 | ❌ No (Epic 4 not complete) |
-| 5.6 | 5 | docs/threat-model.md + tests/coverage/threat-model.md traceability (FR25) | ready-for-dev | — | — | — | none | ❌ No (Epic 4 not complete) |
-| 5.7 | 5 | docs/fincen-cvc-framing.md (FR26) | ready-for-dev | — | — | — | none | ❌ No (Epic 4 not complete) |
-| 5.8 | 5 | Audit firm engagement + report linking (FR57, NFR-S1) | ready-for-dev | — | — | — | 1.2 | ❌ No (Epic 4 not complete) |
-| 5.9 | 5 | Legal opinion engagement + docs/legal-opinion.pdf publication (FR27) | ready-for-dev | — | — | — | 5.7 | ❌ No (Epic 4 not complete) |
+| 5.1 | 5 | tests/invariants/no_strategic_default.rs proptest (FR21) | ready-for-dev | — | — | — | 3.1 | ✅ Ready |
+| 5.2 | 5 | susu-adversary CLI binary skeleton (FR22 part 1) | ready-for-dev | — | — | — | none | ✅ Ready |
+| 5.3 | 5 | 30% Cartel scenario named as headline test (FR23) | ready-for-dev | — | — | — | 5.2 | ❌ No (5.2 not complete) |
+| 5.4 | 5 | Byte-deterministic adversary-report.json from --seed $COMMIT_SHA (FR22 part 2 + NFR-Re1) | ready-for-dev | — | — | — | 5.2, 5.3 | ❌ No (5.2, 5.3 not complete) |
+| 5.5 | 5 | docs/collateral-curve.md formal write-up (FR24) | ready-for-dev | — | — | — | 5.1, 5.4 | ❌ No (5.1, 5.4 not complete) |
+| 5.6 | 5 | docs/threat-model.md + tests/coverage/threat-model.md traceability (FR25) | ready-for-dev | — | — | — | none | ✅ Ready |
+| 5.7 | 5 | docs/fincen-cvc-framing.md (FR26) | ready-for-dev | — | — | — | none | ✅ Ready |
+| 5.8 | 5 | Audit firm engagement + report linking (FR57, NFR-S1) | ready-for-dev | — | — | — | 1.2 | ✅ Ready |
+| 5.9 | 5 | Legal opinion engagement + docs/legal-opinion.pdf publication (FR27) | ready-for-dev | — | — | — | 5.7 | ❌ No (5.7 not complete) |
 | 6.1 | 6 | TS SDK (@susu/sdk) idiomatic helpers + fluent client | ready-for-dev | — | — | — | 1.2, 1.3 | ❌ No (Epic 5 not complete) |
 | 6.2 | 6 | SDK simulate-by-default + explicit-cluster gate | ready-for-dev | — | — | — | 6.1 | ❌ No (Epic 5 not complete) |
 | 6.3 | 6 | SDK error classes — typed discriminated union | ready-for-dev | — | — | — | 1.3, 6.1, 6.2 | ❌ No (Epic 5 not complete) |
