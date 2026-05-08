@@ -1,0 +1,73 @@
+document_output_language: English
+output_folder: '{project-root}/output_susu'
+
+bad:
+  name: BMad Autonomous Development
+  description: Orchestrates parallel BMad story implementation pipelines.
+  version: 1.2.0
+  max_parallel_stories: 5
+  worktree_base_path: .worktrees
+  auto_pr_merge: true
+  monitor_support: true
+  run_ci_locally: false
+  timer_support: true
+  retro_timer_seconds: 600
+  context_compaction_threshold: 80
+  stale_timeout_minutes: 60
+  model_standard: gpt-5
+  model_quality: gpt-5
+  api_usage_threshold: 80
+  epic_scope:
+    epic: 5
+    name: Curve Verification, Adversary Simulation & Public Documentation
+    enforce_epic_only: true
+    source_of_truth:
+      - output_susu/implementation-artifacts/sprint-status.yaml
+      - output_susu/implementation-artifacts/dependency-graph.md
+    initial_batch:
+      - '5.1'
+      - '5.2'
+      - '5.6'
+      - '5.7'
+      - '5.8'
+    lane_stack:
+      - lane: invariant-proof
+        stories:
+          - '5.1'
+        unlocks:
+          - '5.5'
+      - lane: adversary-simulation
+        stories:
+          - '5.2'
+          - '5.3'
+          - '5.4'
+        dependencies:
+          '5.3':
+            - '5.2'
+          '5.4':
+            - '5.2'
+            - '5.3'
+        unlocks:
+          - '5.5'
+      - lane: public-documentation
+        stories:
+          - '5.6'
+          - '5.7'
+          - '5.9'
+        dependencies:
+          '5.9':
+            - '5.7'
+      - lane: audit-engagement
+        stories:
+          - '5.8'
+    blocked_until_dependencies_complete:
+      '5.3':
+        - '5.2'
+      '5.4':
+        - '5.2'
+        - '5.3'
+      '5.5':
+        - '5.1'
+        - '5.4'
+      '5.9':
+        - '5.7'
