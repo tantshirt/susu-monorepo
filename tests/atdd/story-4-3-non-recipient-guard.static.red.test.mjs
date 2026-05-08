@@ -21,7 +21,7 @@ function handlerBody() {
   return match.groups.body;
 }
 
-test('Story 4.3 binds member_position PDA to the claiming signer', () => {
+test('4.3-INT-002/003 binds member_position PDA to the claiming signer', () => {
   const accounts = compact(accountStructBody());
 
   assert.match(
@@ -42,23 +42,25 @@ test('Story 4.3 binds member_position PDA to the claiming signer', () => {
   );
 });
 
-test('Story 4.3 uses a recipient-validation helper that returns NotRotationRecipient', () => {
+test('4.3-INT-001 uses a recipient-validation helper that returns NotRotationRecipient', () => {
   assert.match(source, /pub fn assert_rotation_recipient\(/, 'recipient guard should be unit-testable');
   assert.match(source, /SusuError::NotRotationRecipient/, 'wrong-slot member must map to NotRotationRecipient');
 });
 
-test('Story 4.3 rejects wrong-slot members before deadline checks and transfer CPI', () => {
+test('4.3-INT-001/005 rejects wrong-slot members before deadline checks, receipt writes, and transfer CPI', () => {
   const handler = compact(handlerBody());
   const recipientGuard = handler.indexOf('assert_rotation_recipient(');
   const deadline = handler.indexOf('rotation_close_timestamp(');
+  const receiptWrite = handler.indexOf('letreceipt=&mutctx.accounts.rotation_receipt');
   const cpi = handler.indexOf('CpiContext::new_with_signer');
 
   assert.notEqual(recipientGuard, -1, 'handler must call the recipient guard');
   assert.ok(recipientGuard < deadline, 'wrong recipient must fail before deadline checks');
+  assert.ok(recipientGuard < receiptWrite, 'wrong recipient must fail before receipt field writes');
   assert.ok(recipientGuard < cpi, 'wrong recipient must fail before token transfer');
 });
 
-test('Story 4.3 keeps receipt PDA canonical and isolated from member identity', () => {
+test('4.3-INT-003 keeps receipt PDA canonical and isolated from member identity', () => {
   const accounts = compact(accountStructBody());
 
   assert.match(
