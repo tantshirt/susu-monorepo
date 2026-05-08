@@ -3,7 +3,8 @@ use anchor_lang::prelude::{AccountInfo, Pubkey};
 use anchor_lang::{AccountSerialize, Space};
 use susu::error::SusuError;
 use susu::instructions::claim_payout::{
-    calculate_payout_amount, rotation_close_timestamp, verify_rotation_funded,
+    assert_rotation_recipient, calculate_payout_amount, rotation_close_timestamp,
+    verify_rotation_funded,
 };
 use susu::seeds::{GROUP_SEED, MEMBER_SEED, ROTATION_SEED};
 use susu::state::{
@@ -226,4 +227,35 @@ fn verify_rotation_funded_requires_every_member_to_have_paid_exact_amount() {
         verify_rotation_funded(group_key, &group, 0, &underfunded_accounts),
         SusuError::ContributionAmountMismatch,
     );
+}
+
+#[test]
+fn assert_rotation_recipient_rejects_wrong_slot_member() {
+    let position = MemberPosition {
+        group: Pubkey::new_unique(),
+        member_pubkey: Pubkey::new_unique(),
+        rotation_slot: 2,
+        contribution_history: vec![],
+        collateral_posted: 1_000,
+        slash_status: SlashStatus::None,
+    };
+
+    assert_susu_error(
+        assert_rotation_recipient(&position, 0),
+        SusuError::NotRotationRecipient,
+    );
+}
+
+#[test]
+fn assert_rotation_recipient_allows_exact_slot_recipient() {
+    let position = MemberPosition {
+        group: Pubkey::new_unique(),
+        member_pubkey: Pubkey::new_unique(),
+        rotation_slot: 0,
+        contribution_history: vec![],
+        collateral_posted: 1_000,
+        slash_status: SlashStatus::None,
+    };
+
+    assert_rotation_recipient(&position, 0).expect("exact rotation recipient should pass");
 }
