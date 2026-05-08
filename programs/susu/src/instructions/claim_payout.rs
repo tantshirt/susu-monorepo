@@ -66,10 +66,7 @@ pub fn handler(ctx: Context<ClaimPayout>, group_id: u64, rotation_index: u8) -> 
         (rotation_index as usize) < group.n as usize,
         SusuError::InvalidContributionRotation
     );
-    require!(
-        ctx.accounts.member_position.rotation_slot == rotation_index,
-        SusuError::NotRotationRecipient
-    );
+    assert_rotation_recipient(&ctx.accounts.member_position, rotation_index)?;
     verify_rotation_funded(
         ctx.accounts.group.key(),
         group,
@@ -134,6 +131,18 @@ pub fn calculate_payout_amount(n: u8, contribution_amount: u64) -> Result<u64> {
     u64::from(n)
         .checked_mul(contribution_amount)
         .ok_or(error!(SusuError::ArithmeticOverflow))
+}
+
+pub fn assert_rotation_recipient(
+    member_position: &MemberPosition,
+    rotation_index: u8,
+) -> Result<()> {
+    require!(
+        member_position.rotation_slot == rotation_index,
+        SusuError::NotRotationRecipient
+    );
+
+    Ok(())
 }
 
 pub fn verify_rotation_funded(
