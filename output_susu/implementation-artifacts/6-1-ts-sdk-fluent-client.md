@@ -1,6 +1,6 @@
 # Story 6.1: TS SDK (@susu/sdk) idiomatic helpers + fluent client
 
-Status: ready-for-dev
+Status: review
 
 ## Story
 
@@ -19,34 +19,34 @@ so that I can integrate Susu into a Solana app in <30 minutes.
 
 ## Tasks / Subtasks
 
-- [ ] Author `sdk/ts/src/client.ts` with fluent builder (AC: 1)
-  - [ ] `createSusuClient(opts)` accepts `{ cluster, rpc, signer? }` and returns a `SusuClient` instance with `.use(plugin)` chaining
-  - [ ] Internal state holds `{ cluster, rpc, signer, programId }`; throws if `cluster` missing (Story 6.2 enforces stricter rule)
-  - [ ] Plugin shape: `(client) => Partial<SusuClient>` — composable signer/rpc/cluster plugins
-- [ ] Implement state-changing helpers (AC: 2, 3)
-  - [ ] `createGroup(client, args)` → wraps `getCreateGroupInstructionAsync` from `generated/`
-  - [ ] `acceptInvite(client, args)` → wraps generated `getAcceptInviteInstructionAsync`
-  - [ ] `postCollateral(client, args)` → wraps generated builder
-  - [ ] `contribute(client, args)` → wraps generated builder
-  - [ ] `claimPayout(client, args)` → wraps generated builder
-  - [ ] `topUpCollateral(client, args)` → wraps generated builder
-  - [ ] `withdrawCollateral(client, args)` → wraps generated builder
-  - [ ] `cancelGroup(client, args)` → wraps generated builder
-  - [ ] Each returns `Promise<TransactionSignature>` (after Story 6.2 wraps with simulate-by-default)
-- [ ] Implement read helpers (AC: 2, 3)
-  - [ ] `getGroup(client, groupPda)` → fetches + decodes Group account via `fetchGroup` from `generated/accounts/`
-  - [ ] `getMemberPosition(client, args)` → derives Member PDA, fetches + decodes
-  - [ ] `queryHistory(client, args)` → reads RotationHistory entries (paginated)
-- [ ] Surface public API in `sdk/ts/src/index.ts` (AC: 1)
-  - [ ] Re-export `createSusuClient`, all helpers, types from `generated/types/`, error classes (Story 6.3)
-  - [ ] `package.json` `"main"` / `"module"` / `"types"` point at `dist/`; `"exports"` map declares `.` and `./generated`
-- [ ] Document every public export with JSDoc + runnable example (AC: 4)
-  - [ ] Each helper has `@example` block with kit-first imports
-  - [ ] `README.md` for `@susu/sdk` package mirrors top-level docs/sdk-typescript.md
-- [ ] Unit tests at `sdk/ts/tests/` (AC: 5)
-  - [ ] Mock RPC via `@solana/kit` test harness or fakes
-  - [ ] One happy-path test per helper; assert generated builder is invoked with expected args
-  - [ ] Coverage target: every public export touched by ≥1 test
+- [x] Author `sdk/ts/src/client.ts` with fluent builder (AC: 1)
+  - [x] `createSusuClient(opts)` accepts `{ cluster, rpc, signer? }` and returns a `SusuClient` instance with `.use(plugin)` chaining
+  - [x] Internal state holds `{ cluster, rpc, signer, programId }`; throws if `cluster` missing (Story 6.2 enforces stricter rule)
+  - [x] Plugin shape: `(client) => Partial<SusuClient>` — composable signer/rpc/cluster plugins
+- [x] Implement state-changing helpers (AC: 2, 3)
+  - [x] `createGroup(client, args)` → wraps `getCreateGroupInstructionAsync` from `generated/`
+  - [x] `acceptInvite(client, args)` → wraps generated `getAcceptInviteInstructionAsync`
+  - [x] `postCollateral(client, args)` → wraps generated builder
+  - [x] `contribute(client, args)` → wraps generated builder
+  - [x] `claimPayout(client, args)` → wraps generated builder
+  - [x] `topUpCollateral(client, args)` → wraps generated builder
+  - [x] `withdrawCollateral(client, args)` → wraps generated builder
+  - [x] `cancelGroup(client, args)` → wraps generated builder
+  - [x] Each returns `Promise<TransactionSignature>` (after Story 6.2 wraps with simulate-by-default)
+- [x] Implement read helpers (AC: 2, 3)
+  - [x] `getGroup(client, groupPda)` → fetches + decodes Group account via `fetchGroup` from `generated/accounts/`
+  - [x] `getMemberPosition(client, args)` → derives Member PDA, fetches + decodes
+  - [x] `queryHistory(client, args)` → reads RotationHistory entries (paginated)
+- [x] Surface public API in `sdk/ts/src/index.ts` (AC: 1)
+  - [x] Re-export `createSusuClient`, all helpers, types from `generated/types/`, error classes (Story 6.3)
+  - [x] `package.json` `"main"` / `"module"` / `"types"` point at `dist/`; `"exports"` map declares `.` and `./generated`
+- [x] Document every public export with JSDoc + runnable example (AC: 4)
+  - [x] Each helper has `@example` block with kit-first imports
+  - [x] `README.md` for `@susu/sdk` package mirrors top-level docs/sdk-typescript.md
+- [x] Unit tests at `sdk/ts/tests/` (AC: 5)
+  - [x] Mock RPC via `@solana/kit` test harness or fakes
+  - [x] One happy-path test per helper; assert generated builder is invoked with expected args
+  - [x] Coverage target: every public export touched by ≥1 test
 
 ## Dev Notes
 
@@ -128,10 +128,50 @@ sdk/ts/tests/
 
 ### Agent Model Used
 
-_TBD_
+GPT-5 Codex
 
 ### Debug Log References
 
+- `node --test tests/atdd/story-6-1-ts-sdk-fluent-client.static.red.test.mjs` failed before implementation with missing client/helper/README/export surface, then passed after implementation.
+- `pnpm --filter @susu/sdk build` passed after implementation.
+- `pnpm --filter @susu/sdk test` passed after implementation: 20 passed, 1 todo.
+- `pnpm test:atdd` passed after implementation: 151 passed.
+- `bash scripts/check-patterns.sh` passed.
+- `bash scripts/check-sdk-parity.sh` passed and did not modify generated files.
+
 ### Completion Notes List
 
+- Added fluent `SusuClient` with `createSusuClient().use(...)`, signer/RPC/cluster plugins, typed config errors, and default Susu program ID.
+- Added state-changing helper wrappers that call the current Codama-generated builder functions under `sdk/ts/src/generated/instructions/`; no generated files were edited.
+- Added compute-budget prepending through kit-compatible `@solana-program/compute-budget` builders, Helius-style `getPriorityFeeEstimate` support, and `{ computeUnits, priorityFee }` overrides.
+- Added client-based read wrappers over existing generated decoder/PDA query helpers.
+- Added package-local README, dist export map, and mocked Vitest coverage for client, state helpers, and read helpers.
+
 ### File List
+
+- `pnpm-lock.yaml`
+- `sdk/ts/package.json`
+- `sdk/ts/README.md`
+- `sdk/ts/src/client.ts`
+- `sdk/ts/src/index.ts`
+- `sdk/ts/src/helpers/acceptInvite.ts`
+- `sdk/ts/src/helpers/cancelGroup.ts`
+- `sdk/ts/src/helpers/claimPayout.ts`
+- `sdk/ts/src/helpers/contribute.ts`
+- `sdk/ts/src/helpers/createGroup.ts`
+- `sdk/ts/src/helpers/getGroup.ts`
+- `sdk/ts/src/helpers/getMemberPosition.ts`
+- `sdk/ts/src/helpers/internal/state.ts`
+- `sdk/ts/src/helpers/postCollateral.ts`
+- `sdk/ts/src/helpers/queryHistory.ts`
+- `sdk/ts/src/helpers/topUpCollateral.ts`
+- `sdk/ts/src/helpers/withdrawCollateral.ts`
+- `sdk/ts/tests/client.test.ts`
+- `sdk/ts/tests/parity.test.ts`
+- `sdk/ts/tests/read-helpers.test.ts`
+- `sdk/ts/tests/state-helpers.test.ts`
+- `tests/atdd/story-6-1-ts-sdk-fluent-client.static.red.test.mjs`
+
+### Change Log
+
+- 2026-05-08: Implemented Story 6.1 SDK fluent client, helpers, docs, package exports, and tests. Moved story to review pending BAD review/PR gates.

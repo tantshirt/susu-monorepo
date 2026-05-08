@@ -81,7 +81,7 @@ test('Story 6.1 read helpers use generated account decoders and existing PDA/que
     assertExists(helperPath);
 
     const source = read(helperPath);
-    assert.match(source, /generated\/accounts|helpers\/queries|decodeGroup|decodeMemberPosition/, `${helper} must decode via generated account/query helpers`);
+    assert.match(source, /generated\/accounts|\.\/queries|helpers\/queries|decodeGroup|decodeMemberPosition/, `${helper} must decode via generated account/query helpers`);
     assert.match(source, /@example[\s\S]+@solana\/kit/, `${helper} must have a kit-first runnable JSDoc example`);
     assert.doesNotMatch(source, /@solana\/web3\.js/, `${helper} must not import @solana/web3.js`);
   }

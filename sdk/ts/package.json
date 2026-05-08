@@ -1,16 +1,29 @@
 {
   "name": "@susu/sdk",
-  "version": "0.0.1",
+  "version": "0.1.0-alpha.0",
   "private": false,
   "type": "module",
-  "main": "./src/index.ts",
-  "module": "./src/index.ts",
-  "types": "./src/index.ts",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./generated": {
+      "types": "./dist/generated/index.d.ts",
+      "import": "./dist/generated/index.js"
+    }
+  },
   "peerDependencies": {
-    "@solana/kit": "^2.0.0",
+    "@solana-program/compute-budget": "^0.11.0",
+    "@solana/kit": "^5.0.0",
     "@solana/web3-compat": "^0.0.21"
   },
   "devDependencies": {
+    "@solana-program/compute-budget": "^0.11.0",
+    "@solana/kit": "^5.0.0",
     "vitest": "^4.1.5"
   },
   "scripts": {
