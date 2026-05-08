@@ -30,4 +30,5 @@ export enum SusuError {
   ArithmeticOverflow = 'ArithmeticOverflow',
   NotRotationRecipient = 'NotRotationRecipient',
   RotationNotClosed = 'RotationNotClosed',
+  AlreadyClaimed = 'AlreadyClaimed',
 }

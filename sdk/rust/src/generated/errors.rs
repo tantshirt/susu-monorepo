@@ -31,4 +31,5 @@ pub enum SusuError {
     ArithmeticOverflow,
     NotRotationRecipient,
     RotationNotClosed,
+    AlreadyClaimed,
 }

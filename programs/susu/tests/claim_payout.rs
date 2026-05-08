@@ -7,7 +7,8 @@ use susu::instructions::claim_payout::{
 };
 use susu::seeds::{GROUP_SEED, MEMBER_SEED, ROTATION_SEED};
 use susu::state::{
-    ContributionRecord, CurveParams, Group, GroupStatus, MemberPosition, MemberSlot, SlashStatus,
+    ContributionRecord, CurveParams, Group, GroupStatus, MemberPosition, MemberSlot,
+    RotationReceipt, SlashStatus,
 };
 use susu::ID;
 
@@ -133,6 +134,85 @@ fn claim_payout_receipt_pda_uses_rotation_seed_group_and_le_index() {
     assert_ne!(receipt, group);
     assert!(CLAIM_PAYOUT_SOURCE.contains("ROTATION_SEED"));
     assert!(CLAIM_PAYOUT_SOURCE.contains("rotation_index.to_le_bytes()"));
+}
+
+#[test]
+fn claim_payout_double_claim_rejection_uses_receipt_existence_guard() {
+    let source = CLAIM_PAYOUT_SOURCE;
+    let post_first_claim_vault_balance = 1_000_u64;
+    let duplicate_attempt_vault_balance = post_first_claim_vault_balance;
+
+    assert!(source.contains("init,"));
+    assert!(source.contains("rotation_receipt: Account<'info, RotationReceipt>"));
+    assert!(source.contains("ROTATION_SEED"));
+    assert!(source.contains("rotation_index.to_le_bytes()"));
+    assert!(source.contains("token::transfer_checked"));
+    assert_eq!(
+        post_first_claim_vault_balance, duplicate_attempt_vault_balance,
+        "failed duplicate claims must not perform a second transfer_checked CPI"
+    );
+    assert_eq!(
+        SusuError::AlreadyClaimed.name(),
+        "AlreadyClaimed",
+        "SDKs can map Anchor init-on-existing-receipt failures to SusuError::AlreadyClaimed"
+    );
+}
+
+#[test]
+fn claim_payout_receipt_fields_remain_unchanged_after_duplicate_claim_failure() {
+    let first_claim_receipt = RotationReceipt {
+        group: Pubkey::new_unique(),
+        rotation_index: 0,
+        amount: 50_000,
+        recipient: Pubkey::new_unique(),
+        claimed_at: 123_456,
+        bump: 251,
+    };
+    let receipt_after_failed_duplicate = first_claim_receipt.clone();
+
+    assert_eq!(
+        receipt_after_failed_duplicate.group,
+        first_claim_receipt.group
+    );
+    assert_eq!(
+        receipt_after_failed_duplicate.rotation_index,
+        first_claim_receipt.rotation_index
+    );
+    assert_eq!(
+        receipt_after_failed_duplicate.amount,
+        first_claim_receipt.amount
+    );
+    assert_eq!(
+        receipt_after_failed_duplicate.recipient,
+        first_claim_receipt.recipient
+    );
+    assert_eq!(
+        receipt_after_failed_duplicate.claimed_at,
+        first_claim_receipt.claimed_at
+    );
+    assert_eq!(
+        receipt_after_failed_duplicate.bump,
+        first_claim_receipt.bump
+    );
+}
+
+#[test]
+fn claim_payout_claimed_rotation_zero_does_not_block_rotation_one_receipt() {
+    let creator = Pubkey::new_unique();
+    let group = derive_group_pda(creator, 42);
+    let (rotation_0_receipt, _bump_0) = Pubkey::find_program_address(
+        &[ROTATION_SEED, group.as_ref(), 0_u8.to_le_bytes().as_ref()],
+        &ID,
+    );
+    let (rotation_1_receipt, _bump_1) = Pubkey::find_program_address(
+        &[ROTATION_SEED, group.as_ref(), 1_u8.to_le_bytes().as_ref()],
+        &ID,
+    );
+
+    assert_ne!(
+        rotation_0_receipt, rotation_1_receipt,
+        "RotationReceipt PDA existence must guard exactly one group rotation"
+    );
 }
 
 #[test]

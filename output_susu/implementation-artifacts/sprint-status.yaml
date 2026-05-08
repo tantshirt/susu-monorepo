@@ -80,7 +80,7 @@ development_status:
   4-2-claim-payout: done # merged via PR #158 on 2026-05-08
   4-3-non-recipient-guard: ready-for-dev
   4-4-pre-deadline-guard: ready-for-dev
-  4-5-double-claim-guard: ready-for-dev
+  4-5-double-claim-guard: review
   4-6-e2e-lifecycle-test: ready-for-dev
   epic-4-retrospective: optional
 
