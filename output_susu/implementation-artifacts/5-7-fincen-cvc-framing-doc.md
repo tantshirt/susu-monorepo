@@ -1,6 +1,6 @@
 # Story 5.7: FinCEN CVC framing doc
 
-Status: review
+Status: done
 Issue: #50
 
 ## Story
@@ -83,3 +83,4 @@ GPT-5 Codex
 
 - 2026-05-08: Story artifact created from issue #50 and ATDD handoff scope.
 - 2026-05-08: Implemented FinCEN CVC framing doc and moved story to review.
+- 2026-05-08: CI and Cursor Bugbot passed on PR #166; Story 5.7 moved to done.
