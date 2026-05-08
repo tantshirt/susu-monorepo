@@ -12,7 +12,7 @@ export type AcceptInviteInput = StateHelperInput<AcceptInviteAccounts, AcceptInv
  * import { acceptInvite, createSusuClient, solanaDevnetRpc } from '@susu/sdk';
  * import { address } from '@solana/kit';
  *
- * const client = createSusuClient().use(solanaDevnetRpc({ rpc }));
+ * const client = createSusuClient({ cluster: 'devnet' }).use(solanaDevnetRpc({ rpc }));
  * await acceptInvite(client, { group: address('11111111111111111111111111111111'), member });
  * ```
  */

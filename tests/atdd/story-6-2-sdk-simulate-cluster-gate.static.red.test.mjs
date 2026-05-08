@@ -67,7 +67,7 @@ test('Story 6.2 routes every state-changing helper through executeTx with simula
   assert.match(executeTx, /\blogs\b[\s\S]*programLogs|programLogs[\s\S]*logs/, 'simulation logs and program logs must be preserved');
   assert.match(executeTx, /Promise<\s*TransactionSignature\s*>/, 'executeTx must return a TransactionSignature');
 
-  const firstSimulation = executeTx.indexOf('simulateTransaction');
+  const firstSimulation = executeTx.indexOf('simulateOrThrow');
   const firstSendInstructions = executeTx.indexOf('sendInstructions');
   const firstSendTransaction = executeTx.indexOf('sendTransaction');
   const firstSend = Math.min(

@@ -19,7 +19,7 @@ export type QueryHistoryInput = Readonly<{
  * import { createSusuClient, queryHistory, solanaDevnetRpc } from '@susu/sdk';
  * import { address } from '@solana/kit';
  *
- * const client = createSusuClient().use(solanaDevnetRpc({ rpc }));
+ * const client = createSusuClient({ cluster: 'devnet' }).use(solanaDevnetRpc({ rpc }));
  * const history = await queryHistory(client, { wallet: address('11111111111111111111111111111112') });
  * ```
  */

@@ -1,6 +1,6 @@
 # Story 6.2: SDK simulate-by-default + explicit-cluster gate
 
-Status: ready-for-dev
+Status: review
 
 ## Story
 
@@ -18,26 +18,26 @@ so that integrators can't accidentally send a mainnet transaction or skip simula
 
 ## Tasks / Subtasks
 
-- [ ] Implement explicit-cluster gate in `createSusuClient` (AC: 3)
-  - [ ] Constructor signature: `createSusuClient({ cluster: 'devnet' | 'mainnet-beta' | 'localnet' | 'testnet', rpc, signer? })`
-  - [ ] Throw `SusuClusterError` synchronously if `cluster` is undefined / empty
-  - [ ] Cross-check: if RPC endpoint resolves to mainnet (heuristic via genesis hash or known endpoints) AND `cluster !== 'mainnet-beta'` → throw `SusuClusterError`
-  - [ ] Document the heuristic in `docs/sdk-typescript.md` (it is a defense-in-depth, not a hard guarantee)
-- [ ] Wire simulate-by-default into every state-changing helper (AC: 1, 2)
-  - [ ] Each helper accepts `opts?: { simulate?: boolean }` defaulting to `simulate: true`
-  - [ ] Build the transaction; if `simulate: true`, call `rpc.simulateTransaction(tx)` first
-  - [ ] On simulation success, send + confirm; return `TransactionSignature`
-  - [ ] On simulation failure, throw `SusuSimulationError({ logs, programLogs, error })` - never proceed to send
-  - [ ] Refactor `contribute`, `createGroup`, `acceptInvite`, `postCollateral`, `claimPayout`, `topUpCollateral`, `withdrawCollateral`, `cancelGroup` to share a `executeTx(client, ix, opts)` helper that encapsulates simulate->send
-- [ ] Surface `SusuClusterError` (AC: 3)
-  - [ ] Stub class in `sdk/ts/src/errors.ts` (full taxonomy lands in Story 6.3 - this story creates the file and the cluster error)
-- [ ] Unit tests at `sdk/ts/tests/` (AC: 4)
-  - [ ] `client.test.ts` - missing `cluster` throws; mainnet-resolved + `cluster: 'devnet'` throws
-  - [ ] `simulate.test.ts` - simulation-success path returns sig; simulation-failure path throws `SusuSimulationError` with logs
-  - [ ] `simulate.test.ts` - `simulate: false` skips simulation (escape hatch documented as advanced)
-- [ ] Author `docs/sdk-typescript.md` simulate + cluster section (AC: 5)
-  - [ ] Code samples for: default-safe usage, explicit `simulate: false`, mainnet-beta production usage
-  - [ ] Failure-mode table mapping `SusuSimulationError` / `SusuClusterError` to recovery hints
+- [x] Implement explicit-cluster gate in `createSusuClient` (AC: 3)
+  - [x] Constructor signature: `createSusuClient({ cluster: 'devnet' | 'mainnet-beta' | 'localnet' | 'testnet', rpc, signer? })`
+  - [x] Throw `SusuClusterError` synchronously if `cluster` is undefined / empty
+  - [x] Cross-check: if RPC endpoint resolves to mainnet (heuristic via genesis hash or known endpoints) AND `cluster !== 'mainnet-beta'` -> throw `SusuClusterError`
+  - [x] Document the heuristic in `docs/sdk-typescript.md` (it is a defense-in-depth, not a hard guarantee)
+- [x] Wire simulate-by-default into every state-changing helper (AC: 1, 2)
+  - [x] Each helper accepts `opts?: { simulate?: boolean }` defaulting to `simulate: true`
+  - [x] Build the transaction; if `simulate: true`, call `rpc.simulateTransaction(tx)` first
+  - [x] On simulation success, send + confirm; return `TransactionSignature`
+  - [x] On simulation failure, throw `SusuSimulationError({ logs, programLogs, error })` - never proceed to send
+  - [x] Refactor `contribute`, `createGroup`, `acceptInvite`, `postCollateral`, `claimPayout`, `topUpCollateral`, `withdrawCollateral`, `cancelGroup` to share a `executeTx(client, ix, opts)` helper that encapsulates simulate->send
+- [x] Surface `SusuClusterError` (AC: 3)
+  - [x] Stub class in `sdk/ts/src/errors.ts` (full taxonomy lands in Story 6.3 - this story creates the file and the cluster error)
+- [x] Unit tests at `sdk/ts/tests/` (AC: 4)
+  - [x] `client.test.ts` - missing `cluster` throws; mainnet-resolved + `cluster: 'devnet'` throws
+  - [x] `simulate.test.ts` - simulation-success path returns sig; simulation-failure path throws `SusuSimulationError` with logs
+  - [x] `simulate.test.ts` - `simulate: false` skips simulation (escape hatch documented as advanced)
+- [x] Author `docs/sdk-typescript.md` simulate + cluster section (AC: 5)
+  - [x] Code samples for: default-safe usage, explicit `simulate: false`, mainnet-beta production usage
+  - [x] Failure-mode table mapping `SusuSimulationError` / `SusuClusterError` to recovery hints
 
 ## Dev Notes
 
@@ -97,10 +97,62 @@ docs/
 
 ### Agent Model Used
 
-_TBD_
+GPT-5 Codex
 
 ### Debug Log References
 
+- `node --test tests/atdd/story-6-2-sdk-simulate-cluster-gate.static.red.test.mjs` failed before implementation with missing `errors.ts`, `lib/executeTx.ts`, `simulate.test.ts`, and `docs/sdk-typescript.md`.
+- `pnpm install --frozen-lockfile` passed in the story worktree; `tsc` was unavailable until `typescript` was added as an SDK dev dependency.
+- `pnpm --filter @susu/sdk build` passed after implementation.
+- `pnpm --filter @susu/sdk test` passed after implementation: 28 passed, 1 todo.
+- `node --test tests/atdd/story-6-2-sdk-simulate-cluster-gate.static.red.test.mjs` passed after implementation.
+- `pnpm test:atdd` passed after implementation: 155 passed.
+- `git diff --check` passed.
+- `bash scripts/check-patterns.sh` passed.
+- `bash scripts/check-sdk-parity.sh` passed and did not modify generated files.
+
 ### Completion Notes List
 
+- Added typed `SusuClusterError` and `SusuSimulationError` with discriminating `kind` fields and carried cluster/simulation metadata.
+- Made `cluster` required for `createSusuClient` and `SusuClient`, rejecting missing/empty/unsupported clusters synchronously.
+- Added known mainnet endpoint and `getGenesisHash` defense-in-depth checks, with helper-level genesis checks running before generated instruction builders.
+- Added internal `executeTx` that prepends compute budget instructions, simulates by default, preserves simulation logs on failure, and returns the send signature.
+- Routed state-changing helpers through `executeTx` via the shared state helper adapter.
+- Added client and simulation Vitest coverage for missing cluster, mainnet mismatch, explicit mainnet success, simulation success/failure, and `simulate: false`.
+- Added `docs/sdk-typescript.md` and updated SDK README/JSDoc examples for explicit cluster and simulation behavior.
+- Added `typescript` as an SDK dev dependency so `pnpm --filter @susu/sdk build` has a direct `tsc` binary.
+
 ### File List
+
+- `pnpm-lock.yaml`
+- `docs/sdk-typescript.md`
+- `sdk/ts/package.json`
+- `sdk/ts/README.md`
+- `sdk/ts/src/client.ts`
+- `sdk/ts/src/errors.ts`
+- `sdk/ts/src/index.ts`
+- `sdk/ts/src/lib/executeTx.ts`
+- `sdk/ts/src/helpers/acceptInvite.ts`
+- `sdk/ts/src/helpers/cancelGroup.ts`
+- `sdk/ts/src/helpers/claimPayout.ts`
+- `sdk/ts/src/helpers/contribute.ts`
+- `sdk/ts/src/helpers/createGroup.ts`
+- `sdk/ts/src/helpers/getGroup.ts`
+- `sdk/ts/src/helpers/getMemberPosition.ts`
+- `sdk/ts/src/helpers/internal/state.ts`
+- `sdk/ts/src/helpers/postCollateral.ts`
+- `sdk/ts/src/helpers/queryHistory.ts`
+- `sdk/ts/src/helpers/topUpCollateral.ts`
+- `sdk/ts/src/helpers/withdrawCollateral.ts`
+- `sdk/ts/tests/client.test.ts`
+- `sdk/ts/tests/simulate.test.ts`
+- `sdk/ts/tests/state-helpers.test.ts`
+- `tests/atdd/story-6-2-sdk-simulate-cluster-gate.atdd.md`
+- `tests/atdd/story-6-2-sdk-simulate-cluster-gate.static.red.test.mjs`
+- `output_susu/test-artifacts/atdd-checklist-6-2-sdk-simulate-cluster-gate.md`
+- `output_susu/implementation-artifacts/6-2-sdk-simulate-cluster-gate.md`
+
+### Change Log
+
+- 2026-05-08: Added ATDD artifacts for Story 6.2 and captured the red-phase failure.
+- 2026-05-08: Implemented simulate-by-default transaction execution, explicit cluster gate, typed errors, docs, and unit coverage. Moved story to review pending BAD review/PR gates.

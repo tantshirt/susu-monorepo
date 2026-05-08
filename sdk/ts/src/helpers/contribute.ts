@@ -12,7 +12,7 @@ export type ContributeInput = StateHelperInput<ContributeAccounts, ContributeArg
  * import { contribute, createSusuClient, solanaDevnetRpc } from '@susu/sdk';
  * import { address } from '@solana/kit';
  *
- * const client = createSusuClient().use(solanaDevnetRpc({ rpc }));
+ * const client = createSusuClient({ cluster: 'devnet' }).use(solanaDevnetRpc({ rpc }));
  * await contribute(client, { group: address('11111111111111111111111111111111'), amount: 50_000_000n });
  * ```
  */

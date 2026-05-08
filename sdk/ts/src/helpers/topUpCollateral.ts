@@ -12,7 +12,7 @@ export type TopUpCollateralInput = StateHelperInput<TopUpCollateralAccounts, Top
  * import { createSusuClient, solanaDevnetRpc, topUpCollateral } from '@susu/sdk';
  * import { address } from '@solana/kit';
  *
- * const client = createSusuClient().use(solanaDevnetRpc({ rpc }));
+ * const client = createSusuClient({ cluster: 'devnet' }).use(solanaDevnetRpc({ rpc }));
  * await topUpCollateral(client, { group: address('11111111111111111111111111111111'), amount: 25_000_000n });
  * ```
  */

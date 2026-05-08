@@ -24,7 +24,7 @@ import {
 import { address, generateKeyPairSigner } from '@solana/kit';
 
 const authority = await generateKeyPairSigner();
-const client = createSusuClient()
+const client = createSusuClient({ cluster: 'devnet' })
   .use(signer(authority))
   .use(solanaDevnetRpc({ endpoint: 'https://api.devnet.solana.com' }));
 
@@ -52,7 +52,7 @@ Read helpers return decoded account or history data:
 - `getGroup`
 - `getMemberPosition`
 
-Every state-changing helper delegates instruction construction to the Codama-generated builders in `src/generated/` and prepends compute-budget instructions by default. Override compute budget settings per call:
+Every state-changing helper delegates instruction construction to the Codama-generated builders in `src/generated/`, simulates by default before sending, and prepends compute-budget instructions by default. Override compute budget settings per call:
 
 ```ts
 await claimPayout(client, {
@@ -62,5 +62,7 @@ await claimPayout(client, {
   priorityFee: 5_000n,
 });
 ```
+
+Pass `{ simulate: false }` only when an upstream relayer or wallet flow already performed simulation.
 
 The SDK does not read environment variables. Pass RPC, signer, cluster, and program configuration through `createSusuClient()` or fluent plugins.

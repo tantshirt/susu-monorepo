@@ -12,7 +12,7 @@ export type PostCollateralInput = StateHelperInput<PostCollateralAccounts, PostC
  * import { createSusuClient, postCollateral, solanaDevnetRpc } from '@susu/sdk';
  * import { address } from '@solana/kit';
  *
- * const client = createSusuClient().use(solanaDevnetRpc({ rpc }));
+ * const client = createSusuClient({ cluster: 'devnet' }).use(solanaDevnetRpc({ rpc }));
  * await postCollateral(client, { group: address('11111111111111111111111111111111'), amount: 100_000_000n });
  * ```
  */

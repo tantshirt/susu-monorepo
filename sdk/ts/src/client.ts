@@ -9,11 +9,13 @@ import {
   getSetComputeUnitLimitInstruction,
   getSetComputeUnitPriceInstruction,
 } from '@solana-program/compute-budget';
+import { SusuClusterError } from './errors.js';
 
 export const DEFAULT_SUSU_PROGRAM_ID = address('2f6CBrNHZp8oyXPFRXfzroGx5pZ7WyLA6dUqFFpYsX2N');
 export const DEFAULT_COMPUTE_UNITS = 200_000;
+export const MAINNET_BETA_GENESIS_HASH = '5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp';
 
-export type Cluster = 'localnet' | 'devnet' | 'testnet' | 'mainnet-beta' | (string & {});
+export type Cluster = 'localnet' | 'devnet' | 'testnet' | 'mainnet-beta';
 export type TransactionSignature = Signature;
 export type SusuInstruction = unknown;
 export type PriorityFee = number | bigint;
@@ -41,23 +43,45 @@ export type SendInstructionsContext = Readonly<{
   priorityFee: bigint;
 }>;
 
+export type SusuTransaction = Readonly<{
+  instructions: readonly SusuInstruction[];
+  context: SendInstructionsContext;
+}>;
+
+export type SusuSimulationResponse = Readonly<{
+  value?: Readonly<{
+    err?: unknown;
+    logs?: readonly string[] | null;
+    programLogs?: readonly string[] | null;
+  }>;
+  err?: unknown;
+  error?: unknown;
+  logs?: readonly string[] | null;
+  programLogs?: readonly string[] | null;
+  result?: unknown;
+}>;
+
 export type SusuRpc = Readonly<{
+  endpoint?: string;
+  url?: string;
   getPriorityFeeEstimate?: (
     request: Readonly<{ instructions: readonly SusuInstruction[]; programId: Address }>,
   ) => RpcSendable<PriorityFeeEstimateResponse | PriorityFee>;
+  getGenesisHash?: () => RpcSendable<string | Readonly<{ genesisHash?: string; result?: string; value?: string }>>;
+  simulateTransaction?: (transaction: SusuTransaction) => RpcSendable<SusuSimulationResponse>;
   sendInstructions?: (
     instructions: readonly SusuInstruction[],
     context: SendInstructionsContext,
   ) => RpcSendable<TransactionSignature | string | Readonly<{ signature: TransactionSignature | string }>>;
   sendTransaction?: (
-    transaction: Readonly<{ instructions: readonly SusuInstruction[]; context: SendInstructionsContext }>,
+    transaction: SusuTransaction,
   ) => RpcSendable<TransactionSignature | string | Readonly<{ signature: TransactionSignature | string }>>;
   getAccountInfo?: (...args: readonly unknown[]) => unknown;
   getProgramAccounts?: (...args: readonly unknown[]) => unknown;
 }>;
 
 export type SusuClientOptions = Readonly<{
-  cluster?: Cluster;
+  cluster: Cluster;
   rpc?: SusuRpc;
   signer?: TransactionSigner;
   programId?: Address;
@@ -82,15 +106,18 @@ export class SusuTransactionSendError extends Error {
 }
 
 export class SusuClient {
-  readonly cluster?: Cluster;
+  readonly cluster: Cluster;
   readonly rpc?: SusuRpc;
   readonly signer?: TransactionSigner;
   readonly programId: Address;
   readonly computeUnits: number;
   readonly priorityFee?: PriorityFee;
 
-  constructor(options: SusuClientOptions = {}) {
-    this.cluster = options.cluster;
+  constructor(options: SusuClientOptions) {
+    const cluster = requireExplicitCluster(options?.cluster);
+    assertKnownMainnetEndpointMatchesCluster(cluster, options?.rpc);
+
+    this.cluster = cluster;
     this.rpc = options.rpc;
     this.signer = options.signer;
     this.programId = options.programId ?? DEFAULT_SUSU_PROGRAM_ID;
@@ -100,8 +127,9 @@ export class SusuClient {
 
   use(plugin: SusuPlugin): SusuClient {
     const patch = plugin(this) ?? {};
+    const nextCluster = hasOwn(patch, 'cluster') ? patch.cluster : this.cluster;
     return new SusuClient({
-      cluster: hasOwn(patch, 'cluster') ? patch.cluster : this.cluster,
+      cluster: nextCluster as Cluster,
       rpc: hasOwn(patch, 'rpc') ? patch.rpc : this.rpc,
       signer: hasOwn(patch, 'signer') ? patch.signer : this.signer,
       programId: hasOwn(patch, 'programId') ? patch.programId : this.programId,
@@ -120,12 +148,12 @@ export class SusuClient {
  * import { generateKeyPairSigner } from '@solana/kit';
  *
  * const authority = await generateKeyPairSigner();
- * const client = createSusuClient()
+ * const client = createSusuClient({ cluster: 'devnet' })
  *   .use(signer(authority))
  *   .use(solanaDevnetRpc({ endpoint: 'https://api.devnet.solana.com' }));
  * ```
  */
-export function createSusuClient(options: SusuClientOptions = {}): SusuClient {
+export function createSusuClient(options: SusuClientOptions): SusuClient {
   return new SusuClient(options);
 }
 
@@ -151,15 +179,17 @@ export function signer(value: TransactionSigner): SusuPlugin {
  * ```ts
  * import { createSusuClient, solanaDevnetRpc } from '@susu/sdk';
  *
- * const client = createSusuClient().use(
+ * const client = createSusuClient({ cluster: 'devnet' }).use(
  *   solanaDevnetRpc({ endpoint: 'https://api.devnet.solana.com' }),
  * );
  * ```
  */
 export function solanaDevnetRpc(options: Readonly<{ endpoint?: string; rpc?: SusuRpc }> = {}): SusuPlugin {
+  const endpoint = options.endpoint ?? 'https://api.devnet.solana.com';
+  const rpc = options.rpc ?? (createSolanaRpc(endpoint) as unknown as SusuRpc);
   return () => ({
     cluster: 'devnet',
-    rpc: options.rpc ?? (createSolanaRpc(options.endpoint ?? 'https://api.devnet.solana.com') as unknown as SusuRpc),
+    rpc: withRpcEndpointMetadata(rpc, endpoint),
   });
 }
 
@@ -170,7 +200,7 @@ export function solanaDevnetRpc(options: Readonly<{ endpoint?: string; rpc?: Sus
  * ```ts
  * import { cluster, createSusuClient } from '@susu/sdk';
  *
- * const client = createSusuClient().use(cluster('mainnet-beta'));
+ * const client = createSusuClient({ cluster: 'devnet' }).use(cluster('mainnet-beta'));
  * ```
  */
 export function cluster(value: Cluster): SusuPlugin {
@@ -182,7 +212,9 @@ export function assertClientReady(client: SusuClient): asserts client is SusuCli
   rpc: SusuRpc;
 } {
   if (!client.cluster) {
-    throw new SusuClientConfigError('Susu client requires a cluster before helpers can run');
+    throw new SusuClusterError('Susu client requires an explicit cluster before helpers can run', {
+      reason: 'missing-cluster',
+    });
   }
   if (!client.rpc) {
     throw new SusuClientConfigError('Susu client requires an rpc before helpers can run');
@@ -194,46 +226,47 @@ export type ComputeBudgetOptions = Readonly<{
   priorityFee?: PriorityFee;
 }>;
 
-export async function sendInstructions(
+export type SusuRpcMethodName =
+  | 'getGenesisHash'
+  | 'getPriorityFeeEstimate'
+  | 'sendInstructions'
+  | 'sendTransaction'
+  | 'simulateTransaction';
+
+export async function assertMainnetResolutionMatchesCluster(
   client: SusuClient,
-  instructions: readonly SusuInstruction[],
-  context: Omit<SendInstructionsContext, 'cluster' | 'programId' | 'signer' | 'computeUnits' | 'priorityFee'> &
-    ComputeBudgetOptions,
-): Promise<TransactionSignature> {
+): Promise<void> {
   assertClientReady(client);
-  const computeUnits = context.computeUnits ?? client.computeUnits ?? DEFAULT_COMPUTE_UNITS;
-  const priorityFee = await resolvePriorityFee(client, instructions, context.priorityFee);
-  const budgetedInstructions = [
+  assertKnownMainnetEndpointMatchesCluster(client.cluster, client.rpc);
+
+  const getGenesisHash = getOwnRpcMethod(client.rpc, 'getGenesisHash');
+  if (!getGenesisHash) {
+    return;
+  }
+
+  const genesisHash = normalizeGenesisHash(await resolveSendable(getGenesisHash()));
+  if (genesisHash === MAINNET_BETA_GENESIS_HASH && client.cluster !== 'mainnet-beta') {
+    throw new SusuClusterError('RPC resolves to mainnet-beta; pass cluster: "mainnet-beta" explicitly to send', {
+      reason: 'mainnet-mismatch',
+      cluster: client.cluster,
+      genesisHash,
+    });
+  }
+}
+
+export function prependComputeBudgetInstructions(
+  instructions: readonly SusuInstruction[],
+  computeUnits: number,
+  priorityFee: bigint,
+): readonly SusuInstruction[] {
+  return [
     getSetComputeUnitLimitInstruction({ units: computeUnits }),
     getSetComputeUnitPriceInstruction({ microLamports: priorityFee }),
     ...instructions,
   ];
-  const sendContext: SendInstructionsContext = {
-    cluster: client.cluster,
-    programId: client.programId,
-    signer: client.signer,
-    simulate: context.simulate,
-    helperName: context.helperName,
-    accounts: context.accounts,
-    args: context.args,
-    computeUnits,
-    priorityFee,
-  };
-
-  const sendInstructionsMethod = getOwnRpcMethod(client.rpc, 'sendInstructions');
-  if (sendInstructionsMethod) {
-    return normalizeSignature(await resolveSendable(sendInstructionsMethod(budgetedInstructions, sendContext)));
-  }
-
-  const sendTransactionMethod = getOwnRpcMethod(client.rpc, 'sendTransaction');
-  if (sendTransactionMethod) {
-    return normalizeSignature(await resolveSendable(sendTransactionMethod({ instructions: budgetedInstructions, context: sendContext })));
-  }
-
-  throw new SusuTransactionSendError('Susu RPC must expose sendInstructions or sendTransaction for state-changing helpers');
 }
 
-async function resolvePriorityFee(
+export async function resolvePriorityFee(
   client: SusuClient & { rpc: SusuRpc },
   instructions: readonly SusuInstruction[],
   override?: PriorityFee,
@@ -259,7 +292,7 @@ async function resolvePriorityFee(
   return BigInt(estimate);
 }
 
-async function resolveSendable<T>(value: RpcSendable<T>): Promise<T> {
+export async function resolveSendable<T>(value: RpcSendable<T>): Promise<T> {
   const resolved = await value;
   if (isSendable(resolved)) {
     return resolved.send();
@@ -275,7 +308,7 @@ function hasOwn<K extends PropertyKey>(value: object, key: K): boolean {
   return Object.prototype.hasOwnProperty.call(value, key);
 }
 
-function getOwnRpcMethod<K extends 'getPriorityFeeEstimate' | 'sendInstructions' | 'sendTransaction'>(
+export function getOwnRpcMethod<K extends SusuRpcMethodName>(
   rpc: SusuRpc,
   method: K,
 ): NonNullable<SusuRpc[K]> | undefined {
@@ -287,9 +320,93 @@ function getOwnRpcMethod<K extends 'getPriorityFeeEstimate' | 'sendInstructions'
   return typeof value === 'function' ? (value as NonNullable<SusuRpc[K]>) : undefined;
 }
 
-function normalizeSignature(
+export function normalizeSignature(
   value: TransactionSignature | string | Readonly<{ signature: TransactionSignature | string }>,
 ): TransactionSignature {
   const raw = typeof value === 'object' && value !== null && 'signature' in value ? value.signature : value;
   return raw as TransactionSignature;
+}
+
+function requireExplicitCluster(clusterValue: Cluster | undefined): Cluster {
+  if (typeof clusterValue !== 'string' || clusterValue.trim() === '') {
+    throw new SusuClusterError('createSusuClient requires an explicit cluster', {
+      reason: 'missing-cluster',
+    });
+  }
+
+  if (!isSupportedCluster(clusterValue)) {
+    throw new SusuClusterError(`Unsupported Susu cluster "${clusterValue}"`, {
+      reason: 'unsupported-cluster',
+      cluster: clusterValue,
+    });
+  }
+
+  return clusterValue;
+}
+
+function isSupportedCluster(value: string): value is Cluster {
+  return value === 'localnet' || value === 'devnet' || value === 'testnet' || value === 'mainnet-beta';
+}
+
+function assertKnownMainnetEndpointMatchesCluster(clusterValue: Cluster, rpc?: SusuRpc): void {
+  const endpoint = extractRpcEndpoint(rpc);
+  if (!endpoint || !isKnownMainnetEndpoint(endpoint)) {
+    return;
+  }
+
+  if (clusterValue !== 'mainnet-beta') {
+    throw new SusuClusterError('RPC endpoint appears to target mainnet-beta; pass cluster: "mainnet-beta" explicitly to send', {
+      reason: 'mainnet-mismatch',
+      cluster: clusterValue,
+      endpoint,
+    });
+  }
+}
+
+function extractRpcEndpoint(rpc?: SusuRpc): string | undefined {
+  if (!rpc) {
+    return undefined;
+  }
+  for (const key of ['endpoint', 'url'] as const) {
+    if (Object.prototype.hasOwnProperty.call(rpc, key) && typeof rpc[key] === 'string') {
+      return rpc[key];
+    }
+  }
+  return undefined;
+}
+
+function isKnownMainnetEndpoint(endpoint: string): boolean {
+  const normalized = endpoint.toLowerCase();
+  return (
+    normalized.includes('api.mainnet-beta.solana.com') ||
+    normalized.includes('mainnet-beta') ||
+    normalized.includes('mainnet.helius-rpc.com') ||
+    normalized.includes('solana-mainnet') ||
+    normalized.includes('mainnet.solana')
+  );
+}
+
+function normalizeGenesisHash(value: string | Readonly<{ genesisHash?: string; result?: string; value?: string }>): string | undefined {
+  if (typeof value === 'string') {
+    return value;
+  }
+  return value.genesisHash ?? value.result ?? value.value;
+}
+
+function withRpcEndpointMetadata(rpc: SusuRpc, endpoint: string): SusuRpc {
+  if (Object.prototype.hasOwnProperty.call(rpc, 'endpoint')) {
+    return rpc;
+  }
+
+  try {
+    Object.defineProperty(rpc, 'endpoint', {
+      configurable: true,
+      enumerable: true,
+      value: endpoint,
+    });
+  } catch {
+    return rpc;
+  }
+
+  return rpc;
 }

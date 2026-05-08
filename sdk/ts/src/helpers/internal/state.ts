@@ -1,5 +1,6 @@
 import type { SusuClient, TransactionSignature } from '../../client.js';
-import { sendInstructions, type ComputeBudgetOptions, type SusuInstruction } from '../../client.js';
+import { assertClientReady, assertMainnetResolutionMatchesCluster, type ComputeBudgetOptions, type SusuInstruction } from '../../client.js';
+import { executeTx } from '../../lib/executeTx.js';
 
 type RecordBag = Readonly<Record<string, unknown>>;
 
@@ -23,10 +24,13 @@ export async function sendStateChangingInstruction<TAccounts extends RecordBag, 
   input: StateHelperInput<TAccounts, TArgs>,
   shape: StateHelperShape<TAccounts, TArgs>,
 ): Promise<TransactionSignature> {
+  assertClientReady(client);
+  await assertMainnetResolutionMatchesCluster(client);
+
   const { accounts, args } = splitInstructionInput(input, shape);
   const instruction = buildInstruction(accounts, args);
 
-  return sendInstructions(client, [instruction], {
+  return executeTx(client, [instruction], {
     helperName,
     accounts,
     args,

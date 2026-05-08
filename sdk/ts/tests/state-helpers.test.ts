@@ -46,6 +46,7 @@ vi.mock('../src/generated/instructions/cancelGroup.js', () => ({
 function createRpc() {
   return {
     getPriorityFeeEstimate: vi.fn(() => ({ send: vi.fn(async () => ({ priorityFeeEstimate: 7_500 })) })),
+    simulateTransaction: vi.fn(() => ({ send: vi.fn(async () => ({ value: { err: null, logs: ['ok'] } })) })),
     sendInstructions: vi.fn(() => ({ send: vi.fn(async () => txSig) })),
   };
 }
@@ -82,6 +83,7 @@ describe('state-changing helper wrappers', () => {
     expect(builderMocks[helperName].mock.calls[0]?.[0]).toEqual(expect.objectContaining(expectedAccounts));
     expect(builderMocks[helperName].mock.calls[0]?.[1]).toEqual(expect.objectContaining(expectedArgs));
     expect(rpc.getPriorityFeeEstimate).toHaveBeenCalledTimes(1);
+    expect(rpc.simulateTransaction).toHaveBeenCalledTimes(1);
     expect(rpc.sendInstructions).toHaveBeenCalledTimes(1);
 
     const sentInstructions = rpc.sendInstructions.mock.calls[0]?.[0] as readonly unknown[];
@@ -110,6 +112,7 @@ describe('state-changing helper wrappers', () => {
     });
 
     expect(rpc.getPriorityFeeEstimate).not.toHaveBeenCalled();
+    expect(rpc.simulateTransaction).toHaveBeenCalledTimes(1);
     expect(builderMocks.contribute).toHaveBeenCalledWith(
       expect.objectContaining({ group }),
       expect.objectContaining({ amount: 50_000_000n, rotationIndex: 0 }),
