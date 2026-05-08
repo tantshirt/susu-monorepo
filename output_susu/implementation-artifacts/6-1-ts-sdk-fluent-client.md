@@ -1,6 +1,6 @@
 # Story 6.1: TS SDK (@susu/sdk) idiomatic helpers + fluent client
 
-Status: review
+Status: done
 
 ## Story
 
@@ -149,6 +149,7 @@ GPT-5 Codex
 - Third recovery validation after the proxy send-hook fix passed `git diff --check`, `pnpm --filter @susu/sdk build`, `pnpm --filter @susu/sdk test` (21 passed, 1 todo), `pnpm test:atdd` (151 passed), `bash scripts/check-patterns.sh`, and `bash scripts/check-sdk-parity.sh`.
 - Cursor Bugbot follow-up finding on PR #177 was fixed during fourth recovery: `@solana-program/compute-budget` is now a direct SDK dependency instead of a consumer-facing peer dependency.
 - Cursor Bugbot follow-up finding on PR #177 was fixed during fifth recovery: fluent plugins can now explicitly clear `computeUnits` and `priorityFee` overrides back to SDK defaults/estimation by returning those keys with `undefined`.
+- Pre-done PR gate check on PR #177 passed for head `f46a6a4101abe0c56c5c3677c05ed0c2003613e3`: `lint-and-build` succeeded at `https://github.com/tantshirt/susu-monorepo/actions/runs/25563793572/job/75041897951`, Cursor Bugbot completed `SUCCESS`, and GraphQL review-thread audit found 6 Cursor threads, all resolved, with no unresolved current-head Cursor threads.
 
 ### Completion Notes List
 
@@ -162,6 +163,7 @@ GPT-5 Codex
 - Recovery passes fixed all Cursor Bugbot findings observed before rerunning PR gates.
 - Fourth recovery pass moved the internal compute-budget package to runtime dependencies, keeping only `@solana/kit` and `@solana/web3-compat` as peer dependencies.
 - Fifth recovery pass changed plugin merging to distinguish absent patch keys from explicit `undefined`, preserving immutability while allowing compute-budget override resets.
+- Marked Story 6.1 done after clean PR CI and Cursor evidence on the implementation head; the status-only commit will be re-gated before merge.
 
 ### File List
 
@@ -191,6 +193,8 @@ GPT-5 Codex
 - `output_susu/test-artifacts/atdd-checklist-6-1-ts-sdk-fluent-client.md`
 - `output_susu/test-artifacts/test-reviews/story-6-1-test-review.md`
 - `output_susu/test-artifacts/code-reviews/story-6-1-code-review.md`
+- `output_susu/implementation-artifacts/6-1-ts-sdk-fluent-client.md`
+- `output_susu/implementation-artifacts/sprint-status.yaml`
 
 ### Change Log
 
@@ -202,3 +206,4 @@ GPT-5 Codex
 - 2026-05-08: Fixed Cursor Bugbot standard-RPC-proxy send-hook follow-up and reran story-local validation.
 - 2026-05-08: Fixed Cursor Bugbot dependency-classification follow-up before rerunning final PR gates.
 - 2026-05-08: Fixed Cursor Bugbot plugin-reset follow-up before rerunning final PR gates.
+- 2026-05-08: Marked Story 6.1 done after clean implementation-head CI and Cursor evidence; pending status-only PR re-gate before merge.
