@@ -1,6 +1,6 @@
 # Story 5.4: Byte-deterministic adversary-report.json from --seed $COMMIT_SHA (FR22 part 2 + NFR-Re1)
 
-Status: review
+Status: done
 
 ## Story
 
@@ -80,6 +80,7 @@ GPT-5 Codex
 - `cargo run --bin susu-adversary --release -- --circles 10000 --seed 7438e04cd157a6a76a1d50296ced47cf9a545790 --cluster localnet --output audits/adversary/adversary-report.json` generated the canonical report with `max_defector_profit_lamports == 0`.
 - Code review found that canonical artifact reproduction must use the report's recorded seed rather than moving `HEAD`; the README and CI canonical check were updated, and `CHECK_CANONICAL=1 CIRCLES=10000 bash scripts/check-adversary-determinism.sh` passed with the recorded seed.
 - Cursor Bugbot found unused build-script commit metadata after report metadata moved to explicit CLI input; `build.rs` was reduced to a no-op source-layout sentinel and `cargo test --package susu-adversary` passed.
+- PR #174 `lint-and-build` and Cursor Bugbot passed after the Cursor fix; story marked done.
 
 ### Completion Notes List
 
@@ -114,3 +115,4 @@ GPT-5 Codex
 - 2026-05-08: Implemented byte-deterministic adversary report generation, canonical audit artifact/docs, deterministic regression tests, and CI guard; marked story ready for review.
 - 2026-05-08: Addressed code review finding by making canonical artifact reproduction use the report's recorded seed and adding a CI byte comparison against the committed report.
 - 2026-05-08: Addressed Cursor Bugbot finding by making the adversary crate build script a no-op sentinel.
+- 2026-05-08: Marked Story 5.4 done after PR #174 CI and Cursor Bugbot passed.
