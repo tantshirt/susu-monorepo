@@ -31,7 +31,7 @@ export async function queryHistory(client: SusuClient, input: QueryHistoryInput)
   }
 
   const records = await queryParticipationHistory(client.rpc as QueryRpc, input.programId ?? client.programId, wallet);
-  const start = input.before ? records.findIndex((record) => record.group === input.before) + 1 : 0;
-  const sliced = records.slice(Math.max(start, 0));
+  const end = input.before ? records.findIndex((record) => record.group === input.before) : records.length;
+  const sliced = records.slice(0, end < 0 ? records.length : end);
   return input.limit ? sliced.slice(0, input.limit) : sliced;
 }

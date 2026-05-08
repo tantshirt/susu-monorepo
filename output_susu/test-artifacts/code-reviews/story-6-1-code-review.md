@@ -42,6 +42,11 @@ Reviewed the branch diff against `origin/main`:
 
 No blocking, high, medium, or low-severity findings remain.
 
+Cursor Bugbot reported two issues on PR #177 commit `c9b1152cb60e75bcabee0f7eb7f6f5314ab8c954`; both were fixed during recovery:
+
+- Corrected `queryHistory(..., { before })` to return entries before the cursor instead of after it.
+- Removed the unused exported `prependComputeBudgetInstructions` helper while keeping compute-budget prepending inside `sendInstructions`.
+
 ## Validation Evidence
 
 - `git diff --check` passed.
@@ -52,7 +57,8 @@ No blocking, high, medium, or low-severity findings remain.
 - `bash scripts/check-patterns.sh` passed.
 - `bash scripts/check-sdk-parity.sh` passed and did not modify generated files.
 - `node --input-type=module -e "const sdk = await import('./sdk/ts/dist/index.js'); ..."` verified the built package exports `createSusuClient`, `contribute`, `getGroup`, and `queries`.
+- Recovery rerun after Cursor fixes passed `git diff --check`, `pnpm --filter @susu/sdk build`, `pnpm --filter @susu/sdk test`, `pnpm test:atdd`, `bash scripts/check-patterns.sh`, and `bash scripts/check-sdk-parity.sh`.
 
 ## Outcome
 
-Clean code review. Proceed to PR, CI, Cursor Bugbot, and final BAD status gates.
+Clean code review after recovery fixes. Proceed to final PR CI, Cursor Bugbot, and BAD status gates.

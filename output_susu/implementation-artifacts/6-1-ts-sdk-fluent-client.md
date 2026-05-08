@@ -141,6 +141,8 @@ GPT-5 Codex
 - `pnpm --filter @susu/sdk test` passed after test-review cleanup: 20 passed, 1 todo.
 - `pnpm install --frozen-lockfile` passed after dependency/export changes.
 - Code review completed with no remaining findings.
+- Cursor Bugbot findings on PR #177 were fixed during recovery: `queryHistory(..., { before })` now returns entries before the cursor, and the unused exported `prependComputeBudgetInstructions` helper was removed.
+- Recovery validation after Cursor fixes passed `git diff --check`, `pnpm --filter @susu/sdk build`, `pnpm --filter @susu/sdk test` (20 passed, 1 todo), `pnpm test:atdd` (151 passed), `bash scripts/check-patterns.sh`, and `bash scripts/check-sdk-parity.sh`.
 
 ### Completion Notes List
 
@@ -151,6 +153,7 @@ GPT-5 Codex
 - Added package-local README, dist export map, and mocked Vitest coverage for client, state helpers, and read helpers.
 - Test review completed with no remaining findings; strengthened state-helper tests to assert per-helper generated-builder argument bags.
 - Code review completed clean; no patch, decision, or deferred findings remain.
+- Recovery pass fixed all Cursor Bugbot findings before rerunning PR gates.
 
 ### File List
 
@@ -175,7 +178,9 @@ GPT-5 Codex
 - `sdk/ts/tests/parity.test.ts`
 - `sdk/ts/tests/read-helpers.test.ts`
 - `sdk/ts/tests/state-helpers.test.ts`
+- `tests/atdd/story-6-1-ts-sdk-fluent-client.atdd.md`
 - `tests/atdd/story-6-1-ts-sdk-fluent-client.static.red.test.mjs`
+- `output_susu/test-artifacts/atdd-checklist-6-1-ts-sdk-fluent-client.md`
 - `output_susu/test-artifacts/test-reviews/story-6-1-test-review.md`
 - `output_susu/test-artifacts/code-reviews/story-6-1-code-review.md`
 
@@ -184,3 +189,4 @@ GPT-5 Codex
 - 2026-05-08: Implemented Story 6.1 SDK fluent client, helpers, docs, package exports, and tests. Moved story to review pending BAD review/PR gates.
 - 2026-05-08: Ran test review, fixed the only cleanup item, and recorded no remaining test-review findings.
 - 2026-05-08: Ran code review and recorded no remaining findings.
+- 2026-05-08: Recovered PR #177, fixed Cursor Bugbot findings, and reran story-local validation.

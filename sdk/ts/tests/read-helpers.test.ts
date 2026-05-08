@@ -53,8 +53,8 @@ describe('client read helper wrappers', () => {
     const rpc = { getAccountInfo: vi.fn(), getProgramAccounts: vi.fn() };
     const client = createSusuClient({ cluster: 'devnet', rpc });
 
-    await expect(queryHistory(client, { wallet: member as never, before: 'a' as never, limit: 1 })).resolves.toEqual([
-      { group: 'b', rotationSlot: 1, contributions: 1, slashed: false, completed: true },
+    await expect(queryHistory(client, { wallet: member as never, before: 'c' as never, limit: 1 })).resolves.toEqual([
+      { group: 'a', rotationSlot: 0, contributions: 1, slashed: false, completed: false },
     ]);
     expect(queryMocks.queryParticipationHistory).toHaveBeenCalledWith(rpc, programId, member);
   });

@@ -194,22 +194,6 @@ export type ComputeBudgetOptions = Readonly<{
   priorityFee?: PriorityFee;
 }>;
 
-export async function prependComputeBudgetInstructions(
-  client: SusuClient,
-  instructions: readonly SusuInstruction[],
-  options: ComputeBudgetOptions = {},
-): Promise<readonly SusuInstruction[]> {
-  assertClientReady(client);
-  const units = options.computeUnits ?? client.computeUnits ?? DEFAULT_COMPUTE_UNITS;
-  const microLamports = await resolvePriorityFee(client, instructions, options.priorityFee);
-
-  return [
-    getSetComputeUnitLimitInstruction({ units }),
-    getSetComputeUnitPriceInstruction({ microLamports }),
-    ...instructions,
-  ];
-}
-
 export async function sendInstructions(
   client: SusuClient,
   instructions: readonly SusuInstruction[],
