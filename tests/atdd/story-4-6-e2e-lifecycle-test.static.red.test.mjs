@@ -47,7 +47,7 @@ test('Story 4.6 has an executable full lifecycle fallback test', () => {
     'RotationReceipt',
     'ROTATION_SEED',
     'elapsed',
-    'Duration::from_secs(30)',
+    'Duration::from_secs\\(30\\)',
   ]) {
     assert.match(source, new RegExp(requiredToken), `lifecycle test must include ${requiredToken}`);
   }

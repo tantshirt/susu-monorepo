@@ -298,6 +298,59 @@
       ]
     },
     {
+      "name": "complete_group",
+      "discriminator": [
+        110,
+        61,
+        136,
+        109,
+        92,
+        172,
+        117,
+        60
+      ],
+      "accounts": [
+        {
+          "name": "group",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  103,
+                  114,
+                  111,
+                  117,
+                  112
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "group.creator",
+                "account": "Group"
+              },
+              {
+                "kind": "account",
+                "path": "group.group_id",
+                "account": "Group"
+              }
+            ]
+          }
+        },
+        {
+          "name": "caller",
+          "signer": true
+        }
+      ],
+      "args": [
+        {
+          "name": "group_id",
+          "type": "u64"
+        }
+      ]
+    },
+    {
       "name": "contribute",
       "discriminator": [
         82,
