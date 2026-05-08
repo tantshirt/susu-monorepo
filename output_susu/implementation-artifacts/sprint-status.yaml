@@ -82,7 +82,7 @@ development_status:
   4-4-pre-deadline-guard: done # merged via PR #161 on 2026-05-08
   4-5-double-claim-guard: done # merged via PR #160 on 2026-05-08
   4-6-e2e-lifecycle-test: done # PR #162 checks green on 2026-05-08
-  epic-4-retrospective: optional
+  epic-4-retrospective: done
 
   # Epic 5: Curve Verification, Adversary Simulation & Public Documentation
   epic-5: backlog
