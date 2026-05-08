@@ -138,6 +138,7 @@ GPT-5 Codex
 - `pnpm test:atdd` passed after implementation: 151 passed.
 - `bash scripts/check-patterns.sh` passed.
 - `bash scripts/check-sdk-parity.sh` passed and did not modify generated files.
+- `pnpm --filter @susu/sdk test` passed after test-review cleanup: 20 passed, 1 todo.
 
 ### Completion Notes List
 
@@ -146,6 +147,7 @@ GPT-5 Codex
 - Added compute-budget prepending through kit-compatible `@solana-program/compute-budget` builders, Helius-style `getPriorityFeeEstimate` support, and `{ computeUnits, priorityFee }` overrides.
 - Added client-based read wrappers over existing generated decoder/PDA query helpers.
 - Added package-local README, dist export map, and mocked Vitest coverage for client, state helpers, and read helpers.
+- Test review completed with no remaining findings; strengthened state-helper tests to assert per-helper generated-builder argument bags.
 
 ### File List
 
@@ -171,7 +173,9 @@ GPT-5 Codex
 - `sdk/ts/tests/read-helpers.test.ts`
 - `sdk/ts/tests/state-helpers.test.ts`
 - `tests/atdd/story-6-1-ts-sdk-fluent-client.static.red.test.mjs`
+- `output_susu/test-artifacts/test-reviews/story-6-1-test-review.md`
 
 ### Change Log
 
 - 2026-05-08: Implemented Story 6.1 SDK fluent client, helpers, docs, package exports, and tests. Moved story to review pending BAD review/PR gates.
+- 2026-05-08: Ran test review, fixed the only cleanup item, and recorded no remaining test-review findings.

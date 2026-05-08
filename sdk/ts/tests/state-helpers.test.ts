@@ -56,15 +56,22 @@ describe('state-changing helper wrappers', () => {
   });
 
   it.each([
-    ['createGroup', { creator: group, group, groupId: 1n, n: 5, contributionAmount: 50_000_000n }],
-    ['acceptInvite', { group, member: group }],
-    ['postCollateral', { group, amount: 100_000_000n, rotationSlot: 0 }],
-    ['contribute', { group, amount: 50_000_000n, rotationIndex: 0 }],
-    ['claimPayout', { group, rotationIndex: 0 }],
-    ['topUpCollateral', { group, amount: 10_000_000n }],
-    ['withdrawCollateral', { group, amount: 10_000_000n }],
-    ['cancelGroup', { group, groupId: 1n }],
-  ] as const)('%s calls the generated builder and sends a budgeted transaction', async (helperName, input) => {
+    [
+      'createGroup',
+      { creator: group, group, groupId: 1n, n: 5, contributionAmount: 50_000_000n },
+      { group },
+      { groupId: 1n, n: 5, contributionAmount: 50_000_000n },
+    ],
+    ['acceptInvite', { group, member: group }, { group, member: group }, {}],
+    ['postCollateral', { group, amount: 100_000_000n, rotationSlot: 0 }, { group }, { amount: 100_000_000n, rotationSlot: 0 }],
+    ['contribute', { group, amount: 50_000_000n, rotationIndex: 0 }, { group }, { amount: 50_000_000n, rotationIndex: 0 }],
+    ['claimPayout', { group, rotationIndex: 0 }, { group }, { rotationIndex: 0 }],
+    ['topUpCollateral', { group, amount: 10_000_000n }, { group }, { amount: 10_000_000n }],
+    ['withdrawCollateral', { group, amount: 10_000_000n }, { group }, { amount: 10_000_000n }],
+    ['cancelGroup', { group, groupId: 1n }, { group }, { groupId: 1n }],
+  ] as const)(
+    '%s calls the generated builder with expected args and sends a budgeted transaction',
+    async (helperName, input, expectedAccounts, expectedArgs) => {
     const rpc = createRpc();
     const sdk = await import('../src/index.js');
     const client = sdk.createSusuClient({ cluster: 'devnet', rpc });
@@ -72,7 +79,8 @@ describe('state-changing helper wrappers', () => {
     await expect(sdk[helperName](client, input)).resolves.toBe(txSig);
 
     expect(builderMocks[helperName]).toHaveBeenCalledTimes(1);
-    expect(builderMocks[helperName].mock.calls[0]?.[0]).toEqual(expect.objectContaining({ group }));
+    expect(builderMocks[helperName].mock.calls[0]?.[0]).toEqual(expect.objectContaining(expectedAccounts));
+    expect(builderMocks[helperName].mock.calls[0]?.[1]).toEqual(expect.objectContaining(expectedArgs));
     expect(rpc.getPriorityFeeEstimate).toHaveBeenCalledTimes(1);
     expect(rpc.sendInstructions).toHaveBeenCalledTimes(1);
 
@@ -86,7 +94,8 @@ describe('state-changing helper wrappers', () => {
         priorityFee: 7_500n,
       }),
     );
-  });
+    },
+  );
 
   it('honors compute budget overrides without calling the priority fee estimator', async () => {
     const rpc = createRpc();
