@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { MAINNET_BETA_GENESIS_HASH } from '../src/client.js';
-import { SusuClusterError, SusuSimulationError } from '../src/errors.js';
+import { SusuClusterError, SusuRpcError, SusuSimulationError } from '../src/errors.js';
 
 const txSig = '5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp' as never;
 const group = '11111111111111111111111111111111';
@@ -82,9 +82,9 @@ describe('simulate-by-default transaction execution', () => {
     expect(rpc.sendTransaction).not.toHaveBeenCalled();
   });
 
-  it('wraps rejected simulation RPC errors as SusuSimulationError and never sends', async () => {
+  it('wraps rejected simulation RPC errors as SusuRpcError and never sends', async () => {
     const rpc = createRpc();
-    const upstream = new Error('simulation transport failed');
+    const upstream = { message: 'simulation transport failed' };
     rpc.simulateTransaction.mockReturnValue({
       send: vi.fn(async () => {
         throw upstream;
@@ -104,12 +104,10 @@ describe('simulate-by-default transaction execution', () => {
       thrown = error;
     }
 
-    expect(thrown).toBeInstanceOf(SusuSimulationError);
+    expect(thrown).toBeInstanceOf(SusuRpcError);
     expect(thrown).toMatchObject({
-      kind: 'simulation',
-      logs: [],
-      programLogs: [],
-      error: upstream,
+      kind: 'rpc',
+      cause: upstream,
     });
     expect(rpc.sendTransaction).not.toHaveBeenCalled();
   });

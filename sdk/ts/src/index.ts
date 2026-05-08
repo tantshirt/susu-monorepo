@@ -9,8 +9,28 @@ export {
   SusuClientConfigError,
   SusuTransactionSendError,
 } from './client.js';
-export { SusuClusterError, SusuSimulationError } from './errors.js';
-export type { SusuClusterErrorDetails, SusuClusterErrorReason, SusuSimulationErrorDetails } from './errors.js';
+export {
+  isSusuClusterError,
+  isSusuError,
+  isSusuProgramError,
+  isSusuRpcError,
+  isSusuSimulationError,
+  SusuClusterError,
+  SusuError,
+  SusuErrorBase,
+  SusuRpcError,
+  SusuSimulationError,
+} from './errors.js';
+export type {
+  SusuClusterErrorDetails,
+  SusuClusterErrorReason,
+  SusuErrorBaseOptions,
+  SusuErrorKind,
+  SusuProgramErrorDetails,
+  SusuRpcErrorDetails,
+  SusuSdkError,
+  SusuSimulationErrorDetails,
+} from './errors.js';
 export type {
   Cluster,
   ComputeBudgetOptions,

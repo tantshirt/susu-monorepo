@@ -42,6 +42,16 @@ env_hits="$({
   || true)"
 print_hits "process.env outside apps/reference/lib/env.ts" "$env_hits"
 
+sdk_bare_error_hits="$({
+  grep -rEn --include='*.ts' 'throw[[:space:]]+new[[:space:]]+Error[[:space:]]*\(' sdk/ts/src 2>/dev/null || true
+} | grep -v '^sdk/ts/src/generated/' || true)"
+print_hits "bare Error throw in sdk/ts/src" "$sdk_bare_error_hits"
+
+sdk_string_reject_hits="$({
+  grep -rEn --include='*.ts' 'Promise\.reject[[:space:]]*\([[:space:]]*['"'"'"`]' sdk/ts/src 2>/dev/null || true
+} | grep -v '^sdk/ts/src/generated/' || true)"
+print_hits "string Promise.reject in sdk/ts/src" "$sdk_string_reject_hits"
+
 if [[ "$failures" -ne 0 ]]; then
   exit 1
 fi

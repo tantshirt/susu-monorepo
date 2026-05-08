@@ -1,5 +1,5 @@
 # generated: 2026-05-06
-# last_updated: 2026-05-08
+# last_updated: 2026-05-09
 # project: Susu Protocol
 # project_key: NOKEY
 # tracking_system: file-system
@@ -35,7 +35,7 @@
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 
 generated: 2026-05-06
-last_updated: 2026-05-08
+last_updated: 2026-05-09
 project: Susu Protocol
 project_key: NOKEY
 tracking_system: file-system
@@ -101,7 +101,7 @@ development_status:
   epic-6: backlog
   6-1-ts-sdk-fluent-client: done
   6-2-sdk-simulate-cluster-gate: done
-  6-3-sdk-error-classes: ready-for-dev
+  6-3-sdk-error-classes: done
   6-4-rust-client: ready-for-dev
   6-5-sdk-parity-check: ready-for-dev
   6-6-example-with-privy: ready-for-dev
