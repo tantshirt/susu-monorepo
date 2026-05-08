@@ -92,6 +92,7 @@ GPT-5 Codex
 - `pnpm test:atdd` passed after implementation.
 - `RUSTUP_TOOLCHAIN=stable cargo test --workspace` passed after implementation.
 - Local static checks passed: `bash scripts/check-idl-hash.sh`, `bash scripts/check-patterns.sh`, `bash scripts/check-sdk-parity.sh`, `pnpm exec tsx scripts/check-i18n-parity.ts`, `bash scripts/check-fincen-posture.sh`, `bash scripts/check-bad-skill-sync.sh`, and `pnpm test --if-present`.
+- Test review reran `node --test tests/atdd/story-5-5-collateral-curve-doc.static.red.test.mjs` and `pnpm test:atdd` after tightening the Story 5.5 static guard.
 
 ### Completion Notes List
 
@@ -99,6 +100,7 @@ GPT-5 Codex
 - Worked examples use `$100 USDC` for `n = 3`, `n = 5`, and `n = 10`, including early and final slots to show the collateral decline and slot-independent default payoff.
 - Linked the public proof claim to `tests/invariants/no_strategic_default.rs` and `audits/adversary/adversary-report.json`.
 - Captured an independent non-cryptoeconomist comprehension review record in this story file.
+- Completed test-review follow-up by reducing the Story 5.5 static guard to 100 lines and tightening the payoff assertion.
 
 ### Comprehension Review
 
@@ -113,6 +115,7 @@ GPT-5 Codex
 - `output_susu/implementation-artifacts/5-5-collateral-curve-doc.md`
 - `output_susu/implementation-artifacts/sprint-status.yaml`
 - `output_susu/test-artifacts/atdd-checklist-5-5-collateral-curve-doc.md`
+- `output_susu/test-artifacts/test-reviews/story-5-5-test-review.md`
 - `tests/atdd/story-5-5-collateral-curve-doc.atdd.md`
 - `tests/atdd/story-5-5-collateral-curve-doc.static.red.test.mjs`
 
@@ -120,3 +123,4 @@ GPT-5 Codex
 
 - 2026-05-08: Initialized Story 5.5 from issue #48 and upstream Epic 5 evidence artifacts.
 - 2026-05-08: Implemented `docs/collateral-curve.md`, recorded comprehension review evidence, and moved story to review.
+- 2026-05-08: Completed test-review workflow and fixed all findings.

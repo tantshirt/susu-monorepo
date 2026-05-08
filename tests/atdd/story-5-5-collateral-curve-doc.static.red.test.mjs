@@ -12,10 +12,6 @@ function read(path) {
   return readFileSync(path, 'utf8');
 }
 
-function compact(source) {
-  return source.replace(/\s+/g, ' ');
-}
-
 function firstSectionHeading(markdown) {
   const headings = markdown
     .split('\n')
@@ -33,10 +29,11 @@ test('Story 5.5 doc starts with TL;DR and states the Curve Invariant', () => {
   assert.ok(existsSync(docPath), `${docPath} must exist`);
 
   const doc = read(docPath);
+  const squashed = doc.replace(/\s+/g, ' ');
   assert.equal(firstSectionHeading(doc), '## TL;DR', 'first section after H1 must be ## TL;DR');
   assert.match(doc, /Curve Invariant/i, 'TL;DR must name the Curve Invariant');
   assert.match(
-    compact(doc),
+    squashed,
     /strategic default[^.]+(unprofitable|strictly negative)|expected_default_payoff\(i\)[^.]+<\s*0/i,
     'TL;DR must restate the no-strategic-default claim'
   );
@@ -48,14 +45,14 @@ test('Story 5.5 doc contains formula, derivation, and proof sketch tied to curve
 
   const curve = read(curvePath);
   const doc = read(docPath);
-  const squashed = compact(doc);
+  const squashed = doc.replace(/\s+/g, ' ');
 
   assert.match(curve, /contribution\s*\*\s*\(2\*n\s*-\s*1\s*-\s*slot\)|2\*n - 1 - slot/, 'curve source must retain the canonical formula');
   assert.match(doc, /## Derivation/i, 'doc must include a derivation section');
   assert.match(doc, /## Proof Sketch/i, 'doc must include a proof sketch section');
   assert.match(squashed, /C_?\{?i\}?\s*=\s*c\s*\(?2n\s*-\s*1\s*-\s*i\)?|C_i = c\(2n - 1 - i\)/, 'doc must state the closed-form collateral formula');
   assert.match(squashed, /\(n\s*-\s*1\)\s*c\s*-\s*i\s*c\s*-\s*C_?\{?i\}?/, 'doc must derive payoff from payout, paid contributions, and collateral');
-  assert.match(squashed, /expected_default_payoff\(i\)\s*=\s*-n\s*\*?\s*c|=\s*-nc|<\s*0/, 'doc must show payoff is strictly negative');
+  assert.match(squashed, /expected_default_payoff\(i\)\s*=\s*(-n\s*\*?\s*c|-nc)\s*<\s*0/, 'doc must show payoff is strictly negative');
   assert.match(squashed, /assumptions?|valid slot|positive contribution/i, 'proof sketch must state assumptions');
 });
 
@@ -64,15 +61,16 @@ test('Story 5.5 worked USDC examples match the closed-form curve values', () => 
 
   const doc = read(docPath);
   const cases = [
-    { n: 3, slot: 0, contribution: 100, collateral: requiredCollateral(100, 3, 0), payoff: -300 },
-    { n: 3, slot: 2, contribution: 100, collateral: requiredCollateral(100, 3, 2), payoff: -300 },
-    { n: 5, slot: 0, contribution: 100, collateral: requiredCollateral(100, 5, 0), payoff: -500 },
-    { n: 5, slot: 4, contribution: 100, collateral: requiredCollateral(100, 5, 4), payoff: -500 },
-    { n: 10, slot: 0, contribution: 100, collateral: requiredCollateral(100, 10, 0), payoff: -1000 },
-    { n: 10, slot: 9, contribution: 100, collateral: requiredCollateral(100, 10, 9), payoff: -1000 },
+    [3, 0, -300],
+    [3, 2, -300],
+    [5, 0, -500],
+    [5, 4, -500],
+    [10, 0, -1000],
+    [10, 9, -1000],
   ];
 
-  for (const { n, slot, collateral, payoff } of cases) {
+  for (const [n, slot, payoff] of cases) {
+    const collateral = requiredCollateral(100, n, slot);
     const row = new RegExp(`\\|\\s*${n}\\s*\\|\\s*${slot}\\s*\\|\\s*\\$100(?:\\.00)?\\s*USDC\\s*\\|\\s*\\$${collateral}(?:\\.00)?\\s*USDC\\s*\\|\\s*\\$${payoff}(?:\\.00)?\\s*USDC\\s*\\|`, 'i');
     assert.match(doc, row, `worked example row must include n=${n}, slot=${slot}, collateral=$${collateral}, payoff=$${payoff}`);
   }
