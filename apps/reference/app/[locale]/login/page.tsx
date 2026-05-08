@@ -5,8 +5,9 @@ import { useEffect, useMemo, useState } from 'react';
 import { getPrivySigner, getPrivyState } from '../../../lib/auth/privy.js';
 import { useWalletStandardSigner } from '../../../lib/auth/wallet-standard.js';
 
+const privyState = getPrivyState();
+
 export default function LoginPage() {
-  const privyState = getPrivyState();
   const walletStandardSigner = useWalletStandardSigner();
   const [selectedPath, setSelectedPath] = useState<'privy' | 'wallet-standard'>(
     privyState.available ? 'privy' : 'wallet-standard',

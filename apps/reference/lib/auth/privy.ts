@@ -4,7 +4,7 @@ import { getPublicEnv } from '../env.js';
 import { signerFromPrivyWallet, type WalletLike } from './signer.js';
 
 const privyAppId = getPublicEnv('NEXT_PUBLIC_PRIVY_APP_ID') ?? '';
-const FALLBACK_WALLET_ADDRESS = 'privy-embedded-wallet-unavailable';
+const PRIVY_UNAVAILABLE_MARKER = 'privy-embedded-wallet-unavailable';
 
 export type PrivyState =
   | Readonly<{
@@ -47,7 +47,7 @@ export function getPrivyState(): PrivyState {
 
 function getFallbackPrivyWallet(): WalletLike {
   return {
-    address: FALLBACK_WALLET_ADDRESS,
+    address: PRIVY_UNAVAILABLE_MARKER,
     signMessage: async () => {
       throw new Error('privy_wallet_not_connected');
     },
