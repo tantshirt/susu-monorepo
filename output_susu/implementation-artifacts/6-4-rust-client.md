@@ -1,6 +1,6 @@
 # Story 6.4: Codama-generated Rust client (susu-client) with same surface
 
-Status: review
+Status: done
 
 ## Story
 

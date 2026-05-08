@@ -102,7 +102,7 @@ development_status:
   6-1-ts-sdk-fluent-client: done
   6-2-sdk-simulate-cluster-gate: done
   6-3-sdk-error-classes: done
-  6-4-rust-client: ready-for-dev
+  6-4-rust-client: done
   6-5-sdk-parity-check: ready-for-dev
   6-6-example-with-privy: ready-for-dev
   6-7-example-with-squads: ready-for-dev
