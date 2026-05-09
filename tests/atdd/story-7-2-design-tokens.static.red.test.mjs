@@ -201,13 +201,18 @@ test('Story 7.2 globals.css imports tokens.css and skin-diaspora.css', () => {
   );
 });
 
-test('Story 7.2 default html has data-skin="neutral" so tokens take effect on first paint', () => {
+test('Story 7.2 default html has data-skin set so tokens take effect on first paint', () => {
   const layoutPath = `${appRoot}/app/layout.tsx`;
   assertExists(layoutPath);
   const layout = read(layoutPath);
-  assert.match(
-    layout,
-    /data-skin\s*=\s*["']neutral["']/,
-    'layout.tsx <html> must default to data-skin="neutral"',
+  // Story 7.5 made `data-skin` SSR-aware via `getServerSkin()` (defaults
+  // to "neutral" when no cookie). Either the literal default or the
+  // dynamic interpolation satisfies the "tokens on first paint" intent.
+  const literalDefault = /data-skin\s*=\s*["']neutral["']/.test(layout);
+  const ssrAwareDefault =
+    /data-skin\s*=\s*\{/.test(layout) && /getServerSkin/.test(layout);
+  assert.ok(
+    literalDefault || ssrAwareDefault,
+    'layout.tsx <html> must set data-skin (literal "neutral" or dynamic via getServerSkin)',
   );
 });
