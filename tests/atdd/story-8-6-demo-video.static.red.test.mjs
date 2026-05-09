@@ -17,13 +17,13 @@ function read(path) {
   return readFileSync(path, 'utf8');
 }
 
-test('Story 8.6 storyboard exists with four-part structure and ~60-90s timing', () => {
+test('Story 8.6 storyboard exists with five-segment structure and ~60-90s timing', () => {
   assert.ok(existsSync(STORYBOARD_PATH), `${STORYBOARD_PATH} must exist`);
   const sb = read(STORYBOARD_PATH);
 
-  // Four numbered segments, each with a timing marker.
+  // Five numbered segments, each with a timing marker.
   // Match a permissive shape: segment heading containing "Segment 1" / "Segment 2" / etc.
-  for (const n of [1, 2, 3, 4]) {
+  for (const n of [1, 2, 3, 4, 5]) {
     const seg = new RegExp(`Segment\\s*${n}`, 'i');
     assert.match(sb, seg, `storyboard must contain "Segment ${n}" heading`);
   }
