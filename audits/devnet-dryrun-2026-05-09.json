@@ -1,0 +1,14 @@
+{
+  "story": "9.2",
+  "kind": "devnet-dryrun",
+  "ran_at": "2026-05-09T15:16:46Z",
+  "cluster": "devnet",
+  "solana_version": "solana-cli 3.1.14 (src:3134055b; feat:534737035, client:Agave)",
+  "anchor_version": "anchor-cli 1.0.2",
+  "deploy_keypair_pubkey": "unavailable",
+  "balance": "unavailable",
+  "idl_hash_frozen": "a349f5aea7e6e2427e58f2bb50c51a0b2b9b407068955b6ea56ecde45f6f08ea",
+  "program_id": "DRY-RUN — no deploy executed",
+  "upgrade_authority_post_burn": "DRY-RUN — no authority burn executed",
+  "note": "Devnet rehearsal of scripts/deploy-mainnet.sh preflight. No on-chain writes were performed against any cluster. Script printed the would-execute commands and halted at the EXECUTE prompt (or exited 0 in non-interactive mode)."
+}

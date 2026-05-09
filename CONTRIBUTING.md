@@ -72,6 +72,51 @@ Enforcement mode (post-audit, sentinel removed) requires all of:
 
 Story 9.2's mainnet-deploy preflight is responsible for deleting `audits/SKIP_AUDIT_GATE` and confirming the gate then passes; failure at that point is the explicit "audit not done" blocker the operator must surface.
 
+## Mainnet deploy ceremony (Story 9.2 — irreversible)
+
+Mainnet deploy + upgrade-authority burn is a **one-way, irreversible ceremony** performed by a human operator. The procedure is scripted at `scripts/deploy-mainnet.sh`:
+
+```bash
+bash scripts/deploy-mainnet.sh
+```
+
+Preflight steps (all enforced before the operator is prompted):
+
+1. Repo-root sanity check (Anchor.toml + programs/susu present).
+2. `audits/SKIP_AUDIT_GATE` must be **absent** (i.e., the audit firm has already landed its sign-off PR). The script does NOT delete the sentinel itself — that removal is part of the audit-firm landing PR or a separate human commit.
+3. `bash scripts/check-audit-signoff.sh` runs in `SUSU_AUDIT_GATE=enforce` mode and must pass (zero Critical / zero High, signed-off, PDF report committed).
+4. Solana CLI, Anchor CLI, and `solana config get` are printed.
+5. Deploy keypair has at least 5 SOL on the target cluster (default `mainnet-beta`).
+6. `bash scripts/check-idl-hash.sh` confirms the IDL matches `IDL_FREEZE.md` (FR28/29/30).
+7. `anchor build --verifiable --ignore-keys` produces `target/deploy/susu.so`.
+8. The script **prints** the deploy + authority-burn commands and **halts**, requiring the operator to type `EXECUTE`. Even after EXECUTE, the script does not auto-run the deploy — the operator runs the printed commands manually so every line of output is captured for `/log/YYYY-MM-DD.md`.
+
+The printed commands the operator runs:
+
+```bash
+# Deploy program
+solana program deploy --url mainnet-beta target/deploy/susu.so
+# -> capture Program Id as $PROGRAM_ID
+
+# Burn upgrade authority to the System Program incinerator (irreversible)
+solana program set-upgrade-authority $PROGRAM_ID \
+  --new-upgrade-authority 1nc1nerator11111111111111111111111111111111 \
+  --final --url mainnet-beta
+
+# Verify
+solana program show $PROGRAM_ID --url mainnet-beta
+# -> Upgrade Authority MUST equal 1nc1nerator11111111111111111111111111111111
+```
+
+After the ceremony the operator must:
+
+- Update `MAINNET_PROGRAM_ID.md` with the resulting program ID + tx signatures.
+- Update `NEXT_PUBLIC_PROGRAM_ID` in `.env.example`.
+- Append the full ceremony output to `/log/YYYY-MM-DD.md` (FR55).
+- Tag the release: `git tag v0.1.0-mainnet && git push origin v0.1.0-mainnet`.
+
+**Devnet rehearsal:** `bash scripts/deploy-devnet-dryrun.sh` runs the same preflight against devnet (refuses to run against mainnet) and captures evidence to `audits/devnet-dryrun-YYYY-MM-DD.json`. Use it to validate operator setup before the real ceremony.
+
 ## IDL Re-freeze Policy
 
 Any change to `IDL_FREEZE.md` requires all of the following in the same PR:
