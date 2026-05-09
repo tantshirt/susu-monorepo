@@ -11,9 +11,13 @@
 import { z } from "zod";
 
 const EnvSchema = z.object({
-  NEXT_PUBLIC_HELIUS_RPC_URL: z.string().url({
-    message: "NEXT_PUBLIC_HELIUS_RPC_URL must be a valid URL (see apps/reference/.env.example)",
-  }),
+  NEXT_PUBLIC_HELIUS_RPC_URL: z
+    .string()
+    .url({
+      message: "NEXT_PUBLIC_HELIUS_RPC_URL must be a valid URL (see apps/reference/.env.example)",
+    })
+    .optional()
+    .catch(undefined),
   NEXT_PUBLIC_PRIVY_APP_ID: z.string().length(25, {
     message:
       "NEXT_PUBLIC_PRIVY_APP_ID must be a 25-character Privy app id (see apps/reference/.env.example)",
