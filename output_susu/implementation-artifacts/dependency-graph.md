@@ -73,7 +73,7 @@ _Last updated: 2026-05-09T07:35:00Z_
 | 7.7 | 7 | next-intl multi-locale routing — en + vi live, 4 stubs (FR43) | done | #71 | #195 | merged | 7.1 | ✅ Done |
 | 7.8 | 7 | i18n parity check + workflow + CONTRIBUTING-TRANSLATIONS.md (FR48, FR49, FR50) | done | #72 | #196 | merged | 1.4, 1.5, 7.7 | ✅ Done |
 | 7.9 | 7 | Privy email-onboarding integration + Wallet-Standard fallback (FR39, FR46) | done | #73 | #204 | merged | 6.2, 7.6, 7.7 | ✅ Done |
-| 7.10 | 7 | <TransactionConfirmModal /> with simulation result block (FR40, FR41 prerequisite) | ready-for-dev | — | — | — | 7.4, 7.5, 7.6, 7.7, 7.8, 7.9 | ❌ No |
+| 7.10 | 7 | <TransactionConfirmModal /> with simulation result block (FR40, FR41 prerequisite) | done | #74 | #205 | merged | 7.4, 7.5, 7.6, 7.7, 7.8, 7.9 | ✅ Done |
 | 7.11 | 7 | <RotationCard />, <MemberAvatar />, <CurveVisualizer /> static-svg | ready-for-dev | — | — | — | 7.4, 7.6, 7.7, 7.10 | ❌ No |
 | 7.12 | 7 | Supporting components — <CodeBlock />, <ReceiptCard />, <Banner />, <FieldError /> | done | #76 | #200 | merged | 7.2, 7.3, 7.4 | ✅ Done |
 | 7.13 | 7 | Convex schema + group metadata + isolation lock (ARCH-30, ARCH-31) | done | #77 | #194 | merged | 7.1 | ✅ Done |
