@@ -148,7 +148,7 @@ development_status:
 
   # Epic 9: Mainnet Deploy & Immutability Gate
   epic-9: in-progress
-  9-1-audit-signoff-gate: ready-for-dev
+  9-1-audit-signoff-gate: done # merged via PR #217
   9-2-mainnet-deploy-burn: ready-for-dev
   9-3-immutability-check: ready-for-dev
   9-4-upgrade-burned-badge-live: ready-for-dev
