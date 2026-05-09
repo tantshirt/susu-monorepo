@@ -1,0 +1,46 @@
+name: Audit sign-off gate
+
+# Story 9.1 — NFR-S1 audit sign-off gate.
+# Runs scripts/check-audit-signoff.sh on PRs and pushes that touch mainnet
+# deploy artifacts. The gate is in skip mode while audits/SKIP_AUDIT_GATE is
+# committed; Story 9.2 will delete that sentinel as part of mainnet-deploy
+# preflight, at which point this workflow enforces zero Critical / zero High
+# findings before mainnet deploy can proceed.
+
+on:
+  pull_request:
+    paths:
+      - "programs/susu/**"
+      - "Anchor.toml"
+      - ".github/workflows/release.yml"
+      - ".github/workflows/audit-signoff.yml"
+      - "scripts/check-audit-signoff.sh"
+      - "scripts/deploy-mainnet.sh"
+      - "MAINNET_PROGRAM_ID.md"
+      - "IDL_FREEZE.md"
+      - "audits/**"
+  push:
+    branches:
+      - main
+    paths:
+      - "programs/susu/**"
+      - "Anchor.toml"
+      - ".github/workflows/release.yml"
+      - ".github/workflows/audit-signoff.yml"
+      - "scripts/check-audit-signoff.sh"
+      - "scripts/deploy-mainnet.sh"
+      - "MAINNET_PROGRAM_ID.md"
+      - "IDL_FREEZE.md"
+      - "audits/**"
+
+jobs:
+  audit-signoff:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Run audit sign-off gate
+        run: bash scripts/check-audit-signoff.sh

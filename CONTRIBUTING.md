@@ -46,6 +46,32 @@ Thanks for contributing. This repository is public-from-commit-zero and uses a s
 - Changes touching protected protocol paths require approval from listed owners.
 - If your PR modifies a protected path, request owner review early to avoid merge delays.
 
+## Audit sign-off gate (NFR-S1)
+
+Mainnet deploy (Story 9.2) is blocked by `scripts/check-audit-signoff.sh`. The gate is enforced through `.github/workflows/audit-signoff.yml` on PRs touching mainnet-deploy artifacts (`programs/susu/**`, `Anchor.toml`, `.github/workflows/release.yml`, `scripts/deploy-mainnet.sh`, `MAINNET_PROGRAM_ID.md`, `IDL_FREEZE.md`, `audits/**`).
+
+Run it locally:
+
+```bash
+pnpm audit:check
+# or
+bash scripts/check-audit-signoff.sh
+```
+
+Skip mode (deliberate, pre-audit):
+
+- The committed sentinel `audits/SKIP_AUDIT_GATE` makes the gate exit 0 with a "skipped (pre-audit)" message.
+- `SUSU_AUDIT_GATE=skip` produces the same effect for local runs.
+
+Enforcement mode (post-audit, sentinel removed) requires all of:
+
+- `audits/audit-summary.json` with `critical == 0` and `high == 0` (per epics §9.1 AC).
+- A committed, non-empty audit report PDF at `audits/{firm-slug}-{YYYY-MM}.pdf`.
+- A structural sign-off artifact: either `audits/SIGNED_OFF` (non-empty) or `signed_off: true` plus `signed_off_at: <date>` in `audits/audit-summary.json`.
+- If `audits/findings-tracker.md` exists, every blocking (Critical/High) finding must carry a `resolved-at:` line.
+
+Story 9.2's mainnet-deploy preflight is responsible for deleting `audits/SKIP_AUDIT_GATE` and confirming the gate then passes; failure at that point is the explicit "audit not done" blocker the operator must surface.
+
 ## IDL Re-freeze Policy
 
 Any change to `IDL_FREEZE.md` requires all of the following in the same PR:

@@ -1,0 +1,10 @@
+Pre-audit sentinel — Story 9.1.
+
+This file makes scripts/check-audit-signoff.sh exit 0 in skip mode while the
+audit firm is still engaged but the report has not yet landed. Story 9.2's
+mainnet-deploy preflight MUST delete this file before deploying; the gate will
+then enforce zero Critical / zero High findings, a committed report PDF, and a
+structural sign-off artifact.
+
+Removal of this file with the audit incomplete is the explicit blocker that
+Story 9.2 must surface to the operator.
