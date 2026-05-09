@@ -10,6 +10,7 @@
     "sdk:codegen": "node codama.config.mjs",
     "i18n:check": "tsx scripts/check-i18n-parity.ts",
     "a11y:check": "axe http://localhost:3000/en --tags wcag2aa,wcag21aa",
+    "link:check": "markdown-link-check README.md --config .markdown-link-check.json",
     "test": "find tests/atdd -name '*.static.red.test.mjs' -print0 | xargs -0 node --test",
     "test:atdd": "node --test tests/atdd/*.red.test.mjs"
   },
