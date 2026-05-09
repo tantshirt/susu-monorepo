@@ -1,0 +1,39 @@
+name: i18n parity
+
+on:
+  pull_request:
+    paths:
+      - 'apps/reference/messages/**'
+      - 'scripts/check-i18n-parity*'
+      - '.github/workflows/i18n-parity.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'apps/reference/messages/**'
+      - 'scripts/check-i18n-parity*'
+      - '.github/workflows/i18n-parity.yml'
+
+jobs:
+  parity:
+    name: Locale key parity
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+
+      - name: Install JS dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Check i18n parity
+        run: pnpm i18n:check
