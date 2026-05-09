@@ -31,3 +31,19 @@ Bucket: `performance-budget`
 Message: "Demo exceeded NFR-P2 budget: Xs > 60s."
 
 Recovery: run the demo against a local Surfpool fork first to separate RPC latency from SDK/runtime work. If the forked run is still over budget, profile the phase timings printed by `pnpm susu:demo` and keep the public path under `SUSU_DEMO_MAX_SECONDS`.
+
+## Verify Budget
+
+Bucket: `verify-budget`
+
+Message: "verify exceeded NFR-Re4 budget: Xs > 600s."
+
+Recovery: inspect the `pnpm verify` summary table and rerun the slow step directly. The clean-clone path should stay under ten minutes on a 4-core developer laptop with a stable devnet-compatible RPC.
+
+## Mainnet Immutability
+
+Bucket: `immutability`
+
+Message: "program is still upgradeable."
+
+Recovery: this check only enforces on `CLUSTER=mainnet-beta`. Before a mainnet release, burn the upgrade authority through the approved deploy procedure, then rerun `CLUSTER=mainnet-beta bash scripts/check-immutability.sh`.

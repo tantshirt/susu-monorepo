@@ -1,0 +1,44 @@
+name: Verify
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    container:
+      image: ghcr.io/coral-xyz/anchor:1.0.2
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - name: Cache Cargo registry + target
+        uses: actions/cache@v5
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os }}-verify-cargo-${{ hashFiles('**/Cargo.toml', 'Cargo.lock', 'rust-toolchain.toml') }}
+          restore-keys: |
+            ${{ runner.os }}-verify-cargo-
+
+      - name: Run full reproducibility chain
+        env:
+          CLUSTER: devnet
+          SUSU_DEMO_SKIP_PREFLIGHT: "1"
+          SUSU_VERIFY_MAX_SECONDS: "600"
+        run: bash scripts/verify.sh

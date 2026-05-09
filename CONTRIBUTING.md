@@ -90,8 +90,42 @@ bash scripts/check-fincen-posture.sh
 
 Notes:
 - `scripts/check-i18n-parity.ts` and `scripts/check-fincen-posture.sh` vacuously pass until their target surfaces exist.
-- `scripts/check-sdk-parity.sh` vacuously passes only when Rust generated SDK output is missing/empty.
+- `scripts/check-sdk-parity.sh` **must** regenerate both Codama SDK trees and enforce structural parity; treat failures as regressions rather than drifting generated output.
 - If you use `act`, run `act pull_request -j lint-and-build` to iterate on `ci.yml` locally.
+
+## Reproducing every claim in <10 minutes
+
+Auditors, judges, and maintainers should use the one-command verification path from a clean clone:
+
+```bash
+pnpm verify
+```
+
+`pnpm verify` installs the locked JavaScript dependencies, builds and tests the Anchor program, runs the Rust workspace tests, regenerates the 10,000-circle adversary report with the current commit SHA as seed, runs the 60-second demo, checks the frozen IDL hash, checks TypeScript/Rust SDK parity, runs the skip-aware immutability check, and verifies locale key parity. The script prints a per-step summary and fails if the full run exceeds 600 seconds.
+
+For mainnet-only checks, set `CLUSTER=mainnet-beta` and optionally `SUSU_PROGRAM_ID` and `RPC_URL`. On devnet or local forks, `scripts/check-immutability.sh` exits 0 with a skip message. Failure buckets and recovery hints live in [`docs/troubleshooting.md`](./docs/troubleshooting.md).
+
+## Releasing a new version
+
+Releases are tag-driven and must use the OIDC trusted-publishing workflow in `.github/workflows/release.yml`; do not add long-lived `NPM_TOKEN` or `CARGO_TOKEN` secrets.
+
+1. Confirm `pnpm verify` passes locally.
+2. Bump matching versions in `sdk/ts/package.json` and `sdk/rust/Cargo.toml`.
+3. Commit the version bump and tag it, for example `git tag v0.1.0`.
+4. Push the tag with `git push origin v0.1.0`.
+5. The release workflow runs the verifiable build, IDL hash gate, SDK parity gate, full verify chain, npm publish for `@susu/sdk`, crates.io publish for `susu-client`, provenance attestation, and GitHub release creation.
+
+### Trusted publisher registration
+
+An owner must register the trusted publishers before the first release:
+
+- npm: configure `@susu/sdk` to trust `tantshirt/susu-monorepo`, workflow `.github/workflows/release.yml`, environment `release`.
+- crates.io: configure `susu-client` to trust `tantshirt/susu-monorepo`, workflow `.github/workflows/release.yml`, environment `release`.
+- Repository settings: confirm no `NPM_TOKEN` or `CARGO_TOKEN` long-lived release secrets exist.
+
+### Half-published recovery
+
+The workflow publishes npm first, then crates, then creates the GitHub release. If npm succeeds and crates fails, do not create a GitHub release manually. Either fix crates publishing and rerun the tagged workflow for the same version if the registry allows it, or publish a patch version and deprecate/yank the incomplete artifact according to registry policy. Document the incident in `/log/YYYY-MM-DD.md`.
 
 ## Translation Contributions
 
