@@ -34,6 +34,8 @@ const config: Config = {
         danger: "rgb(var(--danger) / <alpha-value>)",
       },
       // 4px base spacing scale (UX-DR6).
+      // Story 7.17 added `11` (44px) and `14` (56px) to back the WCAG-2.5.5
+      // touch-target floor on the Button primitive (44 / 48 / 56 stack).
       spacing: {
         "0": "0px",
         "1": "4px",
@@ -44,7 +46,9 @@ const config: Config = {
         "6": "24px",
         "8": "32px",
         "10": "40px",
+        "11": "44px",
         "12": "48px",
+        "14": "56px",
         "16": "64px",
         "20": "80px",
         "24": "96px",
@@ -93,6 +97,12 @@ const config: Config = {
       // Locked type scale (UX-DR10) — `[size, lineHeight]` pairs.
       fontSize: {
         "display-1": ["56px", { lineHeight: "64px", letterSpacing: "-0.02em" }],
+        // Story 7.17 — `display-2` is the mobile drop for `display-1`. At
+        // the 360px floor the 56/64 hero would wrap awkwardly or trigger
+        // horizontal scroll, so hero surfaces use
+        // `text-display-2 md:text-display-1` to honour both the locked type
+        // scale and the mobile-first floor.
+        "display-2": ["40px", { lineHeight: "48px", letterSpacing: "-0.02em" }],
         "h1": ["40px", { lineHeight: "48px", letterSpacing: "-0.02em" }],
         "h2": ["32px", { lineHeight: "40px", letterSpacing: "-0.01em" }],
         "h3": ["24px", { lineHeight: "32px" }],

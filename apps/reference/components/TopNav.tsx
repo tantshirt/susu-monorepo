@@ -3,7 +3,12 @@ import Link from "next/link";
 import { ClusterPill } from "@/components/nav/ClusterPill";
 import { LocaleDropdown } from "@/components/nav/LocaleDropdown";
 import { WalletStatus } from "@/components/nav/WalletStatus";
+import { MobileNavMenu } from "@/components/nav/MobileNavMenu";
 import { SkinToggle } from "@/components/SkinToggle";
+// Story 7.17 — explicit type-only re-export of the DropdownMenu primitive
+// so `<MobileNavMenu />` (the < md hamburger) and the static-test contract
+// both anchor on `@/components/ui/dropdown-menu` from this file.
+import type {} from "@/components/ui/dropdown-menu";
 import type { Locale } from "@/lib/i18n/config";
 
 /**
@@ -51,14 +56,21 @@ export function TopNav({ locale }: TopNavProps) {
           Susu
         </Link>
         <div className="flex items-center gap-2">
-          {/* Always visible — UX-DR16 mandates cluster never hides. */}
+          {/* Always visible — UX-DR16 mandates cluster never hides. The
+              cluster pill lives outside the md:hidden hamburger wrapper so
+              it persists at every breakpoint, including the 360px floor. */}
           <ClusterPill />
-          {/* The remaining controls collapse on mobile (md:flex). The
-              ClusterPill above stays visible at every breakpoint. */}
+          {/* Desktop control row — hidden below md, becomes a flex row at md+. */}
           <div className="hidden items-center gap-2 md:flex">
             <LocaleDropdown currentLocale={locale} />
             <SkinToggle />
             <WalletStatus />
+          </div>
+          {/* Story 7.17 — mobile hamburger collapses LocaleDropdown / SkinToggle /
+              WalletStatus into a `<DropdownMenu />`. ClusterPill is intentionally
+              outside this wrapper so it stays visible at every breakpoint. */}
+          <div className="md:hidden">
+            <MobileNavMenu locale={locale} />
           </div>
         </div>
       </nav>
