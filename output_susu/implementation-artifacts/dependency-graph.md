@@ -85,10 +85,10 @@ _Last updated: 2026-05-09T07:35:00Z_
 | 8.1 | 8 | README first-viewport with badge architecture | done | #83 | #212 | merged | 1.4, 5.1, 5.6, 8.2, 8.3 | ✅ Done |
 | 8.2 | 8 | <AdversaryBadge /> server-rendered from latest report | done | #84 | #210 | merged | 5.4 | ✅ Done |
 | 8.3 | 8 | <UpgradeBurnedBadge /> server-rendered from solana program show | done | #85 | #211 | merged | 1.1, 5.4, 8.2 | ✅ Done |
-| 8.4 | 8 | Inline animated SVG curve plot + <CurveVisualizer /> interactive variant | ready-for-dev | #86 | — | — | 1.4, 7.11, 8.1 | ✅ Ready |
-| 8.5 | 8 | README link cluster | ready-for-dev | #87 | — | — | 8.1 | ✅ Ready |
-| 8.6 | 8 | 60-90s demo video production + embed | ready-for-dev | — | — | — | 6.7, 8.4 | ❌ No (Epic 7 not complete) |
-| 8.7 | 8 | Ecosystem partner reference outreach + landing | ready-for-dev | — | — | — | 6.6, 6.7, 6.8, 8.5, 8.6 | ❌ No (Epic 7 not complete) |
+| 8.4 | 8 | Inline animated SVG curve plot + <CurveVisualizer /> interactive variant | done | #86 | #214 | merged | 1.4, 7.11, 8.1 | ✅ Done |
+| 8.5 | 8 | README link cluster | done | #87 | #213 | merged | 8.1 | ✅ Done |
+| 8.6 | 8 | 60-90s demo video production + embed | ready-for-dev | #88 | — | — | 6.7, 8.4 | ✅ Ready |
+| 8.7 | 8 | Ecosystem partner reference outreach + landing | ready-for-dev | #89 | — | — | 6.6, 6.7, 6.8, 8.5, 8.6 | ❌ No (needs 8.6) |
 | 9.1 | 9 | Audit sign-off gate verification (NFR-S1) | ready-for-dev | — | — | — | 5.8 | ❌ No (Epic 8 not complete) |
 | 9.2 | 9 | Mainnet deploy with upgrade authority burned at deploy | ready-for-dev | — | — | — | 9.1 | ❌ No (Epic 8 not complete) |
 | 9.3 | 9 | scripts/check-immutability.sh + immutability-check.yml workflow (FR30) | ready-for-dev | — | — | — | 9.2 | ❌ No (Epic 8 not complete) |
