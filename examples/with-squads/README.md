@@ -48,5 +48,5 @@ Mainnet considerations: fund vault rent/fees, pin exact Squads and Susu program 
 
 ## See also
 
-- `docs/integration-squads.md` (Story 6.9 companion guide)
-- `sdk/ts/README.md`
+- [Squads integration guide](../../docs/integration-squads.md)
+- [Susu TypeScript SDK](../../docs/sdk-typescript.md)

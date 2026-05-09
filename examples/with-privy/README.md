@@ -26,4 +26,5 @@ Privy embedded wallets remove seed-phrase setup from the user journey, but forks
 
 ## See also
 
-Story 6.9 will add `docs/integration-privy.md` as the longer partner integration guide.
+- [Privy integration guide](../../docs/integration-privy.md)
+- [Susu TypeScript SDK](../../docs/sdk-typescript.md)
