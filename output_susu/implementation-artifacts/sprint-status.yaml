@@ -125,7 +125,7 @@ development_status:
   7-8-i18n-parity: done # merged via PR #196
   7-9-privy-onboarding: done # merged via PR #204
   7-10-tx-confirm-modal: done # merged via PR #205
-  7-11-rotation-card-curve-viz: ready-for-dev
+  7-11-rotation-card-curve-viz: done # merged via PR #206
   7-12-supporting-components: done # merged via PR #200
   7-13-convex-schema: done # merged via PR #194
   7-14-one-tap-contribute: ready-for-dev
