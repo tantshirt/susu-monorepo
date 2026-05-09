@@ -1,26 +1,46 @@
 @import "tailwindcss";
+@import "../lib/theme/tokens.css";
+@import "../lib/theme/skin-diaspora.css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
+/**
+ * Susu reference app — Tailwind v4 token bridge (UX-DR1–8).
+ *
+ * Tokens live in `lib/theme/tokens.css` (neutral skin) and
+ * `lib/theme/skin-diaspora.css` (diaspora override). The `@theme` block
+ * below mirrors `tailwind.config.ts` so v4's CSS-first pipeline emits the
+ * matching utility classes (`bg-bg`, `text-primary`, `shadow-1`, etc.).
+ *
+ * Cross-skin invariants (UX-DR2): `--bg`, `--signal`, `--warn`, `--danger`
+ * are protocol-locked and only defined in the neutral skin.
+ */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-bg: rgb(var(--bg) / <alpha-value>);
+  --color-surface: rgb(var(--surface) / <alpha-value>);
+  --color-surface2: rgb(var(--surface-2) / <alpha-value>);
+  --color-border: rgb(var(--border) / <alpha-value>);
+  --color-text: rgb(var(--text) / <alpha-value>);
+  --color-muted: rgb(var(--text-muted) / <alpha-value>);
+  --color-primary: rgb(var(--primary) / <alpha-value>);
+  --color-secondary: rgb(var(--secondary) / <alpha-value>);
+  --color-signal: rgb(var(--signal) / <alpha-value>);
+  --color-warn: rgb(var(--warn) / <alpha-value>);
+  --color-danger: rgb(var(--danger) / <alpha-value>);
+
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-pill: 9999px;
+
+  --shadow-1: var(--shadow-1);
+  --shadow-2: var(--shadow-2);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: rgb(var(--bg));
+  color: rgb(var(--text));
+  font-family: var(--font-sans, Arial, Helvetica, sans-serif);
 }
