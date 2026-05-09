@@ -88,11 +88,11 @@ _Last updated: 2026-05-09T07:35:00Z_
 | 8.4 | 8 | Inline animated SVG curve plot + <CurveVisualizer /> interactive variant | done | #86 | #214 | merged | 1.4, 7.11, 8.1 | ✅ Done |
 | 8.5 | 8 | README link cluster | done | #87 | #213 | merged | 8.1 | ✅ Done |
 | 8.6 | 8 | 60-90s demo video production + embed | done | #88 | #215 | merged | 6.7, 8.4 | ✅ Done |
-| 8.7 | 8 | Ecosystem partner reference outreach + landing | ready-for-dev | #89 | — | — | 6.6, 6.7, 6.8, 8.5, 8.6 | ✅ Ready |
-| 9.1 | 9 | Audit sign-off gate verification (NFR-S1) | ready-for-dev | — | — | — | 5.8 | ❌ No (Epic 8 not complete) |
-| 9.2 | 9 | Mainnet deploy with upgrade authority burned at deploy | ready-for-dev | — | — | — | 9.1 | ❌ No (Epic 8 not complete) |
-| 9.3 | 9 | scripts/check-immutability.sh + immutability-check.yml workflow (FR30) | ready-for-dev | — | — | — | 9.2 | ❌ No (Epic 8 not complete) |
-| 9.4 | 9 | <UpgradeBurnedBadge /> wired live + tagged release v0.1.0-mainnet (ARCH-37) | ready-for-dev | — | — | — | 8.3, 9.2, 9.3 | ❌ No (Epic 8 not complete) |
+| 8.7 | 8 | Ecosystem partner reference outreach + landing | done | #89 | #216 | merged | 6.6, 6.7, 6.8, 8.5, 8.6 | ✅ Done |
+| 9.1 | 9 | Audit sign-off gate verification (NFR-S1) | ready-for-dev | #90 | — | — | 5.8 | ✅ Ready |
+| 9.2 | 9 | Mainnet deploy with upgrade authority burned at deploy | ready-for-dev | #91 | — | — | 9.1 | ❌ No (needs 9.1 + USER AUTHORIZATION for mainnet deploy) |
+| 9.3 | 9 | scripts/check-immutability.sh + immutability-check.yml workflow (FR30) | ready-for-dev | #92 | — | — | 9.2 | ❌ No (needs 9.2) |
+| 9.4 | 9 | <UpgradeBurnedBadge /> wired live + tagged release v0.1.0-mainnet (ARCH-37) | ready-for-dev | #93 | — | — | 8.3, 9.2, 9.3 | ❌ No (needs 9.2 + 9.3) |
 
 ## Dependency Chains
 

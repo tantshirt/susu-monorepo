@@ -136,18 +136,18 @@ development_status:
   epic-7-retrospective: optional
 
   # Epic 8: README Hero, Demo Video & Submission Marketing Surface
-  epic-8: in-progress
+  epic-8: done
   8-1-readme-first-viewport: done # merged via PR #212
   8-2-adversary-badge: done # merged via PR #210
   8-3-upgrade-burned-badge: done # merged via PR #211
   8-4-curve-svg-plot: done # merged via PR #214
   8-5-readme-link-cluster: done # merged via PR #213
   8-6-demo-video: done # merged via PR #215
-  8-7-partner-outreach: ready-for-dev
+  8-7-partner-outreach: done # merged via PR #216
   epic-8-retrospective: optional
 
   # Epic 9: Mainnet Deploy & Immutability Gate
-  epic-9: backlog
+  epic-9: in-progress
   9-1-audit-signoff-gate: ready-for-dev
   9-2-mainnet-deploy-burn: ready-for-dev
   9-3-immutability-check: ready-for-dev

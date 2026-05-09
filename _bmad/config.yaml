@@ -18,14 +18,14 @@ bad:
   model_quality: gpt-5
   api_usage_threshold: 80
   epic_scope:
-    epic: 8
-    name: README Hero, Demo Video & Submission Marketing Surface
+    epic: 9
+    name: Mainnet Deploy & Immutability Gate
     enforce_epic_only: true
     source_of_truth:
       - output_susu/implementation-artifacts/sprint-status.yaml
       - output_susu/implementation-artifacts/dependency-graph.md
     initial_batch:
-      - '8.2'
+      - '9.1'
     lane_stack:
       - lane: scaffold
         stories:
