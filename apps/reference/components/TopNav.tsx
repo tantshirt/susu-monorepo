@@ -5,10 +5,6 @@ import { LocaleDropdown } from "@/components/nav/LocaleDropdown";
 import { WalletStatus } from "@/components/nav/WalletStatus";
 import { MobileNavMenu } from "@/components/nav/MobileNavMenu";
 import { SkinToggle } from "@/components/SkinToggle";
-// Story 7.17 — explicit type-only re-export of the DropdownMenu primitive
-// so `<MobileNavMenu />` (the < md hamburger) and the static-test contract
-// both anchor on `@/components/ui/dropdown-menu` from this file.
-import type {} from "@/components/ui/dropdown-menu";
 import type { Locale } from "@/lib/i18n/config";
 
 /**

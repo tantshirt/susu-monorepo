@@ -17,6 +17,7 @@ const VISUAL_SPEC = 'apps/reference/tests/e2e/visual.spec.ts';
 const VISUAL_WORKFLOW = '.github/workflows/visual.yml';
 const REF_PKG = 'apps/reference/package.json';
 const TOPNAV = 'apps/reference/components/TopNav.tsx';
+const MOBILE_NAV_MENU = 'apps/reference/components/nav/MobileNavMenu.tsx';
 const BUTTON = 'apps/reference/components/ui/button.tsx';
 const TAILWIND_CONFIG = 'apps/reference/tailwind.config.ts';
 const CONTRIBUTE_CLIENT =
@@ -91,12 +92,23 @@ test('Story 7.17 apps/reference/package.json exposes e2e:visual script', () => {
   );
 });
 
-test('Story 7.17 TopNav.tsx wires the mobile DropdownMenu hamburger and keeps ClusterPill always visible', () => {
+test('Story 7.17 TopNav.tsx wires the mobile hamburger and keeps ClusterPill always visible', () => {
   const src = read(TOPNAV);
+  const mobileSrc = read(MOBILE_NAV_MENU);
   assert.match(
     src,
+    /from\s+["']@\/components\/nav\/MobileNavMenu["']/,
+    'TopNav must import MobileNavMenu for the mobile hamburger',
+  );
+  assert.match(
+    src,
+    /<MobileNavMenu\s+locale=\{locale\}\s*\/>/,
+    'TopNav must render <MobileNavMenu /> inside the mobile hamburger wrapper',
+  );
+  assert.match(
+    mobileSrc,
     /from\s+["']@\/components\/ui\/dropdown-menu["']/,
-    'TopNav must import DropdownMenu primitive for the mobile hamburger',
+    'MobileNavMenu must import DropdownMenu primitive for the mobile hamburger',
   );
   // The hamburger must collapse only at < md.
   assert.match(
@@ -113,9 +125,13 @@ test('Story 7.17 TopNav.tsx wires the mobile DropdownMenu hamburger and keeps Cl
   // must precede the `md:hidden` wrapper line and not be a child of a
   // `hidden md:flex` block alone.
   const clusterIdx = src.indexOf('<ClusterPill');
-  const hamburgerIdx = src.indexOf('md:hidden');
+  const hamburgerIdx = src.indexOf('className="md:hidden"');
   assert.ok(clusterIdx > -1, 'TopNav must render <ClusterPill />');
   assert.ok(hamburgerIdx > -1, 'TopNav must render the md:hidden hamburger wrapper');
+  assert.ok(
+    clusterIdx < hamburgerIdx,
+    'TopNav must render <ClusterPill /> before the md:hidden hamburger wrapper',
+  );
   // No directional Tailwind utilities (UX-DR33).
   assert.doesNotMatch(
     src,
