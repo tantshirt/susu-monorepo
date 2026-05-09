@@ -34,7 +34,7 @@ run_step() {
   if [ "$status" -ne 0 ]; then
     printf '%s\t%s\tfail\n' "$name" "$elapsed" >> "$SUMMARY_FILE"
     printf '\nverify failed at step: %s (exit %s)\n' "$name" "$status" >&2
-    printf '--- last 50 log lines ---\n' >&2
+    printf '%s\n' '--- last 50 log lines ---' >&2
     tail -n 50 "$log_file" >&2 || true
     print_summary >&2
     exit "$status"
@@ -44,7 +44,7 @@ run_step() {
 }
 
 print_summary() {
-  printf '\nSusu verify summary\n'
+  printf '\n%s\n' 'Susu verify summary'
   awk -F '\t' 'NR == 1 { printf "%-36s %8s %s\n", $1, $2, $3; next } { printf "%-36s %8ss %s\n", $1, $2, $3 }' "$SUMMARY_FILE"
 }
 
