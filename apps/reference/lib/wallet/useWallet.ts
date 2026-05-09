@@ -25,9 +25,16 @@ interface WalletStandardAccount {
   publicKey?: { toString(): string } | string;
 }
 
+interface WalletStandardDisconnectFeature {
+  disconnect(): void | Promise<void>;
+}
+
 interface WalletStandardWallet {
   chains?: readonly string[];
   accounts?: readonly WalletStandardAccount[];
+  features?: {
+    "standard:disconnect"?: WalletStandardDisconnectFeature;
+  };
 }
 
 interface WalletStandardRegistry {
@@ -38,8 +45,20 @@ interface NavigatorWithWallets extends Navigator {
   wallets?: WalletStandardRegistry;
 }
 
+let ignoredWalletStandardAddress: string | null = null;
+const walletStandardListeners = new Set<() => void>();
+
+function notifyWalletStandardListeners(): void {
+  for (const listener of walletStandardListeners) {
+    listener();
+  }
+}
+
 /** Read the first Solana account exposed by any Wallet-Standard wallet. */
-function readWalletStandardAccount(): { address: string } | null {
+function readWalletStandardAccount(targetAddress?: string): {
+  address: string;
+  wallet: WalletStandardWallet;
+} | null {
   if (typeof window === "undefined" || typeof navigator === "undefined") {
     return null;
   }
@@ -59,7 +78,9 @@ function readWalletStandardAccount(): { address: string } | null {
             ? account.publicKey
             : account.publicKey?.toString();
       if (typeof address === "string" && address.length > 0) {
-        return { address };
+        if (!targetAddress || address === targetAddress) {
+          return { address, wallet: w };
+        }
       }
     }
   } catch {
@@ -69,15 +90,30 @@ function readWalletStandardAccount(): { address: string } | null {
   return null;
 }
 
+export function disconnectWalletStandardWallet(address: string): void {
+  ignoredWalletStandardAddress = address;
+  notifyWalletStandardListeners();
+
+  try {
+    const disconnectFeature =
+      readWalletStandardAccount(address)?.wallet.features?.["standard:disconnect"];
+    const result = disconnectFeature?.disconnect();
+    void Promise.resolve(result).catch(() => {
+      /* no-op — Wallet-Standard fallback is best-effort */
+    });
+  } catch {
+    /* no-op — see NFR-R2 */
+  }
+}
+
 /**
  * Read Privy state defensively — `usePrivy()` is called unconditionally
  * (rules-of-hooks) but the surrounding tree is wrapped in
  * `PrivyProviderWrapper` (the locked outermost provider), so the only
- * "Privy unavailable" cases we still need to handle at this layer are:
- *   1. Privy hasn't finished booting (`ready === false`).
- *   2. The user has not authenticated yet.
- * Both are represented in the unified shape via `connected: false`,
- * satisfying NFR-R2 without violating rules-of-hooks.
+ * "Privy unavailable" case we still need to handle at this layer is Privy not
+ * having finished booting (`ready === false`). That is represented in the
+ * unified shape via `connected: false`, satisfying NFR-R2 without violating
+ * rules-of-hooks.
  */
 
 /**
@@ -89,14 +125,20 @@ function readWalletStandardAccount(): { address: string } | null {
 function useWalletStandardAddress(): string | null {
   const subscribe = React.useCallback((onChange: () => void) => {
     if (typeof window === "undefined") return () => {};
+    walletStandardListeners.add(onChange);
     // Wallet-Standard wallets register asynchronously (the extension content
     // script may inject after our first paint). A short polling subscription
     // keeps things simple without pulling in `@wallet-standard/app`.
     const id = window.setInterval(onChange, 1000);
-    return () => window.clearInterval(id);
+    return () => {
+      walletStandardListeners.delete(onChange);
+      window.clearInterval(id);
+    };
   }, []);
   const getSnapshot = React.useCallback((): string | null => {
-    return readWalletStandardAccount()?.address ?? null;
+    const address = readWalletStandardAccount()?.address ?? null;
+    if (address && address === ignoredWalletStandardAddress) return null;
+    return address;
   }, []);
   const getServerSnapshot = React.useCallback((): string | null => null, []);
   return React.useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
@@ -110,6 +152,15 @@ export function useWallet(): WalletState {
   const privy = usePrivy();
   const { wallets: privyWallets } = useWallets();
   const walletStandardAddress = useWalletStandardAddress();
+
+  if (!privy.ready) {
+    return {
+      connected: false,
+      address: null,
+      cluster,
+      provider: null,
+    };
+  }
 
   // Prefer Privy when authenticated and a wallet is linked.
   if (privy.authenticated && privyWallets.length > 0) {

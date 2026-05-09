@@ -9,7 +9,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useWallet } from "@/lib/wallet/useWallet";
+import { disconnectWalletStandardWallet, useWallet } from "@/lib/wallet/useWallet";
 
 /**
  * Story 7.9 — `<WalletStatus />`.
@@ -17,7 +17,7 @@ import { useWallet } from "@/lib/wallet/useWallet";
  * Disconnected: a "Connect" button that opens Privy's login modal (email +
  * Wallet-Standard browser-extension fallback per FR39 / FR46).
  * Connected: a truncated address inside a shadcn `DropdownMenu` with a
- * "Disconnect" action that routes through Privy's `logout()`.
+ * "Disconnect" action for the active provider.
  *
  * Per NFR-R2 the component never assumes Privy is available — if `usePrivy`
  * throws (provider error) or login/logout aren't ready yet, the controls stay
@@ -42,12 +42,19 @@ export function WalletStatus() {
     }
   }, [privy]);
   const logout = React.useCallback(() => {
+    if (provider === "wallet-standard" && address) {
+      disconnectWalletStandardWallet(address);
+      return;
+    }
+
     try {
-      privy.logout();
+      void privy.logout().catch(() => {
+        /* no-op */
+      });
     } catch {
       /* no-op */
     }
-  }, [privy]);
+  }, [address, privy, provider]);
 
   if (!connected || !address) {
     return (
