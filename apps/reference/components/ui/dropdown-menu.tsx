@@ -65,6 +65,18 @@ export const DropdownMenuCheckboxItem = React.forwardRef<
     )}
     {...props}
   >
+    <DropdownMenuPrimitive.ItemIndicator className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="3"
+        className="h-3 w-3"
+        aria-hidden
+      >
+        <polyline points="20 6 9 17 4 12" />
+      </svg>
+    </DropdownMenuPrimitive.ItemIndicator>
     {children}
   </DropdownMenuPrimitive.CheckboxItem>
 ));
@@ -83,6 +95,11 @@ export const DropdownMenuRadioItem = React.forwardRef<
     )}
     {...props}
   >
+    <DropdownMenuPrimitive.ItemIndicator className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
+      <svg viewBox="0 0 24 24" fill="currentColor" className="h-2 w-2" aria-hidden>
+        <circle cx="12" cy="12" r="6" />
+      </svg>
+    </DropdownMenuPrimitive.ItemIndicator>
     {children}
   </DropdownMenuPrimitive.RadioItem>
 ));

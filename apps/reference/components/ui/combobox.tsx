@@ -57,43 +57,45 @@ export function Combobox({
         <span className={cn(!current && "text-muted")}>{current?.label ?? placeholder}</span>
         <span aria-hidden className="ms-2 text-muted">▾</span>
       </PopoverPrimitive.Trigger>
-      <PopoverPrimitive.Content
-        align="start"
-        className={cn(
-          "z-50 min-w-[var(--radix-popover-trigger-width)] rounded-md border border-border bg-surface p-2 text-text shadow-2",
-        )}
-      >
-        <Input
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder={placeholder}
-          className="mb-2 h-8"
-        />
-        <ul role="listbox" className="max-h-60 overflow-auto">
-          {filtered.length === 0 && (
-            <li className="px-2 py-1.5 text-caption text-muted">{emptyMessage}</li>
+      <PopoverPrimitive.Portal>
+        <PopoverPrimitive.Content
+          align="start"
+          className={cn(
+            "z-50 min-w-[var(--radix-popover-trigger-width)] rounded-md border border-border bg-surface p-2 text-text shadow-2",
           )}
-          {filtered.map((opt) => (
-            <li
-              key={opt.value}
-              role="option"
-              aria-selected={opt.value === value}
-              className={cn(
-                "cursor-pointer rounded-sm px-2 py-1.5 text-body text-text",
-                "hover:bg-surface2",
-                opt.value === value && "bg-surface2",
-              )}
-              onClick={() => {
-                onChange?.(opt.value);
-                setOpen(false);
-                setQuery("");
-              }}
-            >
-              {opt.label}
-            </li>
-          ))}
-        </ul>
-      </PopoverPrimitive.Content>
+        >
+          <Input
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder={placeholder}
+            className="mb-2 h-8"
+          />
+          <ul role="listbox" className="max-h-60 overflow-auto">
+            {filtered.length === 0 && (
+              <li className="px-2 py-1.5 text-caption text-muted">{emptyMessage}</li>
+            )}
+            {filtered.map((opt) => (
+              <li
+                key={opt.value}
+                role="option"
+                aria-selected={opt.value === value}
+                className={cn(
+                  "cursor-pointer rounded-sm px-2 py-1.5 text-body text-text",
+                  "hover:bg-surface2",
+                  opt.value === value && "bg-surface2",
+                )}
+                onClick={() => {
+                  onChange?.(opt.value);
+                  setOpen(false);
+                  setQuery("");
+                }}
+              >
+                {opt.label}
+              </li>
+            ))}
+          </ul>
+        </PopoverPrimitive.Content>
+      </PopoverPrimitive.Portal>
     </PopoverPrimitive.Root>
   );
 }

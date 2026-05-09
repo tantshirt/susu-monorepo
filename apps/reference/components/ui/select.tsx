@@ -82,6 +82,18 @@ export const SelectItem = React.forwardRef<
     )}
     {...props}
   >
+    <SelectPrimitive.ItemIndicator className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="3"
+        className="h-3 w-3"
+        aria-hidden
+      >
+        <polyline points="20 6 9 17 4 12" />
+      </svg>
+    </SelectPrimitive.ItemIndicator>
     <SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText>
   </SelectPrimitive.Item>
 ));
