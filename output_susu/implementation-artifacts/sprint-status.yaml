@@ -142,7 +142,7 @@ development_status:
   8-3-upgrade-burned-badge: done # merged via PR #211
   8-4-curve-svg-plot: done # merged via PR #214
   8-5-readme-link-cluster: done # merged via PR #213
-  8-6-demo-video: ready-for-dev
+  8-6-demo-video: done # merged via PR #215
   8-7-partner-outreach: ready-for-dev
   epic-8-retrospective: optional
 
