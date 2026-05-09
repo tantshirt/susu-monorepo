@@ -78,7 +78,7 @@ _Last updated: 2026-05-09T07:35:00Z_
 | 7.12 | 7 | Supporting components — <CodeBlock />, <ReceiptCard />, <Banner />, <FieldError /> | done | #76 | #200 | merged | 7.2, 7.3, 7.4 | ✅ Done |
 | 7.13 | 7 | Convex schema + group metadata + isolation lock (ARCH-30, ARCH-31) | done | #77 | #194 | merged | 7.1 | ✅ Done |
 | 7.14 | 7 | One-tap Contribute flow (FR40) | done | #78 | #207 | merged | 7.9, 7.10, 7.11, 7.12 | ✅ Done |
-| 7.15 | 7 | One-tap Claim Payout flow (FR41) | ready-for-dev | — | — | — | 7.9, 7.10, 7.11, 7.12, 7.14 | ❌ No |
+| 7.15 | 7 | One-tap Claim Payout flow (FR41) | done | #79 | #208 | merged | 7.9, 7.10, 7.11, 7.12, 7.14 | ✅ Done |
 | 7.16 | 7 | Helius RPC fallback to public + Sphere on-ramp optional flag | done | #80 | #202 | merged | 7.1, 7.7, 7.12 | ✅ Done |
 | 7.17 | 7 | Mobile-first responsive layout 360px floor + breakpoints + Playwright visual regression | ready-for-dev | — | — | — | 7.1, 7.2, 7.3, 7.4, 7.5, 7.6, 7.7, 7.8, 7.9, 7.10, 7.11, 7.12, 7.13, 7.14, 7.15, 7.16 | ❌ No |
 | 7.18 | 7 | Accessibility surface — WCAG 2.1 AA + RTL + reduced-motion + axe-core CI + non-crypto pilot | done | #82 | #203 | merged | none | ✅ Done |
