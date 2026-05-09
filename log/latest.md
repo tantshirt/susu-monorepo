@@ -183,3 +183,41 @@ Now scoping orchestration to Epic 8.
 - Audit badge → `audit-pending` state (firm engagement is process; report links pre-mainnet). "10K passed" badge → `https://susu.protocol/api/badge/adversary` (Vercel domain placeholder until Epic 9 prod wire-up). "Upgrade burned" badge → `/api/badge/upgrade-burned` (currently `pending` until mainnet deploy).
 - Tests 7/7 ATDD red→green; `lint-and-build` green; merged at SHA `23e0b441d80a14c8ac707e912074bdd88cf63fe0`.
 - **Caveat — Playwright visual regression failing:** `/en 404` (webserver routing/build) is failing across PRs since 7.17. Pre-existing — `lint-and-build` is the required gate. Worth fixing before submission.
+
+## Story 8.4 animated curve SVG + interactive variant + cartel toggle (PR #214)
+
+- Updated `docs/assets/curve-hero.svg` with SMIL `<animate>` (bar y/height + polyline `stroke-dashoffset`) and a `prefers-reduced-motion: reduce` rule that hides the animations so reduced-motion users see the static state. No `<script>` — GitHub renders cleanly.
+- Updated `scripts/render-curve-hero.mjs` to emit the animated SVG by default with a `--no-animation` flag for forks who want a still image.
+- Extended `apps/reference/components/susu/CurveVisualizer.tsx` with an `interactive` prop. When true: range sliders for `n` (3..12) + `contribution` ($10..$10,000), a "30% Cartel" toggle highlighting positions [4,5,6] in `fill-warn`, and a `role="note"` callout. Default behavior unchanged (static-svg).
+- Added locale-aware docs page at `apps/reference/app/[locale]/docs/curve/page.tsx` rendering the interactive variant. Strings under `docs.curve.*` in all six locale files (en + vi translated; ar/es/yo/ht-kreyol stub-fallback).
+- Added Playwright spec `apps/reference/tests/e2e/curve-interactive.spec.ts` covering sliders, cartel toggle, and reduced-motion fallback.
+- Touched `tests/atdd/story-7-11-rotation-card-curve-viz.static.red.test.mjs` (one assertion swapped from "no JS" to "declares `interactive` prop") to reflect the now-realized dual-variant world. ATDD 6/6 red→green; lint-and-build green. Merged at SHA `84944049aa63598debeb67c781b371cef964c6f9`.
+
+## Story 8.5 README link cluster + latest-log + markdown-link-check CI (PR #213)
+
+- Added a "Verify every claim" section to `README.md` below `<!-- susu:hero:end -->` linking to `docs/collateral-curve.md`, `audits/adversary/adversary-report.json`, `docs/legal-opinion.pdf`, `log/latest.md`, and an `examples/with-privy/` placeholder for the ecosystem-partner reference (Story 8.7 confirms a real partner). HTML-comment sentinels (`<!-- susu:linkcluster:start/end -->`) bracket the section.
+- `log/latest.md` is a plain regular file (not symlink — Windows-friendly) mirroring the most recent dated entry. `scripts/sync-latest-log.sh` idempotently syncs it to the highest-sorted `log/YYYY-MM-DD.md`. Also called from the new workflow.
+- `.github/workflows/markdown-link-check.yml` runs `markdown-link-check` against `README.md` and `docs/*.md` on PR/push. **Pinned to `markdown-link-check@3.12.2`** — version 3.13.6 has a reporters bug (config without `reporters` field clobbers `opts.reporters` to `undefined` and the CLI throws on `Promise.allSettled(undefined.map(...))`). `.markdown-link-check.json` ignores still-pending Vercel routes (`susu.protocol`, `/api/badge/*`), shields.io / github.com badge URLs, and bare `#` anchors.
+- `package.json` adds `link:check` script. Tests 8/8 ATDD red→green; merged at SHA `06c9b1dddaeda13b2cdee5c078a98c7848750e42`.
+- **Process note:** during debugging, a config fix commit `bd4a7e7` landed directly on main (outside PR review) before the agent caught the branch-state mistake. Content was correct (the `markdown-link-check@3.12.2` pin); recorded here for transparency.
+
+## Tech debt — i18n.ts migrated to next-intl 4.x requestLocale API (0cd43cc)
+
+- Story 7.7 wired `getRequestConfig(async ({ locale }) => …)` per the next-intl 3.x callback shape. In next-intl 4.x the contract changed: the callback receives `{ requestLocale }` (a Promise) and must await it. With the old shape, `locale` was undefined at runtime, `isSupportedLocale(locale)` returned false, and `notFound()` short-circuited every request — visible as the `/en 404` failures dogging the Playwright visual-regression workflow across every PR since 7.17. Switched to `await requestLocale`, kept the `notFound()` guard for unsupported locales.
+
+## Story 8.6 demo video scaffolding (PR #215)
+
+- Storyboard at `docs/demo/storyboard.md` — four segments (rotating-money 10s → curve explainer 20s → live integration code 20s → dual-skin toggle 10s + fork-CTA) totaling 60–90s. Voiceover scripts at `docs/demo/voiceover-en.txt` and `voiceover-vi.txt` (VI marked TODO).
+- Subtitle files: `apps/reference/public/demo.en.vtt` + `demo.vi.vtt` (5-cue WebVTT skeletons matching storyboard timing). Vietnamese cues stub the canonical opener; translator can edit cue text without disturbing timing.
+- 1-byte placeholder `apps/reference/public/demo.mp4` tracked via Git LFS (`.gitattributes` adds `*.mp4 filter=lfs`). Click-to-play poster at `apps/reference/public/demo-poster.svg` (1200×675, mint primary + ▶ overlay).
+- README's `<!-- susu:hero:watch-cta -->` block now embeds `<a href="…youtube…?v=TODO_youtube_id"><img …demo-poster.svg…></a>`. `.markdown-link-check.json` adds `^https?://(?:www\.)?youtube\.com/.*TODO` to ignorePatterns until the user pastes the real YouTube ID.
+- Tests 9/9 ATDD red→green; full 8.x suite 39/39. Merged at SHA `b316b5046c65e7671e878bb221672b44ad71f9a2`.
+- **When the user records the real video:** (1) replace `apps/reference/public/demo.mp4` (LFS auto-routes), (2) replace `TODO_youtube_id` in README, (3) drop the `youtube.*TODO` ignorePattern.
+
+## Story 8.7 outreach kickoff
+
+- Landed the asset side of the ecosystem-partner outreach campaign: `docs/outreach/README.md` (campaign overview), four per-partner email templates (`docs/outreach/email-template-{squads,privy,helius,token-extensions}.md`, ~100–150 words each with `{{recipient_name}}` / `{{your_relationship_to_them}}` placeholders), a short Twitter/Discord DM variant (`docs/outreach/dm-template.md`), and a status tracker (`docs/outreach/tracker.md`) initialized with all four partners as `pending`.
+- Added `scripts/swap-partner-reference.sh` to flip the README link cluster's partner row from the placeholder to a real partner URL on confirmation (`--partner <name> --url <url>`), or drop the row entirely if no partner confirms by submission close (`--drop`). Targets the new `<!-- susu:linkcluster:partner -->` sentinel inside the existing 8.5 link cluster block.
+- Per AC #1, Andre opens outreach to all four partner candidates on T+0 (Squads, Privy, Helius, Token Extensions) using the relevant `examples/with-{partner}/` directory as the runnable asset and the demo video as the supplementary asset.
+- Subsequent partner replies (or non-replies at submission close) will be appended to subsequent daily `/log/` entries per AC #5. Partner-reply outcomes are explicitly out of scope for this story — this story ships the outreach machinery only.
+
