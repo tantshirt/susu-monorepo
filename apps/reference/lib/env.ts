@@ -37,6 +37,18 @@ const EnvSchema = z.object({
       }),
     })
     .transform((v) => v === "true"),
+  // Story 7.4 — dev component preview gate. Defaults to "false" so a
+  // production build never exposes `/[locale]/dev/components` unless the
+  // env explicitly opts in.
+  NEXT_PUBLIC_DEV_PAGES: z
+    .enum(["true", "false"], {
+      errorMap: () => ({
+        message:
+          "NEXT_PUBLIC_DEV_PAGES must be 'true' or 'false' (see apps/reference/.env.example)",
+      }),
+    })
+    .default("false")
+    .transform((v) => v === "true"),
 });
 
 export type Env = z.infer<typeof EnvSchema>;
@@ -51,6 +63,7 @@ function loadEnv(): Env {
     NEXT_PUBLIC_PROGRAM_ID: process.env.NEXT_PUBLIC_PROGRAM_ID,
     NEXT_PUBLIC_CLUSTER: process.env.NEXT_PUBLIC_CLUSTER,
     NEXT_PUBLIC_SPHERE_ENABLED: process.env.NEXT_PUBLIC_SPHERE_ENABLED,
+    NEXT_PUBLIC_DEV_PAGES: process.env.NEXT_PUBLIC_DEV_PAGES,
   };
 
   const parsed = EnvSchema.safeParse(candidate);
