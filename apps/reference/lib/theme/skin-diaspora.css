@@ -1,0 +1,27 @@
+/**
+ * Susu Protocol — diaspora skin (UX-DR4).
+ *
+ * Warm-tinted reskin for diaspora-facing forks. Per cross-skin invariants
+ * (UX-DR2), this file MUST NOT redefine `--bg`, `--signal`, `--warn`, or
+ * `--danger` — those tokens are protocol-locked so the safety semantics
+ * remain identical across every skin/fork.
+ */
+
+:root[data-skin="diaspora"] {
+  /* Warm-tinted surfaces. */
+  --surface: 30 24 20;
+  --surface-2: 42 32 26;
+  --border: 64 48 38;
+
+  /* Text on warm surfaces. */
+  --text: 248 240 228;
+  --text-muted: 188 168 144;
+
+  /* Copper primary, terracotta secondary. */
+  --primary: 217 119 6;       /* copper */
+  --secondary: 234 88 12;     /* terracotta */
+
+  /* Phantom-style shadows tuned for warm surfaces. */
+  --shadow-1: 0 1px 2px 0 rgb(28 12 0 / 0.5);
+  --shadow-2: 0 8px 24px -8px rgb(28 12 0 / 0.65);
+}
