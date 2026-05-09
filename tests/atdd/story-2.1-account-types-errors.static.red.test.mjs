@@ -329,7 +329,7 @@ test('[P0] IDL account type definitions match Story 2.1 account shapes', async (
 });
 
 test('[P1] Story 2.1 parity scripts stay green for i18n, seeds, and generated SDKs', async () => {
-  await runRepoCommand(process.execPath, ['scripts/check-i18n-parity.ts']);
+  await runRepoCommand('pnpm', ['exec', 'tsx', 'scripts/check-i18n-parity.ts']);
   await runRepoCommand('bash', ['scripts/check-patterns.sh']);
   await runRepoCommand('bash', ['scripts/check-sdk-parity.sh']);
 });
