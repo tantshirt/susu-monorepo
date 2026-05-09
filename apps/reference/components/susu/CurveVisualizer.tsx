@@ -1,14 +1,25 @@
+"use client";
+
 import * as React from "react";
-import { computeCollateralCurve } from "@/lib/curve/computeCollateralCurve";
+import { computeCollateralCurve, MAX_GROUP_SIZE, MIN_GROUP_SIZE } from "@/lib/curve/computeCollateralCurve";
 import { cn } from "@/lib/utils";
 
 /**
- * `<CurveVisualizer />` — **static SVG variant** of the dynamic-collateral
- * curve. Server Component, pure SVG, no JS, no animation.
+ * `<CurveVisualizer />` — visualizes the dynamic-collateral curve.
  *
- * Story 7.11 (this file): static-svg variant only. Story 8.4 owns the
- * interactive variant (sliders, hover, animation). Story 8.1 README hero
- * embeds this exact variant.
+ * Two variants share the same SVG markup:
+ *   - **static-svg** (default, Story 7.11) — pure SVG, no JS, no animation.
+ *     Used by the README hero embed and any context where the parameters
+ *     are fixed at render time.
+ *   - **interactive** (`interactive` prop, Story 8.4) — adds parameter
+ *     sliders for `n` and `contribution`, plus a "30% Cartel" toggle that
+ *     highlights positions 4..6 in the warn token with a labeled callout
+ *     (UX-DR12). Renders client-side so the sliders can drive React state.
+ *
+ * Story 8.4 file is marked `"use client"` so the interactive controls work
+ * out of the box. The static-svg variant still works correctly inside Server
+ * Components — Next.js renders the initial markup on the server, and the
+ * client bundle only kicks in when sliders or the toggle are actually used.
  *
  * Renders bars at zero-indexed slots `i = 0..n-1` whose heights are
  * proportional to `C_i = contribution * (2 * n - 1 - i)` — the canonical
@@ -19,22 +30,62 @@ import { cn } from "@/lib/utils";
  * markup re-skins automatically under `[data-skin="diaspora"]`.
  *
  * a11y: `role="img"`, `aria-label`, and a hidden `<table>` with the same
- * data for screen readers (UX-DR12).
+ * data for screen readers (UX-DR12). Slider inputs are labeled, the cartel
+ * toggle is a real `<button>` with `aria-pressed`, and the cartel callout
+ * uses `role="note"` so screen readers announce it.
+ *
+ * Reduced-motion: the SVG re-renders synchronously when sliders change. No
+ * CSS transitions are applied, so `prefers-reduced-motion: reduce` users
+ * already see the static state. The cartel callout is always rendered
+ * inline (no fade transition) for the same reason.
  */
 export type CurveVisualizerSize = "sm" | "md" | "lg";
 
 export interface CurveVisualizerProps extends Omit<React.SVGAttributes<SVGSVGElement>, "n"> {
-  /** Group size, `3 <= n <= 12`. */
+  /** Group size, `3 <= n <= 12`. Required for the static variant; used as the
+   *  initial value when `interactive` is true. */
   n: number;
-  /** Per-round contribution (display units; the SVG is unitless). */
+  /** Per-round contribution (display units; the SVG is unitless). Required
+   *  for the static variant; used as the initial value when `interactive`. */
   contribution: number;
-  /** Optional zero-indexed slot indices to render in the warn token. */
+  /** Optional zero-indexed slot indices to render in the warn token. Ignored
+   *  when `interactive` is true (the cartel toggle controls highlighting). */
   highlight?: number[];
   /** Locale tag — accepted for future intl-aware formatting; unused for now. */
   locale?: string;
   /** Visual size preset. */
   size?: CurveVisualizerSize;
+  /** When `true`, render parameter sliders for `n` and `contribution` plus
+   *  a "30% Cartel" toggle that highlights positions 4..6. Defaults to
+   *  `false` (static-svg variant unchanged from Story 7.11). */
+  interactive?: boolean;
+  /** User-facing copy for the interactive variant. The docs/curve page
+   *  passes localized strings via `next-intl`. Falls back to English when
+   *  the variant is mounted without copy (e.g., in unit tests). */
+  copy?: CurveVisualizerCopy;
 }
+
+export interface CurveVisualizerCopy {
+  sliderN: string;
+  sliderContribution: string;
+  cartelToggle: string;
+  cartelCallout: string;
+}
+
+const DEFAULT_COPY: CurveVisualizerCopy = {
+  sliderN: "Group size (n)",
+  sliderContribution: "Contribution per round (USDC)",
+  cartelToggle: "30% Cartel highlight",
+  cartelCallout:
+    "Positions 4–6 are the cartel-controlled slots in the documented adversary scenario. The curve still keeps every defaulter underwater (UX-DR12).",
+};
+
+/** Cartel positions per `docs/collateral-curve.md` (zero-indexed slots 4..6). */
+const CARTEL_POSITIONS: readonly number[] = [4, 5, 6];
+
+/** Contribution slider bounds per AC. */
+const MIN_CONTRIBUTION = 10;
+const MAX_CONTRIBUTION = 10000;
 
 const SIZE_DIMENSIONS: Record<CurveVisualizerSize, { width: number; height: number }> = {
   sm: { width: 320, height: 120 },
@@ -56,17 +107,34 @@ export function CurveVisualizer({
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   locale,
   size = "md",
+  interactive = false,
+  copy,
   className,
   ...svgProps
 }: CurveVisualizerProps) {
+  // Local state only matters for the interactive variant. Keep both hooks
+  // unconditional so React's hook ordering is stable across renders.
+  const [activeN, setActiveN] = React.useState<number>(n);
+  const [activeContribution, setActiveContribution] = React.useState<number>(contribution);
+  const [cartelOn, setCartelOn] = React.useState<boolean>(false);
+
+  const effectiveN = interactive ? activeN : n;
+  const effectiveContribution = interactive ? activeContribution : contribution;
+  const effectiveHighlight = interactive
+    ? cartelOn
+      ? CARTEL_POSITIONS
+      : []
+    : (highlight ?? []);
+  const localizedCopy = copy ?? DEFAULT_COPY;
+
   const { width, height } = SIZE_DIMENSIONS[size];
-  const curve = computeCollateralCurve(n, contribution);
+  const curve = computeCollateralCurve(effectiveN, effectiveContribution);
   const maxValue = curve[0] ?? 0;
-  const highlightSet = new Set(highlight ?? []);
+  const highlightSet = new Set(effectiveHighlight);
 
   const plotWidth = width - PAD_INLINE_START - PAD_INLINE_END;
   const plotHeight = height - PAD_BLOCK_START - PAD_BLOCK_END;
-  const slotWidth = plotWidth / n;
+  const slotWidth = plotWidth / effectiveN;
   const barWidth = Math.max(1, slotWidth * 0.7);
   const barOffset = (slotWidth - barWidth) / 2;
 
@@ -80,10 +148,10 @@ export function CurveVisualizer({
     })
     .join(" ");
 
-  const ariaLabel = `Collateral curve for n=${n}, contribution=${contribution}`;
+  const ariaLabel = `Collateral curve for n=${effectiveN}, contribution=${effectiveContribution}`;
 
-  return (
-    <figure className={cn("flex flex-col gap-2", className)}>
+  const svgFigure = (
+    <>
       <svg
         viewBox={`0 0 ${width} ${height}`}
         width={width}
@@ -179,6 +247,87 @@ export function CurveVisualizer({
           ))}
         </tbody>
       </table>
+    </>
+  );
+
+  if (!interactive) {
+    return <figure className={cn("flex flex-col gap-2", className)}>{svgFigure}</figure>;
+  }
+
+  // Interactive variant — sliders, cartel toggle, callout. Inputs use
+  // logical Tailwind classes (no directional `pl-*`/`pr-*`) so RTL flips
+  // automatically when wrapped in the locale layout.
+  return (
+    <figure className={cn("flex flex-col gap-4", className)} data-component="CurveVisualizer">
+      {svgFigure}
+
+      <div className="flex flex-col gap-3">
+        {/* n slider — integer 3..12. */}
+        <div className="flex flex-col gap-1">
+          <label htmlFor="curve-n" className="text-body text-text">
+            {localizedCopy.sliderN}: <span className="font-mono text-primary">{activeN}</span>
+          </label>
+          <input
+            id="curve-n"
+            type="range"
+            min={MIN_GROUP_SIZE}
+            max={MAX_GROUP_SIZE}
+            step={1}
+            value={activeN}
+            onChange={(event) => setActiveN(Number(event.target.value))}
+            className="w-full accent-primary"
+            data-testid="curve-slider-n"
+          />
+        </div>
+
+        {/* contribution slider — $10..$10,000, $10 step. */}
+        <div className="flex flex-col gap-1">
+          <label htmlFor="curve-contribution" className="text-body text-text">
+            {localizedCopy.sliderContribution}: <span className="font-mono text-primary">${activeContribution}</span>
+          </label>
+          <input
+            id="curve-contribution"
+            type="range"
+            min={MIN_CONTRIBUTION}
+            max={MAX_CONTRIBUTION}
+            step={10}
+            value={activeContribution}
+            onChange={(event) => setActiveContribution(Number(event.target.value))}
+            className="w-full accent-primary"
+            data-testid="curve-slider-contribution"
+          />
+        </div>
+
+        {/* 30% Cartel toggle. Real <button> for proper a11y semantics; the
+            visual treatment uses the warn token to mirror the highlighted
+            bars. Cartel positions 4..6 are inclusive (zero-indexed) per
+            docs/collateral-curve.md. */}
+        <div className="flex flex-col gap-2">
+          <button
+            type="button"
+            aria-pressed={cartelOn}
+            onClick={() => setCartelOn((value) => !value)}
+            className={cn(
+              "inline-flex items-center justify-center rounded-md border px-4 py-2 text-body font-medium",
+              cartelOn
+                ? "border-warn bg-warn/10 text-warn"
+                : "border-border bg-surface text-text hover:bg-muted/10",
+            )}
+            data-testid="curve-cartel-toggle"
+          >
+            {localizedCopy.cartelToggle}
+          </button>
+          {cartelOn ? (
+            <p
+              role="note"
+              className="rounded-md border border-warn/40 bg-warn/10 p-3 text-caption text-warn"
+              data-testid="curve-cartel-callout"
+            >
+              {localizedCopy.cartelCallout}
+            </p>
+          ) : null}
+        </div>
+      </div>
     </figure>
   );
 }

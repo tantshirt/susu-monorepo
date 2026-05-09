@@ -69,5 +69,15 @@
     "CurveOverflow": "Tính toán tài sản thế chấp bị tràn. Hãy dùng số nhỏ hơn hoặc liên hệ hỗ trợ nếu có sai sót.",
     "InsufficientCollateral": "Tài sản thế chấp đã đặt cộng với số nạp thêm vẫn thấp hơn mức tối thiểu yêu cầu. Hãy tăng số tiền hoặc chờ đến khi có thể nạp thêm.",
     "ContributionPeriodOpen": "Vòng này vẫn trong thời gian đóng góp. Hãy đợi quá hạn rồi mới yêu cầu nhận thanh toán."
+  },
+  "docs": {
+    "curve": {
+      "title": "Đường cong tài sản thế chấp động",
+      "intro": "Kéo các thanh trượt để khám phá cách tài sản thế chấp theo vòng C_i = đóng góp × (2n − 1 − i) thay đổi theo quy mô nhóm và mức đóng góp. Bật chế độ làm nổi bật 30% Cartel để xem các vị trí do cartel kiểm soát.",
+      "sliderN": "Quy mô nhóm (n)",
+      "sliderContribution": "Đóng góp mỗi vòng (USDC)",
+      "cartelToggle": "Làm nổi bật 30% Cartel",
+      "cartelCallout": "Các vị trí 4–6 là các vòng do cartel kiểm soát trong kịch bản đối kháng được ghi nhận. Đường cong vẫn khiến mọi kẻ vi phạm bị âm vốn (UX-DR12)."
+    }
   }
 }
