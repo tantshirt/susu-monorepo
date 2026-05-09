@@ -13,6 +13,7 @@ import {
   notoArabic,
 } from "@/lib/theme/fonts";
 import { getServerSkin } from "@/lib/theme/skin";
+import { SkinProvider } from "@/components/SkinToggle";
 
 /**
  * Story 7.5 — pre-hydration skin reconciliation script.
@@ -83,13 +84,15 @@ export default async function RootLayout({
       <body className="min-h-full flex flex-col font-sans">
         {/* Story 7.5: pre-hydration skin reconcile — must run before React. */}
         <script dangerouslySetInnerHTML={{ __html: skinHydrationScript }} />
-        <PrivyProviderWrapper>
-          <ConvexProviderWrapper>
-            <IntlProviderWrapper locale={locale} messages={messages}>
-              {children}
-            </IntlProviderWrapper>
-          </ConvexProviderWrapper>
-        </PrivyProviderWrapper>
+        <SkinProvider initialSkin={skin}>
+          <PrivyProviderWrapper>
+            <ConvexProviderWrapper>
+              <IntlProviderWrapper locale={locale} messages={messages}>
+                {children}
+              </IntlProviderWrapper>
+            </ConvexProviderWrapper>
+          </PrivyProviderWrapper>
+        </SkinProvider>
       </body>
     </html>
   );

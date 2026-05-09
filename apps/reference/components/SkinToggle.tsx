@@ -23,8 +23,8 @@ import { Button } from "@/components/ui/button";
  * State is mirrored via `useSyncExternalStore`: the `<html data-skin>`
  * attribute is the live store; `subscribe` listens on a private
  * `EventTarget` that the toggle and any future cross-tab listener emit on.
- * This avoids setState-in-effect and keeps SSR + first-paint snapshots
- * deterministically `"neutral"` (matching the `getServerSnapshot`).
+ * This avoids setState-in-effect while letting the root layout seed the
+ * server snapshot from the SSR cookie value.
  */
 
 type Skin = "neutral" | "diaspora";
@@ -32,6 +32,8 @@ type Skin = "neutral" | "diaspora";
 const COOKIE_KEY = "susu-skin";
 const STORAGE_KEY = "susu-skin";
 const ONE_YEAR_SECONDS = 31536000;
+
+const SkinSnapshotContext = React.createContext<Skin>("neutral");
 
 // Module-scoped event bus. Idempotent — server-side it's a no-op since the
 // `EventTarget` constructor is available in modern Node, but we never
@@ -70,9 +72,23 @@ function subscribeSkin(onChange: () => void): () => void {
   return () => skinEvents.removeEventListener(SKIN_CHANGED, onChange);
 }
 
-const getServerSnapshot = (): Skin => "neutral";
+type SkinProviderProps = Readonly<{
+  initialSkin: Skin;
+  children: React.ReactNode;
+}>;
+
+export function SkinProvider({ initialSkin, children }: SkinProviderProps) {
+  return (
+    <SkinSnapshotContext.Provider value={initialSkin}>
+      {children}
+    </SkinSnapshotContext.Provider>
+  );
+}
 
 export function SkinToggle() {
+  const serverSkin = React.useContext(SkinSnapshotContext);
+  const getServerSnapshot = React.useCallback(() => serverSkin, [serverSkin]);
+
   const skin = React.useSyncExternalStore(
     subscribeSkin,
     readCurrentSkin,
