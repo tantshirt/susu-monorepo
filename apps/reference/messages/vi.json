@@ -19,6 +19,17 @@
     "confirm": "Xác nhận",
     "close": "Đóng"
   },
+  "rotation": {
+    "title": "Vòng {index} trên {total}",
+    "recipient": "Người nhận",
+    "statePending": "Chờ",
+    "stateActive": "Đang hoạt động",
+    "stateClaimed": "Đã nhận",
+    "contributionsProgress": "{received} trên {required} đóng góp",
+    "deadline": "Nhận trước",
+    "claim": "Nhận ngay",
+    "viewDetails": "Xem chi tiết"
+  },
   "errors": {
     "GroupFull": "Nhóm này đã đạt số thành viên tối đa. Hãy thử nhóm nhỏ hơn hoặc đợi nhóm sau.",
     "GroupAlreadyStarted": "Nhóm này đã bắt đầu. Hãy tạo nhóm mới hoặc chọn nhóm còn đang hình thành.",

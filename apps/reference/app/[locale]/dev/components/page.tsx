@@ -24,6 +24,9 @@ import { CodeBlock } from "@/components/susu/CodeBlock";
 import { ReceiptCard } from "@/components/susu/ReceiptCard";
 import { Banner } from "@/components/susu/Banner";
 import { FieldError } from "@/components/susu/FieldError";
+import { MemberAvatar } from "@/components/susu/MemberAvatar";
+import { CurveVisualizer } from "@/components/susu/CurveVisualizer";
+import { RotationCard } from "@/components/susu/RotationCard";
 
 /**
  * Dev component preview — renders every Story 7.4 primitive in both skins.
@@ -156,6 +159,39 @@ function DevSection({ skin, title }: { skin: "neutral" | "diaspora"; title: stri
         <Label htmlFor={`${skin}-amount`}>Amount</Label>
         <Input id={`${skin}-amount`} aria-describedby={`${skin}-amount-error`} />
         <FieldError id={`${skin}-amount-error`}>Amount must be positive.</FieldError>
+      </div>
+
+      <Separator className="my-4" />
+
+      <h3 className="mb-3 text-h3 font-semibold text-text">Story 7.11 — Rotation surfaces</h3>
+
+      <div className="mb-4 flex flex-wrap items-center gap-3">
+        <MemberAvatar pubkey="9xQeWvG816bUx9EPjHmaT23z5e35aPm" size="sm" />
+        <MemberAvatar pubkey="DRiP7Bx3w7t1G1zHkGz5PqkV3wMmRn" size="md" />
+        <MemberAvatar
+          pubkey="So11111111111111111111111111111111111111112"
+          size="lg"
+          highlighted
+        />
+      </div>
+
+      <div className="mb-4">
+        <CurveVisualizer n={8} contribution={100} highlight={[2]} locale="en" size="md" />
+      </div>
+
+      <div className="mb-4">
+        <RotationCard
+          locale="en"
+          rotation={{
+            i: 3,
+            n: 8,
+            recipient: "DRiP7Bx3w7t1G1zHkGz5PqkV3wMmRn",
+            state: "active",
+            contributionsReceived: 5,
+            contributionsRequired: 8,
+            claimDeadlineUnix: 1_762_988_400,
+          }}
+        />
       </div>
     </section>
   );
