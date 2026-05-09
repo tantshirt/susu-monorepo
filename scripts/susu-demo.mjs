@@ -47,7 +47,7 @@ const colors = process.stdout.isTTY && process.env.NO_COLOR !== '1'
       reset: '',
     };
 
-export async function runDemo() {
+async function runDemo() {
   const rpc = createDemoRpc(endpoint);
   const client = createSusuClient({ cluster, rpc, computeUnits: 200_000, priorityFee: 0n });
 
