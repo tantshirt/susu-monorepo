@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { setRequestLocale } from "next-intl/server";
 import { isSupportedLocale, isRtl, locales, type Locale } from "@/lib/i18n/config";
 import { TopNav } from "@/components/TopNav";
+import { ToastQueueProvider } from "@/lib/tx/toast-queue";
 
 /**
  * Locale segment layout for Stories 7.6 + 7.7.
@@ -38,10 +39,15 @@ export default async function LocaleLayout({
   setRequestLocale(locale);
 
   // ar (and future RTL locales) flip direction; everything else is LTR.
+  // Story 7.10: mount the ToastQueueProvider so the toast viewport is
+  // available to every locale-prefixed page (TransactionConfirmModal +
+  // future contribute / claim flows publish status toasts through it).
   return (
     <div lang={locale} dir={isRtl(locale) ? "rtl" : "ltr"} className="contents">
-      <TopNav locale={locale as Locale} />
-      {children}
+      <ToastQueueProvider>
+        <TopNav locale={locale as Locale} />
+        {children}
+      </ToastQueueProvider>
     </div>
   );
 }
