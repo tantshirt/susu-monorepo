@@ -275,7 +275,7 @@ function TransactionConfirmModalInner({
             pending={state.phase === "building" || state.phase === "simulating"}
           />
 
-          {state.phase === "failed" && state.error ? (
+          {state.phase === "failed" && state.error && state.simulation?.ok !== false ? (
             <Banner variant="danger">
               {state.error.name && state.error.name !== "Error" ? (
                 <span className="font-mono">{state.error.name}: </span>
