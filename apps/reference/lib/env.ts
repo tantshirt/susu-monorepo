@@ -30,12 +30,16 @@ const EnvSchema = z.object({
         "NEXT_PUBLIC_CLUSTER must be one of mainnet-beta|devnet|testnet|localnet (see apps/reference/.env.example)",
     }),
   }),
+  // Story 7.16 — Sphere on-ramp/off-ramp is gated behind this flag (FR44,
+  // NFR-R3). Defaults to "false" so production builds without the flag set
+  // continue to work cleanly and the demo happy-path stays Sphere-disabled.
   NEXT_PUBLIC_SPHERE_ENABLED: z
     .enum(["true", "false"], {
       errorMap: () => ({
         message: "NEXT_PUBLIC_SPHERE_ENABLED must be 'true' or 'false' (see apps/reference/.env.example)",
       }),
     })
+    .default("false")
     .transform((v) => v === "true"),
   // Story 7.4 — dev component preview gate. Defaults to "false" so a
   // production build never exposes `/[locale]/dev/components` unless the
@@ -79,3 +83,13 @@ function loadEnv(): Env {
 }
 
 export const env: Env = loadEnv();
+
+/**
+ * `NODE_ENV` lives outside the user-configurable env schema (Next.js
+ * inlines it at build time and it is never user-configurable in the same
+ * sense), but `scripts/check-patterns.sh` forbids `process.env` reads
+ * outside this module. Exposing it here keeps the invariant intact while
+ * still giving downstream modules dev-vs-prod visibility.
+ */
+export const NODE_ENV: string = process.env.NODE_ENV ?? "development";
+export const IS_DEV: boolean = NODE_ENV !== "production";
