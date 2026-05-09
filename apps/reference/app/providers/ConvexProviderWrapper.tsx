@@ -1,18 +1,17 @@
 "use client";
 
-import { ConvexProvider, ConvexReactClient } from "convex/react";
-import { useMemo, type ReactNode } from "react";
-import { env } from "@/lib/env";
+import { ConvexProvider } from "convex/react";
+import type { ReactNode } from "react";
+import { convexClient } from "@/lib/convex/client";
 
 /**
- * Convex client wrapper. This story (7.1) only wires the runtime client.
- * The schema, queries, and isolation lock land in Story 7.13, which is also
- * when `convex/_generated` imports become legal here.
+ * Convex client wrapper. Consumes the singleton `ConvexReactClient` from
+ * `@/lib/convex/client` (Story 7.13, ARCH-30/31). The schema and queries live
+ * under `apps/reference/convex/`; per the structural isolation rule no other
+ * file outside `apps/reference/lib/convex/` may import `convex/*` (this
+ * wrapper is the grandfathered exception that bridges the lock to the React
+ * tree).
  */
 export function ConvexProviderWrapper({ children }: { children: ReactNode }) {
-  const client = useMemo(
-    () => new ConvexReactClient(env.NEXT_PUBLIC_CONVEX_URL),
-    [],
-  );
-  return <ConvexProvider client={client}>{children}</ConvexProvider>;
+  return <ConvexProvider client={convexClient}>{children}</ConvexProvider>;
 }
