@@ -1,0 +1,16 @@
+/**
+ * `.numeric` utility (Story 7.3 / UX-DR10).
+ *
+ * Apply to any monetary or quantitative value to opt into tabular +
+ * lining figures. Tabular figures keep digit columns aligned across
+ * rows (essential for amount tables) and lining figures match the cap
+ * height so amounts read cleanly next to body copy.
+ *
+ * The longhand `font-variant-numeric` is set as a fallback for older
+ * engines, but the authoritative declaration is the OpenType feature
+ * settings — `tnum` (tabular numerals) and `lnum` (lining numerals).
+ */
+.numeric {
+  font-variant-numeric: tabular-nums lining-nums;
+  font-feature-settings: "tnum" 1, "lnum" 1;
+}
