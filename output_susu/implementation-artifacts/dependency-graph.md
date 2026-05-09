@@ -1,5 +1,5 @@
 # Story Dependency Graph
-_Last updated: 2026-05-09T20:30:00Z_
+_Last updated: 2026-05-09T20:40:00Z_
 
 ## Epic Readiness Summary
 
@@ -61,8 +61,8 @@ _Last updated: 2026-05-09T20:30:00Z_
 | 6.8 | 6 | examples/with-token-extensions (~200 LOC) | done | #60 | #180 | merged | 6.1, 6.2, 6.3 | ✅ Done |
 | 6.9 | 6 | docs/integration-{partner}.md per partner | done | #61 | #186 | merged | 6.6, 6.7, 6.8 | ✅ Done |
 | 6.10 | 6 | pnpm susu:demo orchestrator hitting NFR-P2 ≤60s | done | #62 | #184 | merged | 6.1, 6.2, 6.3 | ✅ Done |
-| 6.11 | 6 | pnpm verify orchestrator hitting NFR-Re4 ≤10min | review | #63 | — | open PR pending | 5.4, 6.5, 6.10 | ✅ Ready |
-| 6.12 | 6 | SDK + crate publishing pipeline via OIDC | review | #64 | — | open PR pending (bundled with 6.11) | 6.1, 6.2, 6.3, 6.4, 6.5, 6.11 | ⚠️ With 6.11 PR |
+| 6.11 | 6 | pnpm verify orchestrator hitting NFR-Re4 ≤10min | review | #63 | #187 | open | 5.4, 6.5, 6.10 | ✅ Ready |
+| 6.12 | 6 | SDK + crate publishing pipeline via OIDC | review | #64 | #187 | open | 6.1, 6.2, 6.3, 6.4, 6.5, 6.11 | ✅ With #187 |
 | 7.1 | 7 | Next.js 15 reference app scaffold + provider order + Zod env loader | ready-for-dev | — | — | — | 1.1, 1.4 | ❌ No (Epic 6 not complete) |
 | 7.2 | 7 | Design tokens — tokens.css + dual-skin overrides + Tailwind config (UX-DR1–8) | ready-for-dev | — | — | — | 7.1 | ❌ No (Epic 6 not complete) |
 | 7.3 | 7 | Typography self-hosted via next/font + type scale + .numeric utility | ready-for-dev | — | — | — | 7.1, 7.2 | ❌ No (Epic 6 not complete) |
