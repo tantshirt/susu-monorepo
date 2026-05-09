@@ -1,18 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 320" width="720" height="320" role="img" aria-label="Susu dynamic-collateral curve for n=8, contribution=100">
   <title>Susu dynamic-collateral curve for n=8, contribution=100</title>
-  <desc>Per-slot collateral C_i = contribution * (2 * n - 1 - i). Bars descend left-to-right; the polyline overlays the bar tops in mint. Story 8.1 README hero. Story 8.4 will animate this asset.</desc>
+  <desc>Per-slot collateral C_i = contribution * (2 * n - 1 - i). Bars descend left-to-right; the polyline overlays the bar tops in mint. Story 8.4 animates the asset via SMIL; reduced-motion users see the static state.</desc>
+  <style>@media (prefers-reduced-motion: reduce) { animate { display: none !important; } .bar, .curve { animation: none !important; } }</style>
   <line x1="36" y1="16" x2="36" y2="292" stroke="#71717a" stroke-width="1" />
   <line x1="36" y1="292" x2="708" y2="292" stroke="#71717a" stroke-width="1" />
-  <rect x="48.60" y="16.00" width="58.80" height="276.00" fill="#14F195" opacity="0.9" />
-  <rect x="132.60" y="34.40" width="58.80" height="257.60" fill="#14F195" opacity="0.9" />
-  <rect x="216.60" y="52.80" width="58.80" height="239.20" fill="#14F195" opacity="0.9" />
-  <rect x="300.60" y="71.20" width="58.80" height="220.80" fill="#14F195" opacity="0.9" />
-  <rect x="384.60" y="89.60" width="58.80" height="202.40" fill="#14F195" opacity="0.9" />
-  <rect x="468.60" y="108.00" width="58.80" height="184.00" fill="#14F195" opacity="0.9" />
-  <rect x="552.60" y="126.40" width="58.80" height="165.60" fill="#14F195" opacity="0.9" />
-  <rect x="636.60" y="144.80" width="58.80" height="147.20" fill="#14F195" opacity="0.9" />
-  <polyline points="78.00,16.00 162.00,34.40 246.00,52.80 330.00,71.20 414.00,89.60 498.00,108.00 582.00,126.40 666.00,144.80" fill="none" stroke="#14F195" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" />
+  <rect class="bar" x="48.60" y="16.00" width="58.80" height="276.00" fill="#14F195" opacity="0.9">
+    <animate attributeName="y" from="292.00" to="16.00" dur="0.6s" begin="0.00s" fill="freeze" />
+    <animate attributeName="height" from="0" to="276.00" dur="0.6s" begin="0.00s" fill="freeze" />
+  </rect>
+  <rect class="bar" x="132.60" y="34.40" width="58.80" height="257.60" fill="#14F195" opacity="0.9">
+    <animate attributeName="y" from="292.00" to="34.40" dur="0.6s" begin="0.08s" fill="freeze" />
+    <animate attributeName="height" from="0" to="257.60" dur="0.6s" begin="0.08s" fill="freeze" />
+  </rect>
+  <rect class="bar" x="216.60" y="52.80" width="58.80" height="239.20" fill="#14F195" opacity="0.9">
+    <animate attributeName="y" from="292.00" to="52.80" dur="0.6s" begin="0.16s" fill="freeze" />
+    <animate attributeName="height" from="0" to="239.20" dur="0.6s" begin="0.16s" fill="freeze" />
+  </rect>
+  <rect class="bar" x="300.60" y="71.20" width="58.80" height="220.80" fill="#14F195" opacity="0.9">
+    <animate attributeName="y" from="292.00" to="71.20" dur="0.6s" begin="0.24s" fill="freeze" />
+    <animate attributeName="height" from="0" to="220.80" dur="0.6s" begin="0.24s" fill="freeze" />
+  </rect>
+  <rect class="bar" x="384.60" y="89.60" width="58.80" height="202.40" fill="#14F195" opacity="0.9">
+    <animate attributeName="y" from="292.00" to="89.60" dur="0.6s" begin="0.32s" fill="freeze" />
+    <animate attributeName="height" from="0" to="202.40" dur="0.6s" begin="0.32s" fill="freeze" />
+  </rect>
+  <rect class="bar" x="468.60" y="108.00" width="58.80" height="184.00" fill="#14F195" opacity="0.9">
+    <animate attributeName="y" from="292.00" to="108.00" dur="0.6s" begin="0.40s" fill="freeze" />
+    <animate attributeName="height" from="0" to="184.00" dur="0.6s" begin="0.40s" fill="freeze" />
+  </rect>
+  <rect class="bar" x="552.60" y="126.40" width="58.80" height="165.60" fill="#14F195" opacity="0.9">
+    <animate attributeName="y" from="292.00" to="126.40" dur="0.6s" begin="0.48s" fill="freeze" />
+    <animate attributeName="height" from="0" to="165.60" dur="0.6s" begin="0.48s" fill="freeze" />
+  </rect>
+  <rect class="bar" x="636.60" y="144.80" width="58.80" height="147.20" fill="#14F195" opacity="0.9">
+    <animate attributeName="y" from="292.00" to="144.80" dur="0.6s" begin="0.56s" fill="freeze" />
+    <animate attributeName="height" from="0" to="147.20" dur="0.6s" begin="0.56s" fill="freeze" />
+  </rect>
+  <polyline class="curve" points="78.00,16.00 162.00,34.40 246.00,52.80 330.00,71.20 414.00,89.60 498.00,108.00 582.00,126.40 666.00,144.80" fill="none" stroke="#14F195" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" stroke-dasharray="1422.00" stroke-dashoffset="1422.00">
+    <animate attributeName="stroke-dashoffset" from="1422.00" to="0" dur="1.4s" begin="0s" fill="freeze" />
+  </polyline>
   <text x="32" y="20" text-anchor="end" fill="#71717a" font-size="10" font-family="ui-sans-serif, system-ui, sans-serif">C</text>
   <text x="372" y="312" text-anchor="middle" fill="#71717a" font-size="10" font-family="ui-sans-serif, system-ui, sans-serif">slot i (0..n-1)</text>
 </svg>
