@@ -1,7 +1,6 @@
 import {
   createUpgradeBurnedRpc,
   resolveUpgradeBurnedState,
-  type UpgradeBurnedRpc,
 } from "@/lib/badge/upgrade-burned-resolver";
 import { renderUpgradeBurnedSvg } from "@/lib/badge/upgrade-burned";
 import { env } from "@/lib/env";
@@ -35,40 +34,14 @@ import { env } from "@/lib/env";
  * row stays renderable when Solana mainnet RPC is having a bad day.
  */
 
-let rpcFactory: () => UpgradeBurnedRpc = createUpgradeBurnedRpc;
-
-/**
- * Test seam — replace the RPC factory with a hand-rolled mock so unit
- * tests can drive `GET()` without hitting the network. Pass `null` to
- * restore the default factory.
- */
-export function setRpcFactoryForTesting(factory: (() => UpgradeBurnedRpc) | null): void {
-  rpcFactory = factory ?? createUpgradeBurnedRpc;
-}
-
-/**
- * Test seam — override the resolved program id so unit tests can drive
- * `GET()` against the three states regardless of the validated env
- * shape. Pass `null` to restore env-driven resolution. Use empty-string
- * `""` to simulate the pre-Epic-9 "mainnet not deployed" state.
- */
-let programIdOverride: string | null = null;
-export function setProgramIdForTesting(programId: string | null): void {
-  programIdOverride = programId;
-}
-
 export async function GET(): Promise<Response> {
   // The mainnet program id only exists once Epic 9 deploys; before that
   // the env var may be empty/missing. We treat that as `pending` rather
   // than failing the build.
   const programId =
-    programIdOverride !== null
-      ? programIdOverride
-      : env.NEXT_PUBLIC_CLUSTER === "mainnet-beta"
-        ? env.NEXT_PUBLIC_PROGRAM_ID
-        : undefined;
+    env.NEXT_PUBLIC_CLUSTER === "mainnet-beta" ? env.NEXT_PUBLIC_PROGRAM_ID : undefined;
 
-  const rpc = rpcFactory();
+  const rpc = createUpgradeBurnedRpc();
   const { state, authorityOrProgramId } = await resolveUpgradeBurnedState(rpc, programId);
   const svg = renderUpgradeBurnedSvg(state, authorityOrProgramId);
 
