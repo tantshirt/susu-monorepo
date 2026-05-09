@@ -86,6 +86,10 @@ function susuClient(cluster: ClaimParams['cluster']): SusuClient {
   return createSusuClient({ cluster: cluster ?? 'devnet' });
 }
 
+function simulationError(sim: SusuSimulationResponse): unknown {
+  return sim.err ?? sim.error ?? sim.value?.err;
+}
+
 /**
  * Build a SusuClient-backed transaction handle for the `claimPayout`
  * instruction. The actual transaction object is owned by the SDK; we hand
@@ -144,7 +148,7 @@ export async function simulateClaim(handle: ClaimTxHandle): Promise<SimulationRe
   try {
     const sim = await simulator(handle.params);
     handle.simulation = sim;
-    const err = sim.err ?? sim.error ?? sim.value?.err;
+    const err = simulationError(sim);
     const ok = !err;
     const logs = sim.logs ?? sim.programLogs ?? sim.value?.logs ?? sim.value?.programLogs ?? [];
     return {
@@ -184,7 +188,7 @@ export async function submitClaim(handle: ClaimTxHandle): Promise<TxSignature> {
   if (!handle || handle.kind !== 'susu.claim') {
     throw new SusuError({ kind: 'cluster', message: 'Invalid claim handle.' } as never);
   }
-  if (!handle.simulation || handle.simulation.err) {
+  if (!handle.simulation || simulationError(handle.simulation)) {
     throw new SusuError({
       kind: 'simulation',
       message: 'Refusing to submit — simulation has not succeeded for this handle.',
