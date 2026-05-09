@@ -20,6 +20,10 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Separator } from "@/components/ui/separator";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Toast, ToastDescription, ToastTitle } from "@/components/ui/toast";
+import { CodeBlock } from "@/components/susu/CodeBlock";
+import { ReceiptCard } from "@/components/susu/ReceiptCard";
+import { Banner } from "@/components/susu/Banner";
+import { FieldError } from "@/components/susu/FieldError";
 
 /**
  * Dev component preview — renders every Story 7.4 primitive in both skins.
@@ -117,6 +121,42 @@ function DevSection({ skin, title }: { skin: "neutral" | "diaspora"; title: stri
           <ToastDescription>Token-driven status surface.</ToastDescription>
         </div>
       </Toast>
+
+      <Separator className="my-4" />
+
+      <h3 className="mb-3 text-h3 font-semibold text-text">Susu components</h3>
+
+      <div className="mb-4">
+        <CodeBlock
+          filename="example.ts"
+          language="typescript"
+          code={`import { ReceiptCard } from "@/components/susu/ReceiptCard";\n\nexport const receipt = <ReceiptCard signature="..." />;`}
+        />
+      </div>
+
+      <div className="mb-4">
+        <ReceiptCard
+          signature="5x9k2vYj4Q...preview"
+          amount="100.00 USDC"
+          timestamp="2026-05-09T12:00:00Z"
+          status="confirmed"
+        />
+      </div>
+
+      <div className="mb-4 flex flex-col gap-2">
+        <Banner variant="info">Devnet preview — balances are simulated.</Banner>
+        <Banner variant="warn">RPC fallback in use; performance may be degraded.</Banner>
+        <Banner variant="danger" dismissible onDismiss={() => {}}>
+          Audit pending — production use is restricted.
+        </Banner>
+        <Banner variant="success">Transaction confirmed.</Banner>
+      </div>
+
+      <div className="mb-4 flex flex-col gap-2">
+        <Label htmlFor={`${skin}-amount`}>Amount</Label>
+        <Input id={`${skin}-amount`} aria-describedby={`${skin}-amount-error`} />
+        <FieldError id={`${skin}-amount-error`}>Amount must be positive.</FieldError>
+      </div>
     </section>
   );
 }
