@@ -19,6 +19,17 @@
     "confirm": "Confirm",
     "close": "Close"
   },
+  "rotation": {
+    "title": "Rotation {index} of {total}",
+    "recipient": "Recipient",
+    "statePending": "Pending",
+    "stateActive": "Active",
+    "stateClaimed": "Claimed",
+    "contributionsProgress": "{received} of {required} contributions",
+    "deadline": "Claim by",
+    "claim": "Claim now",
+    "viewDetails": "View details"
+  },
   "errors": {
     "GroupFull": "This group has reached its maximum member count. Try a smaller group or wait for a future group.",
     "GroupAlreadyStarted": "This group has already started. Create a new group or choose one that is still forming.",
