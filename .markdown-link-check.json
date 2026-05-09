@@ -1,0 +1,17 @@
+{
+  "ignorePatterns": [
+    { "pattern": "^https://susu\\.protocol/" },
+    { "pattern": "^/api/badge/" },
+    { "pattern": "^https?://(?:img\\.shields\\.io|shields\\.io)/" },
+    { "pattern": "^https?://(?:www\\.)?github\\.com/" },
+    { "pattern": "^https?://api\\.github\\.com/" },
+    { "pattern": "^#$" }
+  ],
+  "replacementPatterns": [],
+  "httpHeaders": [],
+  "timeout": "20s",
+  "retryOn429": true,
+  "retryCount": 3,
+  "fallbackRetryDelay": "30s",
+  "aliveStatusCodes": [200, 206, 301, 302, 308, 403, 429]
+}
