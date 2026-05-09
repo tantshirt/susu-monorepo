@@ -75,3 +75,32 @@ body {
   color: rgb(var(--text));
   font-family: var(--font-body, var(--font-display), Arial, Helvetica, sans-serif);
 }
+
+/**
+ * Reduced-motion override (Story 7.18, UX-DR32).
+ *
+ * When the user has opted into `prefers-reduced-motion: reduce` at the OS
+ * level, neutralize every Tailwind `transition-*` and `animation-*` utility
+ * the codebase emits so components don't have to special-case motion
+ * individually. Selectors target the same property names Tailwind v4 sets
+ * in its preflight + utility layers, with `!important` to win against
+ * inline-style transitions and arbitrary-value utilities. Wrapping the
+ * media query in `@layer utilities` keeps cascade ordering stable: this
+ * block lands inside Tailwind's utility layer so it overrides without
+ * affecting third-party CSS that opts into motion explicitly via
+ * `@media (prefers-reduced-motion: no-preference)`.
+ */
+@layer utilities {
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      animation-delay: 0ms !important;
+      transition-duration: 0.001ms !important;
+      transition-delay: 0ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
