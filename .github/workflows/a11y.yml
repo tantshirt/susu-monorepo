@@ -1,0 +1,76 @@
+name: a11y axe-core
+
+# Story 7.18 — runs @axe-core/cli against the reference app on every PR and
+# push to main. Fails on any wcag2aa or wcag21aa violation (UX-DR27).
+#
+# NOTE (Story 7.13 follow-up): `pnpm --filter @susu/reference build` currently
+# fails because of a known import bug in `apps/reference/convex/groups.ts`
+# (tracked separately). Until that lands, this workflow runs against
+# `next dev` instead of a production build. The dev server still emits the
+# same accessible markup, so axe assertions remain meaningful.
+
+on:
+  pull_request:
+    paths:
+      - 'apps/reference/**'
+      - '.github/workflows/a11y.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'apps/reference/**'
+      - '.github/workflows/a11y.yml'
+
+jobs:
+  axe:
+    name: axe-core WCAG 2.1 AA
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+
+      - name: Install JS dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Copy .env.example to .env.local
+        run: |
+          if [ -f apps/reference/.env.example ]; then
+            cp apps/reference/.env.example apps/reference/.env.local
+          fi
+
+      - name: Start reference dev server
+        run: pnpm --filter @susu/reference dev &
+        env:
+          PORT: '3000'
+
+      - name: Wait for dev server
+        run: |
+          # Poll http://localhost:3000 until it responds (max 90s).
+          for i in $(seq 1 45); do
+            if curl --silent --fail --output /dev/null http://localhost:3000/en; then
+              echo "Dev server is up."
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "Dev server did not become reachable in time." >&2
+          exit 1
+
+      - name: axe-core scan /en
+        run: pnpm --filter @susu/reference exec axe http://localhost:3000/en --tags wcag2aa,wcag21aa --exit
+
+      - name: axe-core scan /vi
+        run: pnpm --filter @susu/reference exec axe http://localhost:3000/vi --tags wcag2aa,wcag21aa --exit
+
+      - name: axe-core scan /ar (RTL)
+        run: pnpm --filter @susu/reference exec axe http://localhost:3000/ar --tags wcag2aa,wcag21aa --exit
