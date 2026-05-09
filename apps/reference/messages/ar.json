@@ -27,6 +27,17 @@
     "receiptTitle": "Contribution receipt",
     "nextStepsLead": "Next contribution opens at the start of the following rotation window."
   },
+  "claim": {
+    "buttonLabel": "Claim payout",
+    "connectPrompt": "Connect a wallet to claim your rotation payout.",
+    "modalTitle": "Confirm payout claim",
+    "modalDescription": "Review the simulated outcome before signing. Your payout is delivered on-chain immediately after confirmation.",
+    "receiptTitle": "Payout receipt",
+    "nextStepsLead": "Withdraw collateral after the final rotation closes.",
+    "notRecipient": "You're not the recipient for this rotation.",
+    "preDeadline": "The contribution period for this rotation has not closed yet. The Claim button unlocks once the deadline passes.",
+    "alreadyClaimed": "This rotation payout has already been claimed."
+  },
   "rotation": {
     "title": "Rotation {index} of {total}",
     "recipient": "Recipient",

@@ -27,6 +27,17 @@
     "receiptTitle": "Biên nhận đóng góp",
     "nextStepsLead": "Lần đóng góp kế tiếp mở vào đầu chu kỳ vòng kế tiếp."
   },
+  "claim": {
+    "buttonLabel": "Nhận thanh toán",
+    "connectPrompt": "Kết nối ví để nhận khoản thanh toán vòng của bạn.",
+    "modalTitle": "Xác nhận yêu cầu thanh toán",
+    "modalDescription": "Hãy xem kết quả mô phỏng trước khi ký. Khoản thanh toán được chuyển on-chain ngay sau khi xác nhận.",
+    "receiptTitle": "Biên nhận thanh toán",
+    "nextStepsLead": "Rút tài sản thế chấp sau khi vòng cuối kết thúc.",
+    "notRecipient": "Bạn không phải người nhận cho vòng này.",
+    "preDeadline": "Thời gian đóng góp cho vòng này chưa kết thúc. Nút Nhận sẽ mở khi quá hạn.",
+    "alreadyClaimed": "Khoản thanh toán cho vòng này đã được nhận."
+  },
   "rotation": {
     "title": "Vòng {index} trên {total}",
     "recipient": "Người nhận",
