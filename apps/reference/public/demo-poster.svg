@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img" aria-label="Watch the Susu Protocol 60-second demo">
+  <title>Watch the Susu Protocol 60-second demo</title>
+  <desc>Click-to-play poster. Plays the demo video on YouTube or the self-hosted apps/reference/public/demo.mp4 fallback.</desc>
+
+  <!-- Phantom-fintech dark background -->
+  <rect x="0" y="0" width="1200" height="675" fill="#0B0E11" />
+
+  <!-- subtle grid for "fintech" texture (drawn with token-equivalent neutrals) -->
+  <g opacity="0.08" stroke="#9CA3AF" stroke-width="1">
+    <line x1="0" y1="168" x2="1200" y2="168" />
+    <line x1="0" y1="337" x2="1200" y2="337" />
+    <line x1="0" y1="506" x2="1200" y2="506" />
+    <line x1="300" y1="0" x2="300" y2="675" />
+    <line x1="600" y1="0" x2="600" y2="675" />
+    <line x1="900" y1="0" x2="900" y2="675" />
+  </g>
+
+  <!-- Stylised collateral curve preview (bars decreasing across the rotation) -->
+  <g transform="translate(120,420)">
+    <rect x="0"   y="-160" width="60" height="160" fill="#14F195" rx="6" />
+    <rect x="80"  y="-120" width="60" height="120" fill="#14F195" rx="6" opacity="0.85" />
+    <rect x="160" y="-90"  width="60" height="90"  fill="#14F195" rx="6" opacity="0.7" />
+    <rect x="240" y="-60"  width="60" height="60"  fill="#14F195" rx="6" opacity="0.55" />
+    <rect x="320" y="-35"  width="60" height="35"  fill="#14F195" rx="6" opacity="0.4" />
+    <rect x="400" y="-15"  width="60" height="15"  fill="#14F195" rx="6" opacity="0.3" />
+  </g>
+
+  <!-- Project wordmark -->
+  <text x="600" y="220" text-anchor="middle"
+        font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif"
+        font-size="84" font-weight="700" fill="#F9FAFB" letter-spacing="-2">
+    Susu Protocol
+  </text>
+  <text x="600" y="270" text-anchor="middle"
+        font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif"
+        font-size="24" font-weight="400" fill="#9CA3AF">
+    The dynamic-collateral ROSCA primitive on Solana
+  </text>
+
+  <!-- Play-button overlay -->
+  <g transform="translate(600,460)">
+    <circle r="64" fill="#14F195" />
+    <polygon points="-22,-30 -22,30 30,0" fill="#0B0E11" />
+  </g>
+
+  <text x="600" y="585" text-anchor="middle"
+        font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif"
+        font-size="22" font-weight="500" fill="#F9FAFB">
+    Watch the 60-second demo
+  </text>
+  <text x="600" y="615" text-anchor="middle"
+        font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif"
+        font-size="16" font-weight="400" fill="#9CA3AF">
+    EN + VI subtitles · self-hosted fallback at apps/reference/public/demo.mp4
+  </text>
+</svg>

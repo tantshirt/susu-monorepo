@@ -47,12 +47,13 @@ pnpm susu:demo
 <sub>demo took $WALL_CLOCK_SECONDSs last verified at $COMMIT_SHA</sub>
 
 <!-- susu:hero:watch-cta -->
-<p>
-  <a href="#"><strong>▶ Watch the 60-second demo</strong></a>
-  &nbsp;·&nbsp;
-  <!-- TODO (Story 8.6): replace with the recorded video embed once the canonical Loom/YouTube URL is committed. -->
-  <em>Video embed lands in Story 8.6.</em>
+<p align="center">
+  <!-- TODO (Story 8.6 follow-up): replace TODO_youtube_id with the canonical YouTube ID after upload. The self-hosted fallback lives at apps/reference/public/demo.mp4 (Git LFS). Subtitles: apps/reference/public/demo.{en,vi}.vtt. -->
+  <a href="https://www.youtube.com/watch?v=TODO_youtube_id">
+    <img src="./apps/reference/public/demo-poster.svg" alt="Watch the 60-second Susu Protocol demo" width="600" />
+  </a>
 </p>
+<p align="center"><sub>Self-hosted fallback: <a href="./apps/reference/public/demo.mp4"><code>apps/reference/public/demo.mp4</code></a> · subtitles: <a href="./apps/reference/public/demo.en.vtt">EN</a> · <a href="./apps/reference/public/demo.vi.vtt">VI</a></sub></p>
 
 <!-- susu:hero:fork-cta -->
 <p>

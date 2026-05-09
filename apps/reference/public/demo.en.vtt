@@ -1,0 +1,33 @@
+WEBVTT
+
+NOTE
+Susu Protocol 60-90s demo subtitles (English).
+Cue boundaries match docs/demo/storyboard.md. Adjust millisecond offsets
+after the manual recording session if the captured pace drifts; the
+five-cue structure must stay aligned to the five storyboard segments.
+
+1
+00:00:00.000 --> 00:00:10.000
+Your grandma's savings circle, on a blockchain,
+with the math worked out this time.
+
+2
+00:00:10.000 --> 00:00:30.000
+Susu uses a dynamic-collateral curve.
+The recipient with the most to gain posts the most collateral.
+No rational defector profits — proven by 10,000 adversarial circles.
+
+3
+00:00:30.000 --> 00:00:50.000
+Five SDK calls. Privy handles the wallet.
+Susu handles the curve. The rotation runs itself.
+
+4
+00:00:50.000 --> 00:01:00.000
+Two skins, one protocol.
+Mint-green stays. Communities theme the rest.
+
+5
+00:01:00.000 --> 00:01:08.000
+Public from commit zero.
+Fork it. Run it. Ship a circle.
