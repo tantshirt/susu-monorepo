@@ -47,6 +47,19 @@ from the frozen IDL. When Codama Rust output can replace these hand-rolled
 helpers, keep the public surface compatible and let Story 6.5 parity checks
 catch drift.
 
+## Story 6.5 — TS/Rust generated surface parity
+
+`scripts/check-sdk-parity.sh` regenerates both clients from the frozen IDL, fails
+on any `git diff` in `sdk/ts/src/generated/` or `sdk/rust/src/generated/`, then
+compares structural surfaces:
+
+- **Instructions:** Rust `SusuInstructionKind` variants are mapped to the same
+  camelCase names Codama exports in TypeScript (`AcceptInvite` → `acceptInvite`).
+- **Accounts / errors:** Identifier sets must match exactly (no case folding).
+
+Read-only failure output lists symbols present only on the TS side vs only on
+the Rust side (`scripts/compare-sdk-surfaces.mjs`).
+
 ## Exit Criteria To Upgrade Status
 
 Run these on a machine with full toolchain:

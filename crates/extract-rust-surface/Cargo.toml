@@ -1,0 +1,9 @@
+[package]
+name = "extract-rust-surface"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[[bin]]
+name = "extract-rust-surface"
+path = "src/main.rs"

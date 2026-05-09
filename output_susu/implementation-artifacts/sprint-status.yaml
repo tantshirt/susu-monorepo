@@ -1,5 +1,5 @@
 # generated: 2026-05-06
-# last_updated: 2026-05-09
+# last_updated: 2026-05-09T15:45:00Z
 # project: Susu Protocol
 # project_key: NOKEY
 # tracking_system: file-system
@@ -35,7 +35,7 @@
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 
 generated: 2026-05-06
-last_updated: 2026-05-09
+last_updated: '2026-05-09T15:45:00Z'
 project: Susu Protocol
 project_key: NOKEY
 tracking_system: file-system
@@ -98,17 +98,17 @@ development_status:
   epic-5-retrospective: done
 
   # Epic 6: SDK Surface, Examples & One-Command Reproducibility
-  epic-6: backlog
+  epic-6: in-progress
   6-1-ts-sdk-fluent-client: done
   6-2-sdk-simulate-cluster-gate: done
   6-3-sdk-error-classes: done
   6-4-rust-client: done
-  6-5-sdk-parity-check: ready-for-dev
-  6-6-example-with-privy: ready-for-dev
+  6-5-sdk-parity-check: review
+  6-6-example-with-privy: done # PR #181
   6-7-example-with-squads: done
   6-8-example-with-token-extensions: done # PR #180 CI + Cursor Bugbot clean on 2026-05-08
   6-9-integration-docs: ready-for-dev
-  6-10-susu-demo-script: review
+  6-10-susu-demo-script: done # PR #184
   6-11-verify-orchestrator: ready-for-dev
   6-12-publish-pipeline: ready-for-dev
   epic-6-retrospective: optional
