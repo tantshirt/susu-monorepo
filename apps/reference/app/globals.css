@@ -70,8 +70,10 @@
   --shadow-2: var(--shadow-2);
 }
 
-body {
-  background: rgb(var(--bg));
-  color: rgb(var(--text));
-  font-family: var(--font-body, var(--font-display), Arial, Helvetica, sans-serif);
+@layer base {
+  body {
+    background: rgb(var(--bg));
+    color: rgb(var(--text));
+    font-family: var(--font-body, var(--font-display), Arial, Helvetica, sans-serif);
+  }
 }

@@ -55,16 +55,20 @@
      (e.g., `font-family: var(--font-sans)` in plain CSS). */
   --font-sans: var(--font-body);
 
-  /* Type scale (UX-DR10) — locked size/line-height pairs encoded as
-     `font-size / line-height`. Tailwind's fontSize plugin reads these
-     verbatim, so utility classes (`text-display-1`, `text-h1`, …) emit
-     the same metrics as the raw CSS variables. */
-  --text-display-1: 56px / 64px;
-  --text-h1: 40px / 48px;
-  --text-h2: 32px / 40px;
-  --text-h3: 24px / 32px;
-  --text-body: 16px / 24px;
-  --text-caption: 12px / 16px;
+  /* Type scale (UX-DR10) — locked size tokens with line-height companions.
+     Tailwind v4 reads matching entries from the `@theme` block in globals.css. */
+  --text-display-1: 56px;
+  --text-display-1--line-height: 64px;
+  --text-h1: 40px;
+  --text-h1--line-height: 48px;
+  --text-h2: 32px;
+  --text-h2--line-height: 40px;
+  --text-h3: 24px;
+  --text-h3--line-height: 32px;
+  --text-body: 16px;
+  --text-body--line-height: 24px;
+  --text-caption: 12px;
+  --text-caption--line-height: 16px;
 
   /* Letter-spacing companions for display weights (UX-DR10). */
   --tracking-tight: -0.02em;
