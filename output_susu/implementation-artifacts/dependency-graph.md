@@ -1,5 +1,5 @@
 # Story Dependency Graph
-_Last updated: 2026-05-08T06:00:30Z_
+_Last updated: 2026-05-09T16:05:00Z_
 
 ## Epic Readiness Summary
 
@@ -9,6 +9,8 @@ _Last updated: 2026-05-08T06:00:30Z_
 | 2 | `sprint-status.yaml` marks `epic-2` and stories 2.1-2.6 `done`; `epic-2-retrospective` is `done`. | Merged PRs #12-#17. | Complete |
 | 3 | `sprint-status.yaml` marks `epic-3` and stories 3.1-3.8 `done`; retrospective remains optional. | Merged PRs #94, #95, #96, and #153. | Complete |
 | 4 | `sprint-status.yaml` marks `epic-4` `done`; Stories 4.1, 4.2, 4.3, 4.4, 4.5, and 4.6 are `done`. | Story 4.1 merged via PR #157; Story 4.2 merged via PR #158; Story 4.3 merged via PR #159; Story 4.4 merged via PR #161; Story 4.5 merged via PR #160; Story 4.6 merged via PR #162. | Complete |
+| 5 | `sprint-status.yaml` marks `epic-5` `done`; Stories 5.1–5.9 `done`; `epic-5-retrospective` `done`. | Merged story PRs #166–#175; retrospective PR #176. Issues #44–#52 closed. | Complete |
+| 6 | `sprint-status.yaml` marks `epic-6` `in-progress`. Stories 6.1–6.4, 6.6–6.8, 6.10 `done`; remainder per DAG below. | Merged SDK/examples/demo PRs #177–#184 on `main` (commit through PR #184). | In progress |
 
 ## Stories
 
@@ -40,27 +42,27 @@ _Last updated: 2026-05-08T06:00:30Z_
 | 4.4 | 4 | claim_payout guard — pre-deadline rejection | done | #41 | #161 | merged | 4.3 | ✅ Done |
 | 4.5 | 4 | claim_payout guard — double-claim rejection via RotationReceipt PDA | done | #42 | #160 | merged | 4.2 | ✅ Done |
 | 4.6 | 4 | End-to-end full ROSCA lifecycle integration test on Surfpool | done | #43 | #162 | merged | 4.1, 4.2, 4.3, 4.4, 4.5 | ✅ Done |
-| 5.1 | 5 | tests/invariants/no_strategic_default.rs proptest (FR21) | ready-for-dev | — | — | — | 3.1 | ✅ Ready |
-| 5.2 | 5 | susu-adversary CLI binary skeleton (FR22 part 1) | ready-for-dev | — | — | — | none | ✅ Ready |
-| 5.3 | 5 | 30% Cartel scenario named as headline test (FR23) | ready-for-dev | — | — | — | 5.2 | ❌ No (5.2 not complete) |
-| 5.4 | 5 | Byte-deterministic adversary-report.json from --seed $COMMIT_SHA (FR22 part 2 + NFR-Re1) | ready-for-dev | — | — | — | 5.2, 5.3 | ❌ No (5.2, 5.3 not complete) |
-| 5.5 | 5 | docs/collateral-curve.md formal write-up (FR24) | ready-for-dev | — | — | — | 5.1, 5.4 | ❌ No (5.1, 5.4 not complete) |
-| 5.6 | 5 | docs/threat-model.md + tests/coverage/threat-model.md traceability (FR25) | ready-for-dev | — | — | — | none | ✅ Ready |
-| 5.7 | 5 | docs/fincen-cvc-framing.md (FR26) | ready-for-dev | — | — | — | none | ✅ Ready |
-| 5.8 | 5 | Audit firm engagement + report linking (FR57, NFR-S1) | ready-for-dev | — | — | — | 1.2 | ✅ Ready |
-| 5.9 | 5 | Legal opinion engagement + docs/legal-opinion.pdf publication (FR27) | ready-for-dev | — | — | — | 5.7 | ❌ No (5.7 not complete) |
-| 6.1 | 6 | TS SDK (@susu/sdk) idiomatic helpers + fluent client | ready-for-dev | — | — | — | 1.2, 1.3 | ❌ No (Epic 5 not complete) |
-| 6.2 | 6 | SDK simulate-by-default + explicit-cluster gate | ready-for-dev | — | — | — | 6.1 | ❌ No (Epic 5 not complete) |
-| 6.3 | 6 | SDK error classes — typed discriminated union | ready-for-dev | — | — | — | 1.3, 6.1, 6.2 | ❌ No (Epic 5 not complete) |
-| 6.4 | 6 | Codama-generated Rust client (susu-client) with same surface | ready-for-dev | — | — | — | 1.2, 1.3, 6.1, 6.2, 6.3 | ❌ No (Epic 5 not complete) |
-| 6.5 | 6 | SDK parity CI check | ready-for-dev | — | — | — | 1.3, 6.1, 6.2, 6.3, 6.4 | ❌ No (Epic 5 not complete) |
-| 6.6 | 6 | examples/with-privy (~200 LOC) | ready-for-dev | — | — | — | 6.1, 6.2, 6.3 | ❌ No (Epic 5 not complete) |
-| 6.7 | 6 | examples/with-squads (~200 LOC) | ready-for-dev | — | — | — | 6.1, 6.2, 6.3 | ❌ No (Epic 5 not complete) |
-| 6.8 | 6 | examples/with-token-extensions (~200 LOC) | ready-for-dev | — | — | — | 6.1, 6.2, 6.3 | ❌ No (Epic 5 not complete) |
-| 6.9 | 6 | docs/integration-{partner}.md per partner | ready-for-dev | — | — | — | 6.6, 6.7, 6.8 | ❌ No (Epic 5 not complete) |
-| 6.10 | 6 | pnpm susu:demo orchestrator hitting NFR-P2 ≤60s | ready-for-dev | — | — | — | 6.1, 6.2, 6.3 | ❌ No (Epic 5 not complete) |
-| 6.11 | 6 | pnpm verify orchestrator hitting NFR-Re4 ≤10min | ready-for-dev | — | — | — | 5.4, 6.10 | ❌ No (Epic 5 not complete) |
-| 6.12 | 6 | SDK + crate publishing pipeline via OIDC | ready-for-dev | — | — | — | 6.1, 6.2, 6.3, 6.4 | ❌ No (Epic 5 not complete) |
+| 5.1 | 5 | tests/invariants/no_strategic_default.rs proptest (FR21) | done | #44 | #168 | merged | 3.1 | ✅ Done |
+| 5.2 | 5 | susu-adversary CLI binary skeleton (FR22 part 1) | done | #45 | #170 | merged | none | ✅ Done |
+| 5.3 | 5 | 30% Cartel scenario named as headline test (FR23) | done | #46 | #172, #173 | merged | 5.2 | ✅ Done |
+| 5.4 | 5 | Byte-deterministic adversary-report.json from --seed $COMMIT_SHA (FR22 part 2 + NFR-Re1) | done | #47 | #174 | merged | 5.2, 5.3 | ✅ Done |
+| 5.5 | 5 | docs/collateral-curve.md formal write-up (FR24) | done | #48 | #175 | merged | 5.1, 5.4 | ✅ Done |
+| 5.6 | 5 | docs/threat-model.md + tests/coverage/threat-model.md traceability (FR25) | done | #49 | #167 | merged | none | ✅ Done |
+| 5.7 | 5 | docs/fincen-cvc-framing.md (FR26) | done | #50 | #166 | merged | none | ✅ Done |
+| 5.8 | 5 | Audit firm engagement + report linking (FR57, NFR-S1) | done | #51 | #169 | merged | 1.2 | ✅ Done |
+| 5.9 | 5 | Legal opinion engagement + docs/legal-opinion.pdf publication (FR27) | done | #52 | #171 | merged | 5.7 | ✅ Done |
+| 6.1 | 6 | TS SDK (@susu/sdk) idiomatic helpers + fluent client | done | #53 | #177 | merged | 1.2, 1.3 | ✅ Done |
+| 6.2 | 6 | SDK simulate-by-default + explicit-cluster gate | done | #54 | #178 | merged | 6.1 | ✅ Done |
+| 6.3 | 6 | SDK error classes — typed discriminated union | done | #55 | #179 | merged | 1.3, 6.1, 6.2 | ✅ Done |
+| 6.4 | 6 | Codama-generated Rust client (susu-client) with same surface | done | #56 | #183 | merged | 1.2, 1.3, 6.1, 6.2, 6.3 | ✅ Done |
+| 6.5 | 6 | SDK parity CI check | review | #57 | — | pending | 1.3, 6.1, 6.2, 6.3, 6.4 | ✅ Ready |
+| 6.6 | 6 | examples/with-privy (~200 LOC) | done | #58 | #181 | merged | 6.1, 6.2, 6.3 | ✅ Done |
+| 6.7 | 6 | examples/with-squads (~200 LOC) | done | #59 | #182 | merged | 6.1, 6.2, 6.3 | ✅ Done |
+| 6.8 | 6 | examples/with-token-extensions (~200 LOC) | done | #60 | #180 | merged | 6.1, 6.2, 6.3 | ✅ Done |
+| 6.9 | 6 | docs/integration-{partner}.md per partner | ready-for-dev | #61 | — | none | 6.6, 6.7, 6.8 | ✅ Ready |
+| 6.10 | 6 | pnpm susu:demo orchestrator hitting NFR-P2 ≤60s | done | #62 | #184 | merged | 6.1, 6.2, 6.3 | ✅ Done |
+| 6.11 | 6 | pnpm verify orchestrator hitting NFR-Re4 ≤10min | ready-for-dev | #63 | — | none | 5.4, 6.5, 6.10 | ❌ No (6.5 not merged) |
+| 6.12 | 6 | SDK + crate publishing pipeline via OIDC | ready-for-dev | #64 | — | none | 6.1, 6.2, 6.3, 6.4, 6.5, 6.11 | ❌ No |
 | 7.1 | 7 | Next.js 15 reference app scaffold + provider order + Zod env loader | ready-for-dev | — | — | — | 1.1, 1.4 | ❌ No (Epic 6 not complete) |
 | 7.2 | 7 | Design tokens — tokens.css + dual-skin overrides + Tailwind config (UX-DR1–8) | ready-for-dev | — | — | — | 7.1 | ❌ No (Epic 6 not complete) |
 | 7.3 | 7 | Typography self-hosted via next/font + type scale + .numeric utility | ready-for-dev | — | — | — | 7.1, 7.2 | ❌ No (Epic 6 not complete) |

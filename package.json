@@ -8,6 +8,7 @@
     "susu:demo": "bash scripts/susu-demo.sh",
     "verify": "echo \"verify placeholder\"",
     "sdk:codegen": "node codama.config.mjs",
+    "test": "node --test \"tests/atdd/**/*.static.red.test.mjs\"",
     "test:atdd": "node --test tests/atdd/*.red.test.mjs"
   },
   "devDependencies": {
