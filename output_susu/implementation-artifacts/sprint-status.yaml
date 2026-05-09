@@ -128,7 +128,7 @@ development_status:
   7-11-rotation-card-curve-viz: done # merged via PR #206
   7-12-supporting-components: done # merged via PR #200
   7-13-convex-schema: done # merged via PR #194
-  7-14-one-tap-contribute: ready-for-dev
+  7-14-one-tap-contribute: done # merged via PR #207
   7-15-one-tap-claim: ready-for-dev
   7-16-helius-fallback-sphere: done # merged via PR #202
   7-17-mobile-responsive: ready-for-dev
