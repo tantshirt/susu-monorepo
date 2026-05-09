@@ -50,7 +50,8 @@ print_summary() {
 
 run_step "pnpm install" pnpm install --frozen-lockfile
 run_step "anchor build" env RUSTUP_TOOLCHAIN="${RUSTUP_TOOLCHAIN:-stable}" anchor build --ignore-keys
-run_step "anchor test" env RUSTUP_TOOLCHAIN="${RUSTUP_TOOLCHAIN:-stable}" anchor test
+# Anchor ≥1.0 defaults to `--validator surfpool`; reproducible CI has Solana CLI (legacy test validator), not Surfpool.
+run_step "anchor test" env RUSTUP_TOOLCHAIN="${RUSTUP_TOOLCHAIN:-stable}" anchor test --validator legacy
 run_step "cargo test workspace" env RUSTUP_TOOLCHAIN="${RUSTUP_TOOLCHAIN:-stable}" cargo test --workspace
 run_step "adversary 10000 circles" env RUSTUP_TOOLCHAIN="${RUSTUP_TOOLCHAIN:-stable}" COMMIT_SHA="$COMMIT_SHA_VALUE" cargo run --bin susu-adversary --release -- --circles 10000 --seed "$COMMIT_SHA_VALUE" --cluster localnet --output "${WORK_DIR}/adversary-report.json"
 run_step "susu demo" pnpm susu:demo
