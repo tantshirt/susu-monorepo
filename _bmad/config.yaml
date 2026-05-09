@@ -18,14 +18,14 @@ bad:
   model_quality: gpt-5
   api_usage_threshold: 80
   epic_scope:
-    epic: 7
-    name: Reference App — Dual-Skin Multi-Locale End-Saver Experience
+    epic: 8
+    name: README Hero, Demo Video & Submission Marketing Surface
     enforce_epic_only: true
     source_of_truth:
       - output_susu/implementation-artifacts/sprint-status.yaml
       - output_susu/implementation-artifacts/dependency-graph.md
     initial_batch:
-      - '7.1'
+      - '8.2'
     lane_stack:
       - lane: scaffold
         stories:

@@ -114,7 +114,7 @@ development_status:
   epic-6-retrospective: optional
 
   # Epic 7: Reference App — Dual-Skin Multi-Locale End-Saver Experience
-  epic-7: in-progress
+  epic-7: done
   7-1-next-app-scaffold: done # merged via PR #192
   7-2-design-tokens: done # merged via PR #193
   7-3-typography: done # merged via PR #197
@@ -131,12 +131,12 @@ development_status:
   7-14-one-tap-contribute: done # merged via PR #207
   7-15-one-tap-claim: done # merged via PR #208
   7-16-helius-fallback-sphere: done # merged via PR #202
-  7-17-mobile-responsive: ready-for-dev
+  7-17-mobile-responsive: done # merged via PR #209
   7-18-accessibility: done # merged via PR #203
   epic-7-retrospective: optional
 
   # Epic 8: README Hero, Demo Video & Submission Marketing Surface
-  epic-8: backlog
+  epic-8: in-progress
   8-1-readme-first-viewport: ready-for-dev
   8-2-adversary-badge: ready-for-dev
   8-3-upgrade-burned-badge: ready-for-dev
