@@ -37,9 +37,11 @@ test('Story 6.11 immutability check skips non-mainnet and fails on upgrade autho
   assert.match(immutability, /upgrade authority/);
 });
 
-test('Story 6.11 adds clean-container main branch verify CI and contributor docs', () => {
+test('Story 6.11 adds main-branch verify CI and contributor docs', () => {
   assert.match(workflow, /branches:\n\s+- main/);
-  assert.match(workflow, /container:/);
+  assert.doesNotMatch(workflow, /ghcr\.io\/coral-xyz\/anchor/);
+  assert.match(workflow, /dtolnay\/rust-toolchain/);
+  assert.match(workflow, /Install Anchor CLI/);
   assert.match(workflow, /bash scripts\/verify\.sh/);
   assert.match(contributing, /Reproducing every claim in <10 minutes/);
 });
