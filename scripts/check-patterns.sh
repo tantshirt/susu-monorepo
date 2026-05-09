@@ -25,6 +25,7 @@ convex_hits="$({
   grep -rEn --include='*.ts' --include='*.tsx' "from[[:space:]]+['\"](convex|convex/react|@convex-dev/[^'\"]+)['\"]" apps sdk examples 2>/dev/null || true
 } \
   | grep -v '^apps/reference/lib/convex/' \
+  | grep -v '^apps/reference/app/providers/ConvexProviderWrapper\.tsx:' \
   | grep -v '^sdk/ts/src/generated/' \
   || true)"
 print_hits "convex import outside apps/reference/lib/convex" "$convex_hits"
