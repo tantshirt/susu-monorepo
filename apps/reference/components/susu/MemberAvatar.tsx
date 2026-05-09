@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { cn } from "@/lib/utils";
+import { cn, truncatePubkey } from "@/lib/utils";
 
 /**
  * `<MemberAvatar />` — deterministic avatar for a Solana wallet pubkey.
@@ -70,11 +70,6 @@ function deriveInitials(pubkey: string): string {
   const a = slice.charAt(0) || "?";
   const b = slice.charAt(2) || a;
   return (a + b).toUpperCase();
-}
-
-function truncatePubkey(pubkey: string): string {
-  if (pubkey.length <= 8) return pubkey;
-  return `${pubkey.slice(0, 4)}…${pubkey.slice(-4)}`;
 }
 
 export const MemberAvatar = React.forwardRef<HTMLSpanElement, MemberAvatarProps>(

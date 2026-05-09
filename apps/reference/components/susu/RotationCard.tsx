@@ -11,7 +11,7 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { MemberAvatar } from "@/components/susu/MemberAvatar";
-import { cn } from "@/lib/utils";
+import { cn, truncatePubkey } from "@/lib/utils";
 
 /**
  * `<RotationCard />` — single rotation slot summary card. Story 7.11.
@@ -56,11 +56,6 @@ export interface RotationCardProps extends React.HTMLAttributes<HTMLDivElement> 
   locale: string;
   /** Optional display name for the recipient (Convex / off-chain metadata). */
   recipientDisplayName?: string | null;
-}
-
-function truncatePubkey(pubkey: string): string {
-  if (pubkey.length <= 8) return pubkey;
-  return `${pubkey.slice(0, 4)}…${pubkey.slice(-4)}`;
 }
 
 function stateBadgeVariant(state: RotationState): "signal" | "warn" | "outline" {

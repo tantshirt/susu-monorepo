@@ -12,3 +12,8 @@ import { twMerge } from "tailwind-merge";
 export function cn(...inputs: ClassValue[]): string {
   return twMerge(clsx(inputs));
 }
+
+export function truncatePubkey(pubkey: string): string {
+  if (pubkey.length <= 8) return pubkey;
+  return `${pubkey.slice(0, 4)}…${pubkey.slice(-4)}`;
+}
