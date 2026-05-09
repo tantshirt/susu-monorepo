@@ -6,7 +6,7 @@
   "packageManager": "pnpm@9.12.3",
   "scripts": {
     "susu:demo": "bash scripts/susu-demo.sh",
-    "verify": "echo \"verify placeholder\"",
+    "verify": "bash scripts/verify.sh",
     "sdk:codegen": "node codama.config.mjs",
     "test": "find tests/atdd -name '*.static.red.test.mjs' -print0 | xargs -0 node --test",
     "test:atdd": "node --test tests/atdd/*.red.test.mjs"

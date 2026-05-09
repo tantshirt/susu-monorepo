@@ -1,5 +1,5 @@
 # generated: 2026-05-06
-# last_updated: 2026-05-09T15:45:00Z
+# last_updated: 2026-05-09T20:35:00Z
 # project: Susu Protocol
 # project_key: NOKEY
 # tracking_system: file-system
@@ -35,7 +35,7 @@
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 
 generated: 2026-05-06
-last_updated: '2026-05-09T15:45:00Z'
+last_updated: '2026-05-09T20:35:00Z'
 project: Susu Protocol
 project_key: NOKEY
 tracking_system: file-system
@@ -107,10 +107,10 @@ development_status:
   6-6-example-with-privy: done # PR #181
   6-7-example-with-squads: done
   6-8-example-with-token-extensions: done # PR #180 CI + Cursor Bugbot clean on 2026-05-08
-  6-9-integration-docs: review
+  6-9-integration-docs: done # PR #186
   6-10-susu-demo-script: done # PR #184
-  6-11-verify-orchestrator: ready-for-dev
-  6-12-publish-pipeline: ready-for-dev
+  6-11-verify-orchestrator: review
+  6-12-publish-pipeline: review
   epic-6-retrospective: optional
 
   # Epic 7: Reference App — Dual-Skin Multi-Locale End-Saver Experience

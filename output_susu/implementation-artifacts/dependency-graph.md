@@ -1,5 +1,5 @@
 # Story Dependency Graph
-_Last updated: 2026-05-09T16:05:00Z_
+_Last updated: 2026-05-09T20:30:00Z_
 
 ## Epic Readiness Summary
 
@@ -10,7 +10,7 @@ _Last updated: 2026-05-09T16:05:00Z_
 | 3 | `sprint-status.yaml` marks `epic-3` and stories 3.1-3.8 `done`; retrospective remains optional. | Merged PRs #94, #95, #96, and #153. | Complete |
 | 4 | `sprint-status.yaml` marks `epic-4` `done`; Stories 4.1, 4.2, 4.3, 4.4, 4.5, and 4.6 are `done`. | Story 4.1 merged via PR #157; Story 4.2 merged via PR #158; Story 4.3 merged via PR #159; Story 4.4 merged via PR #161; Story 4.5 merged via PR #160; Story 4.6 merged via PR #162. | Complete |
 | 5 | `sprint-status.yaml` marks `epic-5` `done`; Stories 5.1–5.9 `done`; `epic-5-retrospective` `done`. | Merged story PRs #166–#175; retrospective PR #176. Issues #44–#52 closed. | Complete |
-| 6 | `sprint-status.yaml` marks `epic-6` `in-progress`. Stories 6.1–6.4, 6.6–6.8, 6.10 `done`; remainder per DAG below. | Merged SDK/examples/demo PRs #177–#184 on `main` (commit through PR #184). | In progress |
+| 6 | `sprint-status.yaml` marks `epic-6` `in-progress`. Stories 6.1–6.10 `done`; 6.11–6.12 in flight per DAG below. | Stories 6.1–6.10 merged on `main` through PRs #177–#184 plus #185 (parity) and #186 (integration docs). | In progress |
 
 ## Stories
 
@@ -59,10 +59,10 @@ _Last updated: 2026-05-09T16:05:00Z_
 | 6.6 | 6 | examples/with-privy (~200 LOC) | done | #58 | #181 | merged | 6.1, 6.2, 6.3 | ✅ Done |
 | 6.7 | 6 | examples/with-squads (~200 LOC) | done | #59 | #182 | merged | 6.1, 6.2, 6.3 | ✅ Done |
 | 6.8 | 6 | examples/with-token-extensions (~200 LOC) | done | #60 | #180 | merged | 6.1, 6.2, 6.3 | ✅ Done |
-| 6.9 | 6 | docs/integration-{partner}.md per partner | review | #61 | — | open PR pending | 6.6, 6.7, 6.8 | ✅ Ready |
+| 6.9 | 6 | docs/integration-{partner}.md per partner | done | #61 | #186 | merged | 6.6, 6.7, 6.8 | ✅ Done |
 | 6.10 | 6 | pnpm susu:demo orchestrator hitting NFR-P2 ≤60s | done | #62 | #184 | merged | 6.1, 6.2, 6.3 | ✅ Done |
-| 6.11 | 6 | pnpm verify orchestrator hitting NFR-Re4 ≤10min | ready-for-dev | #63 | — | none | 5.4, 6.5, 6.10 | ✅ Ready |
-| 6.12 | 6 | SDK + crate publishing pipeline via OIDC | ready-for-dev | #64 | — | none | 6.1, 6.2, 6.3, 6.4, 6.5, 6.11 | ❌ No |
+| 6.11 | 6 | pnpm verify orchestrator hitting NFR-Re4 ≤10min | review | #63 | — | open PR pending | 5.4, 6.5, 6.10 | ✅ Ready |
+| 6.12 | 6 | SDK + crate publishing pipeline via OIDC | review | #64 | — | open PR pending (bundled with 6.11) | 6.1, 6.2, 6.3, 6.4, 6.5, 6.11 | ⚠️ With 6.11 PR |
 | 7.1 | 7 | Next.js 15 reference app scaffold + provider order + Zod env loader | ready-for-dev | — | — | — | 1.1, 1.4 | ❌ No (Epic 6 not complete) |
 | 7.2 | 7 | Design tokens — tokens.css + dual-skin overrides + Tailwind config (UX-DR1–8) | ready-for-dev | — | — | — | 7.1 | ❌ No (Epic 6 not complete) |
 | 7.3 | 7 | Typography self-hosted via next/font + type scale + .numeric utility | ready-for-dev | — | — | — | 7.1, 7.2 | ❌ No (Epic 6 not complete) |
@@ -132,8 +132,8 @@ _Last updated: 2026-05-09T16:05:00Z_
 - **6.8** depends on: 6.1, 6.2, 6.3
 - **6.9** depends on: 6.6, 6.7, 6.8
 - **6.10** depends on: 6.1, 6.2, 6.3
-- **6.11** depends on: 5.4, 6.10
-- **6.12** depends on: 6.1, 6.2, 6.3, 6.4
+- **6.11** depends on: 5.4, 6.5, 6.10
+- **6.12** depends on: 6.1, 6.2, 6.3, 6.4, 6.5, 6.11
 - **7.1** depends on: 1.1, 1.4
 - **7.2** depends on: 7.1
 - **7.3** depends on: 7.1, 7.2

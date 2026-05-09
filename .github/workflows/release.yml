@@ -1,0 +1,135 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+  id-token: write
+  attestations: write
+
+jobs:
+  verify-build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - name: Setup Rust toolchain
+        uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: stable
+
+      - name: Install Anchor CLI
+        run: |
+          ANCHOR_VERSION=1.0.2
+          ANCHOR_SHA256=51c158a7b66db6d9802afe59cd73e6d78928791114b55567de5c0732e88770eb
+          curl -fsSL "https://github.com/solana-foundation/anchor/releases/download/v${ANCHOR_VERSION}/anchor-${ANCHOR_VERSION}-x86_64-unknown-linux-gnu" -o /tmp/anchor
+          echo "${ANCHOR_SHA256}  /tmp/anchor" | sha256sum -c -
+          install -m 0755 /tmp/anchor "$HOME/.cargo/bin/anchor"
+          anchor --version
+
+      - name: Install Solana CLI
+        run: |
+          sh -c "$(curl -sSfL https://release.anza.xyz/stable/install)"
+          echo "$HOME/.local/share/solana/install/active_release/bin" >> "$GITHUB_PATH"
+          export PATH="$HOME/.local/share/solana/install/active_release/bin:$PATH"
+          solana --version
+          cargo-build-sbf --version
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Verifiable Anchor build
+        run: RUSTUP_TOOLCHAIN=stable anchor build --verifiable --ignore-keys
+
+      - name: Release gates
+        run: |
+          bash scripts/check-idl-hash.sh
+          bash scripts/check-sdk-parity.sh
+          SUSU_DEMO_SKIP_PREFLIGHT=1 bash scripts/verify.sh
+
+  publish-npm:
+    runs-on: ubuntu-latest
+    needs: verify-build
+    environment: release
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+          registry-url: https://registry.npmjs.org
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build @susu/sdk
+        run: pnpm --filter @susu/sdk build
+
+      - name: Publish @susu/sdk
+        working-directory: sdk/ts
+        run: npm publish --access public --provenance
+
+  publish-crates:
+    runs-on: ubuntu-latest
+    needs: publish-npm
+    environment: release
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Rust toolchain
+        uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: stable
+
+      - name: Authenticate to crates.io
+        id: crates-auth
+        uses: rust-lang/crates-io-auth-action@v1
+
+      - name: Publish susu-client
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ steps.crates-auth.outputs.token }}
+        run: cargo publish -p susu-client
+
+  github-release:
+    runs-on: ubuntu-latest
+    needs: publish-crates
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Generate provenance attestation
+        uses: actions/attest-build-provenance@v3
+        with:
+          subject-path: |
+            sdk/ts/package.json
+            sdk/rust/Cargo.toml
+
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "${GITHUB_REF_NAME}" --generate-notes --verify-tag
