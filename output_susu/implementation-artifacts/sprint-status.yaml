@@ -116,18 +116,18 @@ development_status:
   # Epic 7: Reference App — Dual-Skin Multi-Locale End-Saver Experience
   epic-7: in-progress
   7-1-next-app-scaffold: done # merged via PR #192
-  7-2-design-tokens: ready-for-dev
+  7-2-design-tokens: done # merged via PR #193
   7-3-typography: ready-for-dev
   7-4-shadcn-primitives: ready-for-dev
   7-5-skin-toggle: ready-for-dev
   7-6-top-nav: ready-for-dev
-  7-7-i18n-routing: ready-for-dev
+  7-7-i18n-routing: done # merged via PR #195
   7-8-i18n-parity: ready-for-dev
   7-9-privy-onboarding: ready-for-dev
   7-10-tx-confirm-modal: ready-for-dev
   7-11-rotation-card-curve-viz: ready-for-dev
   7-12-supporting-components: ready-for-dev
-  7-13-convex-schema: ready-for-dev
+  7-13-convex-schema: done # merged via PR #194
   7-14-one-tap-contribute: ready-for-dev
   7-15-one-tap-claim: ready-for-dev
   7-16-helius-fallback-sphere: ready-for-dev
