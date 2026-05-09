@@ -29,6 +29,12 @@
   <a href="https://github.com/tantshirt/susu-monorepo/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/tantshirt/susu-monorepo/actions/workflows/ci.yml/badge.svg?branch=main" /></a>
 </p>
 
+<p align="center">
+
+[![Legal Opinion](https://img.shields.io/badge/legal-opinion%20placeholder-yellow)](./docs/legal-opinion.pdf)
+
+</p>
+
 <!-- susu:hero:demo -->
 ### One command to run the demo
 
