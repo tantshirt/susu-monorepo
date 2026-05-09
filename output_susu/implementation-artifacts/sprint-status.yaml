@@ -123,7 +123,7 @@ development_status:
   7-6-top-nav: done # merged via PR #201
   7-7-i18n-routing: done # merged via PR #195
   7-8-i18n-parity: done # merged via PR #196
-  7-9-privy-onboarding: ready-for-dev
+  7-9-privy-onboarding: done # merged via PR #204
   7-10-tx-confirm-modal: ready-for-dev
   7-11-rotation-card-curve-viz: ready-for-dev
   7-12-supporting-components: done # merged via PR #200
@@ -132,7 +132,7 @@ development_status:
   7-15-one-tap-claim: ready-for-dev
   7-16-helius-fallback-sphere: done # merged via PR #202
   7-17-mobile-responsive: ready-for-dev
-  7-18-accessibility: ready-for-dev
+  7-18-accessibility: done # merged via PR #203
   epic-7-retrospective: optional
 
   # Epic 8: README Hero, Demo Video & Submission Marketing Surface

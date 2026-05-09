@@ -72,7 +72,7 @@ _Last updated: 2026-05-09T07:35:00Z_
 | 7.6 | 7 | Top nav with always-visible <ClusterPill /> + locale dropdown + skin toggle + wallet status | done | #70 | #201 | merged | 7.4, 7.5 | ✅ Done |
 | 7.7 | 7 | next-intl multi-locale routing — en + vi live, 4 stubs (FR43) | done | #71 | #195 | merged | 7.1 | ✅ Done |
 | 7.8 | 7 | i18n parity check + workflow + CONTRIBUTING-TRANSLATIONS.md (FR48, FR49, FR50) | done | #72 | #196 | merged | 1.4, 1.5, 7.7 | ✅ Done |
-| 7.9 | 7 | Privy email-onboarding integration + Wallet-Standard fallback (FR39, FR46) | ready-for-dev | — | — | — | 6.2, 7.6, 7.7 | ❌ No |
+| 7.9 | 7 | Privy email-onboarding integration + Wallet-Standard fallback (FR39, FR46) | done | #73 | #204 | merged | 6.2, 7.6, 7.7 | ✅ Done |
 | 7.10 | 7 | <TransactionConfirmModal /> with simulation result block (FR40, FR41 prerequisite) | ready-for-dev | — | — | — | 7.4, 7.5, 7.6, 7.7, 7.8, 7.9 | ❌ No |
 | 7.11 | 7 | <RotationCard />, <MemberAvatar />, <CurveVisualizer /> static-svg | ready-for-dev | — | — | — | 7.4, 7.6, 7.7, 7.10 | ❌ No |
 | 7.12 | 7 | Supporting components — <CodeBlock />, <ReceiptCard />, <Banner />, <FieldError /> | done | #76 | #200 | merged | 7.2, 7.3, 7.4 | ✅ Done |
@@ -81,7 +81,7 @@ _Last updated: 2026-05-09T07:35:00Z_
 | 7.15 | 7 | One-tap Claim Payout flow (FR41) | ready-for-dev | — | — | — | 7.9, 7.10, 7.11, 7.12, 7.14 | ❌ No |
 | 7.16 | 7 | Helius RPC fallback to public + Sphere on-ramp optional flag | done | #80 | #202 | merged | 7.1, 7.7, 7.12 | ✅ Done |
 | 7.17 | 7 | Mobile-first responsive layout 360px floor + breakpoints + Playwright visual regression | ready-for-dev | — | — | — | 7.1, 7.2, 7.3, 7.4, 7.5, 7.6, 7.7, 7.8, 7.9, 7.10, 7.11, 7.12, 7.13, 7.14, 7.15, 7.16 | ❌ No |
-| 7.18 | 7 | Accessibility surface — WCAG 2.1 AA + RTL + reduced-motion + axe-core CI + non-crypto pilot | ready-for-dev | — | — | — | none | ❌ No |
+| 7.18 | 7 | Accessibility surface — WCAG 2.1 AA + RTL + reduced-motion + axe-core CI + non-crypto pilot | done | #82 | #203 | merged | none | ✅ Done |
 | 8.1 | 8 | README first-viewport with badge architecture | ready-for-dev | — | — | — | 1.4, 5.1, 5.6, 8.2, 8.3, 8.4 | ❌ No (Epic 7 not complete) |
 | 8.2 | 8 | <AdversaryBadge /> server-rendered from latest report | ready-for-dev | — | — | — | 5.4 | ❌ No (Epic 7 not complete) |
 | 8.3 | 8 | <UpgradeBurnedBadge /> server-rendered from solana program show | ready-for-dev | — | — | — | 1.1, 5.4, 8.2 | ❌ No (Epic 7 not complete) |
