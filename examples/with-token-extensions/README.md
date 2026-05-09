@@ -40,4 +40,5 @@ PNPM_TEST_E2E=1 pnpm test:e2e
 
 ## See also
 
-- `docs/integration-token-extensions.md`
+- [Token-2022 extensions integration guide](../../docs/integration-token-extensions.md)
+- [Susu TypeScript SDK](../../docs/sdk-typescript.md)

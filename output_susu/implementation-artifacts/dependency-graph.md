@@ -55,13 +55,13 @@ _Last updated: 2026-05-09T16:05:00Z_
 | 6.2 | 6 | SDK simulate-by-default + explicit-cluster gate | done | #54 | #178 | merged | 6.1 | ✅ Done |
 | 6.3 | 6 | SDK error classes — typed discriminated union | done | #55 | #179 | merged | 1.3, 6.1, 6.2 | ✅ Done |
 | 6.4 | 6 | Codama-generated Rust client (susu-client) with same surface | done | #56 | #183 | merged | 1.2, 1.3, 6.1, 6.2, 6.3 | ✅ Done |
-| 6.5 | 6 | SDK parity CI check | review | #57 | — | pending | 1.3, 6.1, 6.2, 6.3, 6.4 | ✅ Ready |
+| 6.5 | 6 | SDK parity CI check | done | #57 | #185 | merged | 1.3, 6.1, 6.2, 6.3, 6.4 | ✅ Done |
 | 6.6 | 6 | examples/with-privy (~200 LOC) | done | #58 | #181 | merged | 6.1, 6.2, 6.3 | ✅ Done |
 | 6.7 | 6 | examples/with-squads (~200 LOC) | done | #59 | #182 | merged | 6.1, 6.2, 6.3 | ✅ Done |
 | 6.8 | 6 | examples/with-token-extensions (~200 LOC) | done | #60 | #180 | merged | 6.1, 6.2, 6.3 | ✅ Done |
-| 6.9 | 6 | docs/integration-{partner}.md per partner | ready-for-dev | #61 | — | none | 6.6, 6.7, 6.8 | ✅ Ready |
+| 6.9 | 6 | docs/integration-{partner}.md per partner | review | #61 | — | open PR pending | 6.6, 6.7, 6.8 | ✅ Ready |
 | 6.10 | 6 | pnpm susu:demo orchestrator hitting NFR-P2 ≤60s | done | #62 | #184 | merged | 6.1, 6.2, 6.3 | ✅ Done |
-| 6.11 | 6 | pnpm verify orchestrator hitting NFR-Re4 ≤10min | ready-for-dev | #63 | — | none | 5.4, 6.5, 6.10 | ❌ No (6.5 not merged) |
+| 6.11 | 6 | pnpm verify orchestrator hitting NFR-Re4 ≤10min | ready-for-dev | #63 | — | none | 5.4, 6.5, 6.10 | ✅ Ready |
 | 6.12 | 6 | SDK + crate publishing pipeline via OIDC | ready-for-dev | #64 | — | none | 6.1, 6.2, 6.3, 6.4, 6.5, 6.11 | ❌ No |
 | 7.1 | 7 | Next.js 15 reference app scaffold + provider order + Zod env loader | ready-for-dev | — | — | — | 1.1, 1.4 | ❌ No (Epic 6 not complete) |
 | 7.2 | 7 | Design tokens — tokens.css + dual-skin overrides + Tailwind config (UX-DR1–8) | ready-for-dev | — | — | — | 7.1 | ❌ No (Epic 6 not complete) |
