@@ -11,7 +11,7 @@
 #   ./scripts/swap-partner-reference.sh --drop
 #
 # Targets the <!-- susu:linkcluster:partner --> ... <!-- /susu:linkcluster:partner -->
-# block inside the README link cluster (Story 8.5 / Story 8.7).
+# span inside the README link cluster (Story 8.5 / Story 8.7).
 #
 # Idempotent: safe to re-run. The block boundaries are restored on every
 # successful swap, so a second --partner run replaces the previous URL cleanly.
@@ -73,19 +73,24 @@ while [[ "$REPO_ROOT" != "/" ]]; do
   REPO_ROOT="$(dirname "$REPO_ROOT")"
 done
 
+START_TAG="<!-- susu:linkcluster:partner -->"
+END_TAG="<!-- /susu:linkcluster:partner -->"
+
 README="$REPO_ROOT/README.md"
 if [[ ! -f "$README" ]]; then
   echo "error: README.md with linkcluster sentinel not found from $SCRIPT_DIR upward" >&2
   exit 1
 fi
 
-if ! grep -q "susu:linkcluster:partner" "$README"; then
-  echo "error: README.md is missing the <!-- susu:linkcluster:partner --> sentinel" >&2
+if ! grep -Fq "$START_TAG" "$README"; then
+  echo "error: README.md is missing the $START_TAG sentinel" >&2
   exit 1
 fi
 
-START_TAG="<!-- susu:linkcluster:partner -->"
-END_TAG="<!-- /susu:linkcluster:partner -->"
+if ! grep -Fq "$END_TAG" "$README"; then
+  echo "error: README.md is missing the $END_TAG sentinel" >&2
+  exit 1
+fi
 
 TMP="$(mktemp)"
 trap 'rm -f "$TMP"' EXIT
@@ -95,14 +100,18 @@ if [[ "$DROP" == "1" ]]; then
     echo "error: --drop is mutually exclusive with --partner / --url" >&2
     exit 2
   fi
-  # Remove the entire block including both sentinel comments.
+  # Remove the entire span including both sentinel comments.
   awk -v start="$START_TAG" -v end="$END_TAG" '
     BEGIN { skip = 0 }
     {
-      if (index($0, start) > 0) { skip = 1; next }
+      if (index($0, start) > 0) {
+        if (index($0, end) == 0) { skip = 1 }
+        next
+      }
       if (skip && index($0, end) > 0) { skip = 0; next }
       if (!skip) print
     }
+    END { if (skip) exit 1 }
   ' "$README" > "$TMP"
   mv "$TMP" "$README"
   trap - EXIT
@@ -122,24 +131,23 @@ if [[ ! "$URL" =~ ^https?:// ]]; then
   exit 2
 fi
 
-NEW_ROW="| Ecosystem partner reference — ${PARTNER} | [${URL}](${URL}) |"
+NEW_ROW="| ${START_TAG} Ecosystem partner reference — ${PARTNER} | [${URL}](${URL}) ${END_TAG} |"
 
-# Replace the entire block (sentinels + whatever rows live inside) with a
-# fresh sentinel-bracketed single-row block. Idempotent: re-running produces
+# Replace the entire span (sentinels + whatever row lives inside) with a
+# fresh sentinel-marked single row. Idempotent: re-running produces
 # the same shape regardless of prior contents.
 awk -v start="$START_TAG" -v end="$END_TAG" -v new_row="$NEW_ROW" '
   BEGIN { skip = 0 }
   {
     if (index($0, start) > 0) {
-      print start
       print new_row
-      print end
-      skip = 1
+      if (index($0, end) == 0) { skip = 1 }
       next
     }
     if (skip && index($0, end) > 0) { skip = 0; next }
     if (!skip) print
   }
+  END { if (skip) exit 1 }
 ' "$README" > "$TMP"
 mv "$TMP" "$README"
 trap - EXIT
