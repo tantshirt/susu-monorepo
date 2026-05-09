@@ -1,6 +1,7 @@
-@import "tailwindcss";
-@import "../lib/theme/tokens.css";
-@import "../lib/theme/skin-diaspora.css";
+@import 'tailwindcss';
+@import '../lib/theme/tokens.css';
+@import '../lib/theme/skin-diaspora.css';
+@config "../tailwind.config.ts";
 
 /**
  * Susu reference app — Tailwind v4 token bridge (UX-DR1–8).
@@ -11,7 +12,7 @@
  * matching utility classes (`bg-bg`, `text-primary`, `shadow-1`, etc.).
  *
  * Cross-skin invariants (UX-DR2): `--bg`, `--signal`, `--warn`, `--danger`
- * are protocol-locked and only defined in the neutral skin.
+ * are protocol-locked and defined globally.
  */
 @theme inline {
   --color-bg: rgb(var(--bg) / <alpha-value>);

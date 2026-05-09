@@ -12,9 +12,16 @@
  * shift between skins.
  */
 
-:root[data-skin="neutral"] {
-  /* Surfaces (UX-DR3) — Phantom-fintech dark stack. */
+:root {
+  /* Protocol-locked safety/identity tokens (UX-DR2). */
   --bg: 11 13 18;
+  --signal: 20 241 149; /* protocol-locked mint */
+  --warn: 251 191 36; /* amber */
+  --danger: 248 113 113; /* coral */
+}
+
+:root[data-skin='neutral'] {
+  /* Surfaces (UX-DR3) — Phantom-fintech dark stack. */
   --surface: 18 21 28;
   --surface-2: 26 30 38;
   --border: 39 44 54;
@@ -23,12 +30,9 @@
   --text: 240 243 248;
   --text-muted: 148 156 170;
 
-  /* Brand + signal. Mint is cross-skin protocol identity. */
-  --primary: 20 241 149;     /* Solana mint #14F195 */
-  --secondary: 0 217 255;    /* Solana cyan accent */
-  --signal: 20 241 149;      /* protocol-locked mint */
-  --warn: 251 191 36;        /* amber */
-  --danger: 248 113 113;     /* coral */
+  /* Brand accents. */
+  --primary: 20 241 149; /* Solana mint #14F195 */
+  --secondary: 0 217 255; /* Solana cyan accent */
 
   /* Phantom-style shadows (UX-DR8). */
   --shadow-1: 0 1px 2px 0 rgb(0 0 0 / 0.4);
