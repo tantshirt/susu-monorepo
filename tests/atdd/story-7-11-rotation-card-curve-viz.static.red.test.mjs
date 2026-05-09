@@ -110,14 +110,15 @@ test('Story 7.11 MemberAvatar.tsx exists with expected shape', () => {
   assertNoHex('MemberAvatar.tsx', src);
 });
 
-test('Story 7.11 CurveVisualizer.tsx exists as a static SVG (no JS, no interactivity)', () => {
+test('Story 7.11 CurveVisualizer.tsx exposes a static SVG variant (interactive variant from Story 8.4 is opt-in)', () => {
   assertExists(curveVizPath);
   const src = read(curveVizPath);
-  assert.doesNotMatch(
-    src,
-    /^"use client";/m,
-    'CurveVisualizer (static-svg variant) must not be a Client Component — Story 8.4 owns interactivity',
-  );
+  // Story 8.4 lands the interactive variant gated behind an `interactive`
+  // prop (default `false`). The default behavior remains a static SVG
+  // identical to the Story 7.11 contract: no animation, no JS-driven
+  // changes when consumers do not opt in. The component is allowed to
+  // import client-side hooks in the same file because the interactive
+  // controls are gated behind the prop.
   assert.match(
     src,
     /export\s+(?:default\s+)?(?:function|const)\s+CurveVisualizer\b/,
@@ -135,10 +136,14 @@ test('Story 7.11 CurveVisualizer.tsx exists as a static SVG (no JS, no interacti
     src.includes('contribution') && src.includes('n'),
     'CurveVisualizer must reference the contribution and n props',
   );
-  assert.doesNotMatch(
+  // The interactive variant from Story 8.4 introduces sliders + a cartel
+  // toggle gated behind an `interactive` prop. The static variant must
+  // remain reachable: the file must declare an `interactive` prop (so
+  // the static path is still the default behavior).
+  assert.match(
     src,
-    FORBID_INTERACTIVE,
-    'CurveVisualizer (static-svg) must not include interactive handlers — that is Story 8.4',
+    /interactive\??:\s*boolean/,
+    'CurveVisualizer must declare an `interactive` prop so the static variant remains opt-out (Story 8.4)',
   );
   assertNoDirectional('CurveVisualizer.tsx', src);
   assertNoHex('CurveVisualizer.tsx', src);
