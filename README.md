@@ -86,7 +86,9 @@ Every assertion in the hero above is one click from its verifier. If a link 404s
 | 10,000 adversarial circles passed | [`audits/adversary/adversary-report.json`](./audits/adversary/adversary-report.json) |
 | Legal posture documented | [`docs/legal-opinion.pdf`](./docs/legal-opinion.pdf) |
 | Daily engineering log (latest entry) | [`log/latest.md`](./log/latest.md) |
+<!-- susu:linkcluster:partner -->
 | Ecosystem partner integration (placeholder until [Story 8.7](https://github.com/tantshirt/susu-monorepo/issues/89) confirms a real partner) | [`examples/with-privy/`](./examples/with-privy/) |
+<!-- /susu:linkcluster:partner -->
 
 <!-- susu:linkcluster:end -->
 
