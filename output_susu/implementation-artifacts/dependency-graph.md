@@ -1,5 +1,5 @@
 # Story Dependency Graph
-_Last updated: 2026-05-09T20:40:00Z_
+_Last updated: 2026-05-09T21:15:00Z_
 
 ## Epic Readiness Summary
 
@@ -10,7 +10,7 @@ _Last updated: 2026-05-09T20:40:00Z_
 | 3 | `sprint-status.yaml` marks `epic-3` and stories 3.1-3.8 `done`; retrospective remains optional. | Merged PRs #94, #95, #96, and #153. | Complete |
 | 4 | `sprint-status.yaml` marks `epic-4` `done`; Stories 4.1, 4.2, 4.3, 4.4, 4.5, and 4.6 are `done`. | Story 4.1 merged via PR #157; Story 4.2 merged via PR #158; Story 4.3 merged via PR #159; Story 4.4 merged via PR #161; Story 4.5 merged via PR #160; Story 4.6 merged via PR #162. | Complete |
 | 5 | `sprint-status.yaml` marks `epic-5` `done`; Stories 5.1–5.9 `done`; `epic-5-retrospective` `done`. | Merged story PRs #166–#175; retrospective PR #176. Issues #44–#52 closed. | Complete |
-| 6 | `sprint-status.yaml` marks `epic-6` `in-progress`. Stories 6.1–6.10 `done`; 6.11–6.12 in flight per DAG below. | Stories 6.1–6.10 merged on `main` through PRs #177–#184 plus #185 (parity) and #186 (integration docs). | In progress |
+| 6 | `sprint-status.yaml` marks `epic-6` and Stories 6.1–6.12 `done`; `epic-6-retrospective` is `optional`. | Stories 6.1–6.12 merged on `main` (capstone verify + release PR #187). Issues #53–#64 closed. | Complete |
 
 ## Stories
 
@@ -61,26 +61,26 @@ _Last updated: 2026-05-09T20:40:00Z_
 | 6.8 | 6 | examples/with-token-extensions (~200 LOC) | done | #60 | #180 | merged | 6.1, 6.2, 6.3 | ✅ Done |
 | 6.9 | 6 | docs/integration-{partner}.md per partner | done | #61 | #186 | merged | 6.6, 6.7, 6.8 | ✅ Done |
 | 6.10 | 6 | pnpm susu:demo orchestrator hitting NFR-P2 ≤60s | done | #62 | #184 | merged | 6.1, 6.2, 6.3 | ✅ Done |
-| 6.11 | 6 | pnpm verify orchestrator hitting NFR-Re4 ≤10min | review | #63 | #187 | open | 5.4, 6.5, 6.10 | ✅ Ready |
-| 6.12 | 6 | SDK + crate publishing pipeline via OIDC | review | #64 | #187 | open | 6.1, 6.2, 6.3, 6.4, 6.5, 6.11 | ✅ With #187 |
-| 7.1 | 7 | Next.js 15 reference app scaffold + provider order + Zod env loader | ready-for-dev | — | — | — | 1.1, 1.4 | ❌ No (Epic 6 not complete) |
-| 7.2 | 7 | Design tokens — tokens.css + dual-skin overrides + Tailwind config (UX-DR1–8) | ready-for-dev | — | — | — | 7.1 | ❌ No (Epic 6 not complete) |
-| 7.3 | 7 | Typography self-hosted via next/font + type scale + .numeric utility | ready-for-dev | — | — | — | 7.1, 7.2 | ❌ No (Epic 6 not complete) |
-| 7.4 | 7 | shadcn/ui primitives copied + reskinned via tokens (UX-DR24) | ready-for-dev | — | — | — | 7.2, 7.3, 7.7 | ❌ No (Epic 6 not complete) |
-| 7.5 | 7 | <SkinToggle /> with cookie + localStorage persistence + server-side hydration | ready-for-dev | — | — | — | 7.2, 7.3, 7.4 | ❌ No (Epic 6 not complete) |
-| 7.6 | 7 | Top nav with always-visible <ClusterPill /> + locale dropdown + skin toggle + wallet status | ready-for-dev | — | — | — | 7.4, 7.5 | ❌ No (Epic 6 not complete) |
-| 7.7 | 7 | next-intl multi-locale routing — en + vi live, 4 stubs (FR43) | ready-for-dev | — | — | — | 7.1 | ❌ No (Epic 6 not complete) |
-| 7.8 | 7 | i18n parity check + workflow + CONTRIBUTING-TRANSLATIONS.md (FR48, FR49, FR50) | ready-for-dev | — | — | — | 1.4, 1.5, 7.7 | ❌ No (Epic 6 not complete) |
-| 7.9 | 7 | Privy email-onboarding integration + Wallet-Standard fallback (FR39, FR46) | ready-for-dev | — | — | — | 6.2, 7.6, 7.7 | ❌ No (Epic 6 not complete) |
-| 7.10 | 7 | <TransactionConfirmModal /> with simulation result block (FR40, FR41 prerequisite) | ready-for-dev | — | — | — | 7.4, 7.5, 7.6, 7.7, 7.8, 7.9 | ❌ No (Epic 6 not complete) |
-| 7.11 | 7 | <RotationCard />, <MemberAvatar />, <CurveVisualizer /> static-svg | ready-for-dev | — | — | — | 7.4, 7.6, 7.7, 7.10 | ❌ No (Epic 6 not complete) |
-| 7.12 | 7 | Supporting components — <CodeBlock />, <ReceiptCard />, <Banner />, <FieldError /> | ready-for-dev | — | — | — | 7.2, 7.3, 7.4 | ❌ No (Epic 6 not complete) |
-| 7.13 | 7 | Convex schema + group metadata + isolation lock (ARCH-30, ARCH-31) | ready-for-dev | — | — | — | 7.1 | ❌ No (Epic 6 not complete) |
-| 7.14 | 7 | One-tap Contribute flow (FR40) | ready-for-dev | — | — | — | 7.9, 7.10, 7.11, 7.12 | ❌ No (Epic 6 not complete) |
-| 7.15 | 7 | One-tap Claim Payout flow (FR41) | ready-for-dev | — | — | — | 7.9, 7.10, 7.11, 7.12, 7.14 | ❌ No (Epic 6 not complete) |
-| 7.16 | 7 | Helius RPC fallback to public + Sphere on-ramp optional flag | ready-for-dev | — | — | — | 7.1, 7.7, 7.12 | ❌ No (Epic 6 not complete) |
-| 7.17 | 7 | Mobile-first responsive layout 360px floor + breakpoints + Playwright visual regression | ready-for-dev | — | — | — | 7.1, 7.2, 7.3, 7.4, 7.5, 7.6, 7.7, 7.8, 7.9, 7.10, 7.11, 7.12, 7.13, 7.14, 7.15, 7.16 | ❌ No (Epic 6 not complete) |
-| 7.18 | 7 | Accessibility surface — WCAG 2.1 AA + RTL + reduced-motion + axe-core CI + non-crypto pilot | ready-for-dev | — | — | — | none | ❌ No (Epic 6 not complete) |
+| 6.11 | 6 | pnpm verify orchestrator hitting NFR-Re4 ≤10min | done | #63 | #187 | merged | 5.4, 6.5, 6.10 | ✅ Done |
+| 6.12 | 6 | SDK + crate publishing pipeline via OIDC | done | #64 | #187 | merged | 6.1, 6.2, 6.3, 6.4, 6.5, 6.11 | ✅ Done |
+| 7.1 | 7 | Next.js 15 reference app scaffold + provider order + Zod env loader | ready-for-dev | — | — | — | 1.1, 1.4 | ✅ Ready |
+| 7.2 | 7 | Design tokens — tokens.css + dual-skin overrides + Tailwind config (UX-DR1–8) | ready-for-dev | — | — | — | 7.1 | ❌ No |
+| 7.3 | 7 | Typography self-hosted via next/font + type scale + .numeric utility | ready-for-dev | — | — | — | 7.1, 7.2 | ❌ No |
+| 7.4 | 7 | shadcn/ui primitives copied + reskinned via tokens (UX-DR24) | ready-for-dev | — | — | — | 7.2, 7.3, 7.7 | ❌ No |
+| 7.5 | 7 | <SkinToggle /> with cookie + localStorage persistence + server-side hydration | ready-for-dev | — | — | — | 7.2, 7.3, 7.4 | ❌ No |
+| 7.6 | 7 | Top nav with always-visible <ClusterPill /> + locale dropdown + skin toggle + wallet status | ready-for-dev | — | — | — | 7.4, 7.5 | ❌ No |
+| 7.7 | 7 | next-intl multi-locale routing — en + vi live, 4 stubs (FR43) | ready-for-dev | — | — | — | 7.1 | ❌ No |
+| 7.8 | 7 | i18n parity check + workflow + CONTRIBUTING-TRANSLATIONS.md (FR48, FR49, FR50) | ready-for-dev | — | — | — | 1.4, 1.5, 7.7 | ❌ No |
+| 7.9 | 7 | Privy email-onboarding integration + Wallet-Standard fallback (FR39, FR46) | ready-for-dev | — | — | — | 6.2, 7.6, 7.7 | ❌ No |
+| 7.10 | 7 | <TransactionConfirmModal /> with simulation result block (FR40, FR41 prerequisite) | ready-for-dev | — | — | — | 7.4, 7.5, 7.6, 7.7, 7.8, 7.9 | ❌ No |
+| 7.11 | 7 | <RotationCard />, <MemberAvatar />, <CurveVisualizer /> static-svg | ready-for-dev | — | — | — | 7.4, 7.6, 7.7, 7.10 | ❌ No |
+| 7.12 | 7 | Supporting components — <CodeBlock />, <ReceiptCard />, <Banner />, <FieldError /> | ready-for-dev | — | — | — | 7.2, 7.3, 7.4 | ❌ No |
+| 7.13 | 7 | Convex schema + group metadata + isolation lock (ARCH-30, ARCH-31) | ready-for-dev | — | — | — | 7.1 | ❌ No |
+| 7.14 | 7 | One-tap Contribute flow (FR40) | ready-for-dev | — | — | — | 7.9, 7.10, 7.11, 7.12 | ❌ No |
+| 7.15 | 7 | One-tap Claim Payout flow (FR41) | ready-for-dev | — | — | — | 7.9, 7.10, 7.11, 7.12, 7.14 | ❌ No |
+| 7.16 | 7 | Helius RPC fallback to public + Sphere on-ramp optional flag | ready-for-dev | — | — | — | 7.1, 7.7, 7.12 | ❌ No |
+| 7.17 | 7 | Mobile-first responsive layout 360px floor + breakpoints + Playwright visual regression | ready-for-dev | — | — | — | 7.1, 7.2, 7.3, 7.4, 7.5, 7.6, 7.7, 7.8, 7.9, 7.10, 7.11, 7.12, 7.13, 7.14, 7.15, 7.16 | ❌ No |
+| 7.18 | 7 | Accessibility surface — WCAG 2.1 AA + RTL + reduced-motion + axe-core CI + non-crypto pilot | ready-for-dev | — | — | — | none | ❌ No |
 | 8.1 | 8 | README first-viewport with badge architecture | ready-for-dev | — | — | — | 1.4, 5.1, 5.6, 8.2, 8.3, 8.4 | ❌ No (Epic 7 not complete) |
 | 8.2 | 8 | <AdversaryBadge /> server-rendered from latest report | ready-for-dev | — | — | — | 5.4 | ❌ No (Epic 7 not complete) |
 | 8.3 | 8 | <UpgradeBurnedBadge /> server-rendered from solana program show | ready-for-dev | — | — | — | 1.1, 5.4, 8.2 | ❌ No (Epic 7 not complete) |
