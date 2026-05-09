@@ -1,14 +1,18 @@
 @import "tailwindcss";
 @import "../lib/theme/tokens.css";
 @import "../lib/theme/skin-diaspora.css";
+@import "../lib/theme/numeric.css";
 
 /**
- * Susu reference app — Tailwind v4 token bridge (UX-DR1–8).
+ * Susu reference app — Tailwind v4 token bridge (UX-DR1–10).
  *
  * Tokens live in `lib/theme/tokens.css` (neutral skin) and
- * `lib/theme/skin-diaspora.css` (diaspora override). The `@theme` block
- * below mirrors `tailwind.config.ts` so v4's CSS-first pipeline emits the
- * matching utility classes (`bg-bg`, `text-primary`, `shadow-1`, etc.).
+ * `lib/theme/skin-diaspora.css` (diaspora override). Story 7.3 adds the
+ * type scale tokens (`--text-*`) and the typography stack variables
+ * (`--font-display`, `--font-body`, `--font-mono`). The `@theme` block
+ * below mirrors `tailwind.config.ts` so v4's CSS-first pipeline emits
+ * matching utility classes (`bg-bg`, `text-primary`, `text-display-1`,
+ * `font-display`, `shadow-1`, etc.).
  *
  * Cross-skin invariants (UX-DR2): `--bg`, `--signal`, `--warn`, `--danger`
  * are protocol-locked and only defined in the neutral skin.
@@ -26,8 +30,35 @@
   --color-warn: rgb(var(--warn) / <alpha-value>);
   --color-danger: rgb(var(--danger) / <alpha-value>);
 
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* Self-hosted font families (Story 7.3). The authoritative values for
+     `--font-display`, `--font-body`, `--font-mono` are injected on
+     `<html>` by `lib/theme/fonts.ts` via `next/font/local`. The defaults
+     declared here are the system-stack fallbacks the cascade lands on
+     when an element opts out of the next/font className (e.g., portals
+     in old browsers). Tailwind v4 reads these `@theme` declarations to
+     emit `font-display`, `font-sans`, and `font-mono` utility classes. */
+  --font-display: ui-sans-serif, system-ui, sans-serif;
+  --font-body: ui-sans-serif, system-ui, sans-serif;
+  --font-sans: ui-sans-serif, system-ui, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* Locked type scale (UX-DR10). Tailwind v4 emits `text-display-1`,
+     `text-h1`, etc. utilities from these. */
+  --text-display-1: 56px;
+  --text-display-1--line-height: 64px;
+  --text-display-1--letter-spacing: -0.02em;
+  --text-h1: 40px;
+  --text-h1--line-height: 48px;
+  --text-h1--letter-spacing: -0.02em;
+  --text-h2: 32px;
+  --text-h2--line-height: 40px;
+  --text-h2--letter-spacing: -0.01em;
+  --text-h3: 24px;
+  --text-h3--line-height: 32px;
+  --text-body: 16px;
+  --text-body--line-height: 24px;
+  --text-caption: 12px;
+  --text-caption--line-height: 16px;
 
   --radius-sm: 6px;
   --radius-md: 10px;
@@ -42,5 +73,5 @@
 body {
   background: rgb(var(--bg));
   color: rgb(var(--text));
-  font-family: var(--font-sans, Arial, Helvetica, sans-serif);
+  font-family: var(--font-body, var(--font-display), Arial, Helvetica, sans-serif);
 }
