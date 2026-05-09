@@ -67,7 +67,7 @@ _Last updated: 2026-05-09T07:35:00Z_
 | 7.1 | 7 | Next.js 15 reference app scaffold + provider order + Zod env loader | done | #65 | #192 | merged | 1.1, 1.4 | ✅ Done |
 | 7.2 | 7 | Design tokens — tokens.css + dual-skin overrides + Tailwind config (UX-DR1–8) | done | #66 | #193 | merged | 7.1 | ✅ Done |
 | 7.3 | 7 | Typography self-hosted via next/font + type scale + .numeric utility | done | #67 | #197 | merged | 7.1, 7.2 | ✅ Done |
-| 7.4 | 7 | shadcn/ui primitives copied + reskinned via tokens (UX-DR24) | ready-for-dev | — | — | — | 7.2, 7.3, 7.7 | ❌ No |
+| 7.4 | 7 | shadcn/ui primitives copied + reskinned via tokens (UX-DR24) | done | #68 | #198 | merged | 7.2, 7.3, 7.7 | ✅ Done |
 | 7.5 | 7 | <SkinToggle /> with cookie + localStorage persistence + server-side hydration | ready-for-dev | — | — | — | 7.2, 7.3, 7.4 | ❌ No |
 | 7.6 | 7 | Top nav with always-visible <ClusterPill /> + locale dropdown + skin toggle + wallet status | ready-for-dev | — | — | — | 7.4, 7.5 | ❌ No |
 | 7.7 | 7 | next-intl multi-locale routing — en + vi live, 4 stubs (FR43) | done | #71 | #195 | merged | 7.1 | ✅ Done |
