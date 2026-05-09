@@ -34,7 +34,8 @@ jobs:
           node-version-file: .nvmrc
 
       - name: Install markdown-link-check
-        run: npm install -g markdown-link-check@3.13.6
+        # Pin to 3.12.2 — 3.13.6 silently exits 1 without checking any links.
+        run: npm install -g markdown-link-check@3.12.2
 
       - name: Sync latest log mirror
         run: bash scripts/sync-latest-log.sh
