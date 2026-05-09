@@ -1,0 +1,43 @@
+{
+  "app": {
+    "title": "Ứng dụng tham chiếu Susu",
+    "tagline": "Giao diện tham chiếu cho monorepo của Susu Protocol.",
+    "welcome": "Chào mừng đến với Susu",
+    "getStarted": "Để bắt đầu, hãy chỉnh sửa tệp page.tsx."
+  },
+  "nav": {
+    "home": "Trang chủ",
+    "groups": "Nhóm",
+    "settings": "Cài đặt",
+    "switchLocale": "Đổi ngôn ngữ",
+    "switchSkin": "Đổi giao diện"
+  },
+  "common": {
+    "loading": "Đang tải…",
+    "retry": "Thử lại",
+    "cancel": "Huỷ",
+    "confirm": "Xác nhận",
+    "close": "Đóng"
+  },
+  "errors": {
+    "GroupFull": "Nhóm này đã đạt số thành viên tối đa. Hãy thử nhóm nhỏ hơn hoặc đợi nhóm sau.",
+    "GroupAlreadyStarted": "Nhóm này đã bắt đầu. Hãy tạo nhóm mới hoặc chọn nhóm còn đang hình thành.",
+    "MemberNotInvited": "Ví này chưa được mời vào nhóm. Hãy kiểm tra địa chỉ mời hoặc yêu cầu người tạo mời bạn.",
+    "InvalidMemberCount": "Số thành viên nằm ngoài khoảng hỗ trợ. Hãy chọn quy mô nhóm trong giới hạn cấu hình.",
+    "MintNotSupported": "Mint token này không được hỗ trợ cho nhóm. Hãy chọn mint được hỗ trợ trước khi tạo hoặc tham gia.",
+    "GroupCancelled": "Nhóm này đã bị huỷ. Hãy đợi người tạo lập nhóm mới hoặc chọn lời mời khác đang hoạt động.",
+    "AlreadyAccepted": "Lời mời này đã được chấp nhận. Hãy tiếp tục với vị trí thành viên hiện có thay vì thử lại.",
+    "GroupNotActive": "Nhóm này chưa hoạt động. Hãy đợi nhóm kích hoạt trước khi đóng góp, hoặc chọn nhóm khác.",
+    "OutsideContributionWindow": "Chỉ chấp nhận đóng góp trong khung giờ đã lên lịch cho vòng này. Hãy kiểm tra thời gian vòng và thử lại trong khung mở.",
+    "ContributionAmountMismatch": "Số tiền gửi không khớp với mức đóng góp cố định của nhóm. Hãy gửi lại đúng số tiền đã cấu hình.",
+    "MemberSlashedCannotContribute": "Vị trí thành viên này đã bị phạt và không thể đóng góp. Hãy liên hệ quản trị nhóm hoặc chọn ví/nhóm khác.",
+    "ContributionAlreadyRecorded": "Bạn đã đóng góp cho vòng này. Hãy đợi vòng kế tiếp hoặc kiểm tra lịch sử on-chain trước khi thử lại.",
+    "InvalidContributionRotation": "Chỉ số vòng không hợp lệ cho quy mô nhóm này. Hãy chọn vòng trong số thành viên của nhóm và thử lại.",
+    "InvalidCurveParams": "Tham số đường cong nằm ngoài khoảng hỗ trợ. Hãy kiểm tra quy mô nhóm và chỉ số vòng.",
+    "GroupIdMismatch": "ID nhóm trong giao dịch không khớp với tài khoản nhóm. Hãy tải lại chi tiết nhóm và thử lại.",
+    "MemberPositionMismatch": "Vị trí thành viên này không khớp với ví hoặc nhóm của bạn.",
+    "CurveOverflow": "Tính toán tài sản thế chấp bị tràn. Hãy dùng số nhỏ hơn hoặc liên hệ hỗ trợ nếu có sai sót.",
+    "InsufficientCollateral": "Tài sản thế chấp đã đặt cộng với số nạp thêm vẫn thấp hơn mức tối thiểu yêu cầu. Hãy tăng số tiền hoặc chờ đến khi có thể nạp thêm.",
+    "ContributionPeriodOpen": "Vòng này vẫn trong thời gian đóng góp. Hãy đợi quá hạn rồi mới yêu cầu nhận thanh toán."
+  }
+}

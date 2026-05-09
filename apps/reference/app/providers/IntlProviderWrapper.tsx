@@ -1,19 +1,29 @@
 "use client";
 
-import { NextIntlClientProvider } from "next-intl";
+import { NextIntlClientProvider, type AbstractIntlMessages } from "next-intl";
 import type { ReactNode } from "react";
 
 /**
- * Innermost provider in the locked chain. Story 7.7 wires real locale loading
- * and routing; for 7.1 we ship an English-only stub so the chain compiles.
+ * Innermost provider in the locked chain. Story 7.7 wires real locale-aware
+ * message loading: the parent layout (server component) imports the message
+ * bundle for the active locale via `next-intl/server` and passes it in via
+ * props. Per UX-DR46 we never hardcode strings here.
  */
-const messages: Record<string, string> = {
-  "app.title": "Susu Reference App",
-};
-
-export function IntlProviderWrapper({ children }: { children: ReactNode }) {
+export function IntlProviderWrapper({
+  locale,
+  messages,
+  children,
+}: {
+  locale: string;
+  messages: AbstractIntlMessages;
+  children: ReactNode;
+}) {
   return (
-    <NextIntlClientProvider locale="en" messages={messages} timeZone="UTC">
+    <NextIntlClientProvider
+      locale={locale}
+      messages={messages}
+      timeZone="UTC"
+    >
       {children}
     </NextIntlClientProvider>
   );
