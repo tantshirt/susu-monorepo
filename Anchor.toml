@@ -17,4 +17,5 @@ cluster = "Localnet"
 wallet = "~/.config/solana/id.json"
 
 [scripts]
-test = "anchor test"
+# Match verify.sh / CI: use Solana test validator unless Surfpool is installed locally.
+test = "anchor test --validator legacy"
