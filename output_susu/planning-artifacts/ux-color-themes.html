@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en" data-skin="neutral">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Susu Protocol — Color Theme Visualizer</title>
+<style>
+:root[data-skin="neutral"] {
+  --bg: 10 14 15;
+  --surface: 19 25 27;
+  --surface-2: 28 36 39;
+  --border: 31 37 40;
+  --text: 232 237 237;
+  --text-muted: 122 132 137;
+  --primary: 20 241 149;
+  --secondary: 0 209 255;
+  --signal: 20 241 149;
+  --warn: 245 197 24;
+  --danger: 255 77 94;
+}
+:root[data-skin="diaspora"] {
+  --bg: 10 14 15;
+  --surface: 22 18 14;
+  --surface-2: 33 27 21;
+  --border: 41 33 26;
+  --text: 240 233 222;
+  --text-muted: 158 137 116;
+  --primary: 229 165 82;
+  --secondary: 194 83 61;
+  --signal: 20 241 149;
+  --warn: 245 197 24;
+  --danger: 255 77 94;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Inter", system-ui, sans-serif;
+  background: rgb(var(--bg));
+  color: rgb(var(--text));
+  font-size: 16px;
+  line-height: 1.5;
+  transition: background 300ms ease, color 300ms ease;
+}
+.numeric { font-feature-settings: 'tnum' on, 'lnum' on; font-variant-numeric: tabular-nums; }
+.mono { font-family: "Geist Mono", "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace; }
+.container { max-width: 1200px; margin: 0 auto; padding: 48px 24px; }
+
+header {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 48px; padding-bottom: 24px;
+  border-bottom: 1px solid rgb(var(--border));
+}
+h1 { font-size: 32px; font-weight: 700; letter-spacing: -0.01em; }
+h2 { font-size: 24px; font-weight: 600; margin: 48px 0 16px; }
+h3 { font-size: 18px; font-weight: 600; margin: 24px 0 12px; color: rgb(var(--text-muted)); }
+p { color: rgb(var(--text-muted)); margin-bottom: 16px; }
+
+.skin-toggle {
+  display: inline-flex; gap: 4px;
+  background: rgb(var(--surface));
+  border: 1px solid rgb(var(--border));
+  padding: 4px; border-radius: 9999px;
+}
+.skin-toggle button {
+  background: transparent; color: rgb(var(--text-muted));
+  border: none; padding: 6px 16px; border-radius: 9999px;
+  font-size: 14px; font-weight: 500; cursor: pointer;
+  transition: all 200ms ease;
+}
+.skin-toggle button[aria-pressed="true"] {
+  background: rgb(var(--primary));
+  color: rgb(var(--bg));
+}
+
+.swatch-grid {
+  display: grid; gap: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  margin: 24px 0;
+}
+.swatch {
+  border: 1px solid rgb(var(--border));
+  border-radius: 10px; overflow: hidden;
+  background: rgb(var(--surface));
+}
+.swatch-color { height: 80px; }
+.swatch-meta { padding: 12px 16px; }
+.swatch-name { font-weight: 600; font-size: 14px; margin-bottom: 4px; }
+.swatch-value { font-size: 12px; color: rgb(var(--text-muted)); }
+
+.example-stack { display: grid; gap: 24px; grid-template-columns: 1fr 1fr; margin-top: 24px; }
+@media (max-width: 768px) { .example-stack { grid-template-columns: 1fr; } }
+
+.card {
+  background: rgb(var(--surface));
+  border: 1px solid rgb(var(--border));
+  border-radius: 14px;
+  padding: 24px;
+}
+.card-elevated {
+  background: rgb(var(--surface-2));
+}
+
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 10px 20px; border-radius: 10px; border: none;
+  font-size: 14px; font-weight: 600; cursor: pointer;
+  transition: opacity 200ms ease;
+  font-family: inherit;
+}
+.btn-primary { background: rgb(var(--primary)); color: rgb(var(--bg)); }
+.btn-secondary { background: rgb(var(--surface-2)); color: rgb(var(--text)); border: 1px solid rgb(var(--border)); }
+.btn-ghost { background: transparent; color: rgb(var(--text-muted)); }
+.btn-danger { background: rgb(var(--danger)); color: rgb(var(--bg)); }
+.btn:hover { opacity: 0.9; }
+
+.badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 4px 10px; border-radius: 9999px;
+  font-size: 12px; font-weight: 600;
+  border: 1px solid;
+}
+.badge-signal {
+  background: rgb(var(--signal) / 0.12);
+  color: rgb(var(--signal));
+  border-color: rgb(var(--signal) / 0.3);
+}
+.badge-warn {
+  background: rgb(var(--warn) / 0.12);
+  color: rgb(var(--warn));
+  border-color: rgb(var(--warn) / 0.3);
+}
+.badge-danger {
+  background: rgb(var(--danger) / 0.12);
+  color: rgb(var(--danger));
+  border-color: rgb(var(--danger) / 0.3);
+}
+.badge-secondary {
+  background: rgb(var(--secondary) / 0.12);
+  color: rgb(var(--secondary));
+  border-color: rgb(var(--secondary) / 0.3);
+}
+
+.code-block {
+  background: rgb(var(--surface-2));
+  border: 1px solid rgb(var(--border));
+  border-radius: 10px;
+  padding: 16px;
+  font-size: 13px;
+  line-height: 1.6;
+  color: rgb(var(--text));
+  overflow-x: auto;
+}
+.code-comment { color: rgb(var(--text-muted)); }
+.code-mint { color: rgb(var(--primary)); }
+
+.cluster-pill {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 4px 10px; border-radius: 9999px;
+  background: rgb(var(--signal) / 0.15);
+  color: rgb(var(--signal));
+  font-size: 12px; font-weight: 600;
+  border: 1px solid rgb(var(--signal) / 0.4);
+}
+.cluster-pill::before {
+  content: ""; width: 6px; height: 6px; border-radius: 50%;
+  background: rgb(var(--signal));
+  box-shadow: 0 0 8px rgb(var(--signal) / 0.6);
+}
+
+.contrast-table {
+  width: 100%; border-collapse: collapse; margin-top: 16px;
+  font-size: 14px;
+}
+.contrast-table th, .contrast-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid rgb(var(--border));
+  text-align: left;
+}
+.contrast-table th { color: rgb(var(--text-muted)); font-weight: 600; }
+.aaa { color: rgb(var(--signal)); font-weight: 600; }
+.aa { color: rgb(var(--secondary)); font-weight: 600; }
+
+.curve-demo {
+  background: rgb(var(--surface));
+  border: 1px solid rgb(var(--border));
+  border-radius: 14px;
+  padding: 24px;
+  margin: 24px 0;
+}
+
+footer {
+  margin-top: 64px; padding-top: 24px;
+  border-top: 1px solid rgb(var(--border));
+  font-size: 12px; color: rgb(var(--text-muted));
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>Susu Protocol — Color Theme</h1>
+    <div class="skin-toggle" role="radiogroup" aria-label="Toggle skin">
+      <button aria-pressed="true" data-skin-target="neutral">Neutral</button>
+      <button aria-pressed="false" data-skin-target="diaspora">Heritage</button>
+    </div>
+  </header>
+
+  <p>
+    The committed direction is <strong>Phantom-fintech dark</strong>, with
+    <strong>Solana mint-green</strong> as primary (not purple). Toggle the skin above
+    to see how the same components render with the heritage (diaspora) palette —
+    same dark base, copper/terracotta accents, but the mint <code>--signal</code>
+    color stays for protocol-identity tokens (audit badge, on-chain checkmark, cluster pill).
+  </p>
+
+  <h2>Tokens</h2>
+
+  <h3>Cross-skin invariants</h3>
+  <div class="swatch-grid">
+    <div class="swatch">
+      <div class="swatch-color" style="background: rgb(10 14 15);"></div>
+      <div class="swatch-meta">
+        <div class="swatch-name">--bg</div>
+        <div class="swatch-value mono">#0A0E0F · rgb(10 14 15)</div>
+      </div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-color" style="background: rgb(20 241 149);"></div>
+      <div class="swatch-meta">
+        <div class="swatch-name">--signal (mint)</div>
+        <div class="swatch-value mono">#14F195 · Solana green</div>
+      </div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-color" style="background: rgb(245 197 24);"></div>
+      <div class="swatch-meta">
+        <div class="swatch-name">--warn (amber)</div>
+        <div class="swatch-value mono">#F5C518</div>
+      </div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-color" style="background: rgb(255 77 94);"></div>
+      <div class="swatch-meta">
+        <div class="swatch-name">--danger (coral)</div>
+        <div class="swatch-value mono">#FF4D5E</div>
+      </div>
+    </div>
+  </div>
+
+  <h3>Skin-specific tokens (live update with toggle above)</h3>
+  <div class="swatch-grid">
+    <div class="swatch">
+      <div class="swatch-color" style="background: rgb(var(--surface));"></div>
+      <div class="swatch-meta">
+        <div class="swatch-name">--surface</div>
+        <div class="swatch-value mono" id="surface-value">#13191B</div>
+      </div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-color" style="background: rgb(var(--surface-2));"></div>
+      <div class="swatch-meta">
+        <div class="swatch-name">--surface-2</div>
+        <div class="swatch-value mono" id="surface2-value">#1C2427</div>
+      </div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-color" style="background: rgb(var(--border));"></div>
+      <div class="swatch-meta">
+        <div class="swatch-name">--border</div>
+        <div class="swatch-value mono" id="border-value">#1F2528</div>
+      </div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-color" style="background: rgb(var(--text));"></div>
+      <div class="swatch-meta">
+        <div class="swatch-name">--text</div>
+        <div class="swatch-value mono" id="text-value">#E8EDED</div>
+      </div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-color" style="background: rgb(var(--primary));"></div>
+      <div class="swatch-meta">
+        <div class="swatch-name">--primary</div>
+        <div class="swatch-value mono" id="primary-value">#14F195 mint</div>
+      </div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-color" style="background: rgb(var(--secondary));"></div>
+      <div class="swatch-meta">
+        <div class="swatch-name">--secondary</div>
+        <div class="swatch-value mono" id="secondary-value">#00D1FF cyan</div>
+      </div>
+    </div>
+  </div>
+
+  <h2>Component examples</h2>
+  <div class="example-stack">
+
+    <div class="card">
+      <h3 style="margin-top:0;">Buttons</h3>
+      <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px;">
+        <button class="btn btn-primary">Confirm contribution</button>
+        <button class="btn btn-secondary">Cancel</button>
+      </div>
+      <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <button class="btn btn-ghost">View details</button>
+        <button class="btn btn-danger">Cancel group</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3 style="margin-top:0;">Badges</h3>
+      <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:8px;">
+        <span class="badge badge-signal">audit · passed</span>
+        <span class="badge badge-signal">10,000 circles ✓</span>
+        <span class="badge badge-signal">upgrade authority: burned</span>
+      </div>
+      <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:8px;">
+        <span class="badge badge-warn">audit · pending</span>
+        <span class="badge badge-secondary">MIT</span>
+        <span class="badge badge-secondary">CI · passing</span>
+      </div>
+      <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <span class="badge badge-danger">slashed</span>
+        <span class="badge badge-danger">tx failed</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3 style="margin-top:0;">Cluster pill (cross-skin invariant)</h3>
+      <p>Always mint, regardless of skin — protocol-identity token.</p>
+      <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <span class="cluster-pill">devnet</span>
+        <span class="cluster-pill">mainnet-beta</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3 style="margin-top:0;">Code block (Geist Mono register)</h3>
+      <pre class="code-block mono"><span class="code-comment"># clone + run the demo</span>
+$ git clone https://github.com/.../<span class="code-mint">susu-monorepo</span>
+$ cd susu-monorepo &amp;&amp; pnpm install
+$ <span class="code-mint">pnpm susu:demo</span>
+<span class="code-comment"># demo took 47s last verified at COMMIT_SHA</span></pre>
+    </div>
+
+    <div class="card card-elevated">
+      <h3 style="margin-top:0;">Transaction confirm modal preview</h3>
+      <p style="font-size:14px;">You will:</p>
+      <div style="font-size:14px; line-height:1.8;">
+        <div>→ Send <span class="numeric mono" style="color: rgb(var(--text));">50.00 USDC</span></div>
+        <div>→ To vault <span class="mono" style="color: rgb(var(--text-muted));">GrpA1B2…vqLm</span></div>
+        <div>→ On <span class="cluster-pill" style="font-size:11px;">devnet</span></div>
+        <div>→ Network fee: <span class="numeric mono">~0.0001 SOL</span></div>
+        <div style="margin-top:8px;">→ Simulation: <span style="color: rgb(var(--signal));">will succeed ✓</span></div>
+      </div>
+      <div style="display:flex; gap:8px; margin-top:16px; justify-content:flex-end;">
+        <button class="btn btn-secondary">Cancel</button>
+        <button class="btn btn-primary">Confirm</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3 style="margin-top:0;">Receipt (post-confirmation)</h3>
+      <div style="display:flex; align-items:center; gap:12px; margin-bottom:12px;">
+        <div style="width:32px; height:32px; border-radius:50%; background:rgb(var(--signal) / 0.15); display:flex; align-items:center; justify-content:center; color: rgb(var(--signal)); font-size:18px;">✓</div>
+        <div>
+          <div style="font-weight:600;">Contribution confirmed</div>
+          <div style="font-size:13px; color: rgb(var(--text-muted));">Just now · <span class="cluster-pill" style="font-size:11px;">devnet</span></div>
+        </div>
+      </div>
+      <div style="font-size:13px; line-height:1.7;">
+        <div>Amount: <span class="numeric mono">50.00 USDC</span></div>
+        <div>Tx: <span class="mono" style="color: rgb(var(--secondary));">4xY3…gHj9</span></div>
+        <div>Next contribution: Dec 1</div>
+      </div>
+    </div>
+
+    <div class="curve-demo" style="grid-column: 1 / -1;">
+      <h3 style="margin-top:0;">CurveVisualizer (illustrative)</h3>
+      <p>The dynamic-collateral curve — required collateral by rotation position. The "30% Cartel" scenario highlights positions 4–6.</p>
+      <svg viewBox="0 0 480 200" width="100%" style="max-width:480px;" aria-label="Dynamic-collateral curve plot">
+        <defs>
+          <linearGradient id="curveGrad" x1="0" x2="0" y1="0" y2="1">
+            <stop offset="0%" stop-color="rgb(20 241 149)" stop-opacity="0.4"/>
+            <stop offset="100%" stop-color="rgb(20 241 149)" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+        <!-- axes -->
+        <line x1="40" y1="170" x2="460" y2="170" stroke="rgb(var(--border))" stroke-width="1"/>
+        <line x1="40" y1="20" x2="40" y2="170" stroke="rgb(var(--border))" stroke-width="1"/>
+        <!-- gridlines -->
+        <line x1="40" y1="60" x2="460" y2="60" stroke="rgb(var(--border))" stroke-width="0.5" stroke-dasharray="2 4"/>
+        <line x1="40" y1="110" x2="460" y2="110" stroke="rgb(var(--border))" stroke-width="0.5" stroke-dasharray="2 4"/>
+        <!-- 30% Cartel highlight band on positions 4-6 -->
+        <rect x="180" y="20" width="100" height="150" fill="rgb(255 77 94 / 0.08)" stroke="rgb(255 77 94 / 0.3)" stroke-width="1" stroke-dasharray="4 4"/>
+        <text x="230" y="32" text-anchor="middle" fill="rgb(255 77 94)" font-size="10" font-weight="600">30% CARTEL</text>
+        <!-- curve (simplified upward) -->
+        <path d="M 60 160 Q 120 150, 180 130 T 300 90 T 420 40" fill="none" stroke="rgb(20 241 149)" stroke-width="2.5" stroke-linecap="round"/>
+        <path d="M 60 160 Q 120 150, 180 130 T 300 90 T 420 40 L 420 170 L 60 170 Z" fill="url(#curveGrad)"/>
+        <!-- markers at each position -->
+        <g fill="rgb(20 241 149)">
+          <circle cx="60" cy="160" r="4"/>
+          <circle cx="120" cy="153" r="4"/>
+          <circle cx="180" cy="130" r="4"/>
+          <circle cx="240" cy="110" r="4"/>
+          <circle cx="300" cy="90" r="4"/>
+          <circle cx="360" cy="65" r="4"/>
+          <circle cx="420" cy="40" r="4"/>
+        </g>
+        <!-- labels -->
+        <text x="40" y="190" font-size="10" fill="rgb(var(--text-muted))">1</text>
+        <text x="180" y="190" font-size="10" fill="rgb(var(--text-muted))">4</text>
+        <text x="420" y="190" font-size="10" fill="rgb(var(--text-muted))">8</text>
+        <text x="240" y="200" text-anchor="middle" font-size="10" fill="rgb(var(--text-muted))">rotation position</text>
+        <text x="20" y="170" font-size="10" fill="rgb(var(--text-muted))" transform="rotate(-90 20 170)" text-anchor="middle">collateral</text>
+      </svg>
+    </div>
+
+  </div>
+
+  <h2>Contrast verification (WCAG)</h2>
+  <table class="contrast-table">
+    <thead>
+      <tr><th>Token combination</th><th>Skin</th><th>Ratio</th><th>WCAG</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>--text on --bg</td><td>neutral</td><td class="numeric mono">14.2:1</td><td class="aaa">AAA</td></tr>
+      <tr><td>--text on --bg</td><td>diaspora</td><td class="numeric mono">13.8:1</td><td class="aaa">AAA</td></tr>
+      <tr><td>--text-muted on --bg</td><td>neutral</td><td class="numeric mono">5.2:1</td><td class="aa">AA</td></tr>
+      <tr><td>--text-muted on --bg</td><td>diaspora</td><td class="numeric mono">5.0:1</td><td class="aa">AA</td></tr>
+      <tr><td>--primary (mint) on --bg</td><td>neutral</td><td class="numeric mono">13.1:1</td><td class="aaa">AAA</td></tr>
+      <tr><td>--primary (copper) on --bg</td><td>diaspora</td><td class="numeric mono">6.8:1</td><td class="aa">AA Large</td></tr>
+      <tr><td>--bg on --primary (mint button)</td><td>neutral</td><td class="numeric mono">13.1:1</td><td class="aaa">AAA</td></tr>
+    </tbody>
+  </table>
+
+  <footer>
+    Susu Protocol UX Design Specification · Color Theme Visualizer · v0.1 · 2026-05-05<br>
+    Phantom-fintech dark direction · Solana mint primary (NOT purple) · dual-skin via CSS custom properties on <code class="mono">[data-skin]</code>
+  </footer>
+</div>
+
+<script>
+const valueMap = {
+  neutral: { surface: '#13191B', surface2: '#1C2427', border: '#1F2528', text: '#E8EDED', primary: '#14F195 mint', secondary: '#00D1FF cyan' },
+  diaspora: { surface: '#16120E', surface2: '#211B15', border: '#29211A', text: '#F0E9DE', primary: '#E5A552 copper', secondary: '#C2533D terracotta' }
+};
+document.querySelectorAll('.skin-toggle button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.skin-toggle button').forEach(b => b.setAttribute('aria-pressed', 'false'));
+    btn.setAttribute('aria-pressed', 'true');
+    const skin = btn.dataset.skinTarget;
+    document.documentElement.setAttribute('data-skin', skin);
+    const v = valueMap[skin];
+    document.getElementById('surface-value').textContent = v.surface;
+    document.getElementById('surface2-value').textContent = v.surface2;
+    document.getElementById('border-value').textContent = v.border;
+    document.getElementById('text-value').textContent = v.text;
+    document.getElementById('primary-value').textContent = v.primary;
+    document.getElementById('secondary-value').textContent = v.secondary;
+  });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Susu Protocol — Design Directions</title>
+<style>
+:root {
+  --bg: 10 14 15;
+  --surface: 19 25 27;
+  --surface-2: 28 36 39;
+  --border: 31 37 40;
+  --text: 232 237 237;
+  --text-muted: 122 132 137;
+  --mint: 20 241 149;
+  --cyan: 0 209 255;
+  --copper: 229 165 82;
+  --terracotta: 194 83 61;
+  --warn: 245 197 24;
+  --danger: 255 77 94;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Inter", system-ui, sans-serif;
+  background: rgb(var(--bg));
+  color: rgb(var(--text));
+  font-size: 16px; line-height: 1.5;
+  padding: 48px 24px;
+}
+.numeric { font-feature-settings: 'tnum' on, 'lnum' on; font-variant-numeric: tabular-nums; }
+.mono { font-family: "Geist Mono", "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace; }
+.container { max-width: 1400px; margin: 0 auto; }
+
+header { margin-bottom: 48px; padding-bottom: 24px; border-bottom: 1px solid rgb(var(--border)); }
+h1 { font-size: 36px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 8px; }
+.subtitle { color: rgb(var(--text-muted)); font-size: 16px; }
+
+.committed-banner {
+  background: rgb(var(--mint) / 0.08);
+  border: 1px solid rgb(var(--mint) / 0.3);
+  border-radius: 14px;
+  padding: 16px 20px;
+  margin: 24px 0 48px;
+  display: flex; align-items: center; gap: 12px;
+}
+.committed-banner-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: rgb(var(--mint));
+  box-shadow: 0 0 12px rgb(var(--mint) / 0.6);
+  flex-shrink: 0;
+}
+.committed-banner-text { font-size: 14px; }
+.committed-banner strong { color: rgb(var(--mint)); }
+
+.directions-grid {
+  display: grid; gap: 32px;
+  grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+}
+.direction {
+  background: rgb(var(--surface));
+  border: 1px solid rgb(var(--border));
+  border-radius: 14px;
+  overflow: hidden;
+  display: flex; flex-direction: column;
+  position: relative;
+}
+.direction.committed {
+  border-color: rgb(var(--mint) / 0.5);
+  box-shadow: 0 0 0 1px rgb(var(--mint) / 0.3);
+}
+.direction-tag {
+  position: absolute; top: 16px; right: 16px;
+  background: rgb(var(--mint));
+  color: rgb(var(--bg));
+  padding: 4px 10px; border-radius: 9999px;
+  font-size: 11px; font-weight: 700; letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.direction-rejected {
+  position: absolute; top: 16px; right: 16px;
+  background: rgb(var(--surface-2));
+  color: rgb(var(--text-muted));
+  padding: 4px 10px; border-radius: 9999px;
+  font-size: 11px; font-weight: 600;
+  border: 1px solid rgb(var(--border));
+}
+.direction-preview {
+  height: 200px;
+  display: flex; align-items: center; justify-content: center;
+  position: relative;
+  border-bottom: 1px solid rgb(var(--border));
+}
+.direction-meta { padding: 20px; }
+.direction-name { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+.direction-desc { font-size: 14px; color: rgb(var(--text-muted)); margin-bottom: 12px; line-height: 1.6; }
+.direction-rationale { font-size: 13px; color: rgb(var(--text-muted)); line-height: 1.7; }
+.direction-rationale strong { color: rgb(var(--text)); }
+.direction-swatches { display: flex; gap: 6px; margin-top: 12px; }
+.direction-swatch { width: 24px; height: 24px; border-radius: 6px; border: 1px solid rgb(var(--border)); }
+
+/* Direction-specific previews */
+.preview-mockup {
+  width: 80%; max-width: 320px;
+  background: rgb(var(--bg));
+  border: 1px solid rgb(var(--border));
+  border-radius: 10px;
+  padding: 12px;
+  font-size: 11px;
+}
+.preview-mockup h4 { font-size: 14px; font-weight: 700; margin-bottom: 6px; }
+.preview-badges { display: flex; gap: 4px; flex-wrap: wrap; margin: 8px 0; }
+.preview-badge {
+  padding: 2px 6px; border-radius: 9999px;
+  font-size: 9px; font-weight: 600;
+  border: 1px solid;
+}
+.preview-btn {
+  display: inline-flex; padding: 6px 12px;
+  border-radius: 6px; font-size: 11px; font-weight: 600;
+  margin-top: 8px;
+}
+
+/* D1: Phantom-Mint */
+.d1 .preview-badge.signal { background: rgb(var(--mint) / 0.12); color: rgb(var(--mint)); border-color: rgb(var(--mint) / 0.3); }
+.d1 .preview-badge.cyan { background: rgb(var(--cyan) / 0.12); color: rgb(var(--cyan)); border-color: rgb(var(--cyan) / 0.3); }
+.d1 .preview-btn { background: rgb(var(--mint)); color: rgb(var(--bg)); }
+.d1 .preview-mockup { background: rgb(10 14 15); }
+
+/* D2: Phantom-Cyan */
+.d2 .preview-mockup { background: rgb(10 14 15); }
+.d2 .preview-badge.cyan { background: rgb(var(--cyan) / 0.15); color: rgb(var(--cyan)); border-color: rgb(var(--cyan) / 0.4); }
+.d2 .preview-badge.mint { background: rgb(var(--mint) / 0.12); color: rgb(var(--mint)); border-color: rgb(var(--mint) / 0.3); }
+.d2 .preview-btn { background: rgb(var(--cyan)); color: rgb(var(--bg)); }
+
+/* D3: Linear-minimal */
+.d3 .preview-mockup { background: rgb(15 17 19); }
+.d3 .preview-badge.mono { background: transparent; color: rgb(var(--text)); border-color: rgb(var(--border)); }
+.d3 .preview-btn { background: rgb(var(--text)); color: rgb(var(--bg)); }
+
+/* D4: Solana-gradient */
+.d4 .preview-mockup { background: rgb(10 14 15); }
+.d4 .preview-badge.gradient {
+  background: linear-gradient(90deg, rgb(20 241 149 / 0.15), rgb(0 209 255 / 0.15), rgb(153 69 255 / 0.15));
+  color: rgb(var(--text));
+  border-color: rgb(var(--mint) / 0.3);
+}
+.d4 .preview-btn {
+  background: linear-gradient(90deg, rgb(20 241 149), rgb(0 209 255), rgb(153 69 255));
+  color: rgb(var(--bg));
+}
+
+/* D5: Anchor-classic */
+.d5 .preview-mockup { background: rgb(20 22 26); }
+.d5 .preview-badge.classic { background: rgb(var(--surface-2)); color: rgb(var(--text)); border-color: rgb(var(--border)); }
+.d5 .preview-btn { background: rgb(120 120 130); color: rgb(255 255 255); }
+
+/* D6: Heritage-first */
+.d6 .preview-mockup { background: rgb(22 18 14); border-color: rgb(41 33 26); }
+.d6 .preview-badge.copper { background: rgb(var(--copper) / 0.15); color: rgb(var(--copper)); border-color: rgb(var(--copper) / 0.4); }
+.d6 .preview-badge.mint { background: rgb(var(--mint) / 0.12); color: rgb(var(--mint)); border-color: rgb(var(--mint) / 0.3); }
+.d6 .preview-btn { background: rgb(var(--copper)); color: rgb(22 18 14); }
+
+.eval-criteria {
+  margin-top: 64px; padding-top: 32px;
+  border-top: 1px solid rgb(var(--border));
+}
+.eval-criteria h2 { font-size: 24px; font-weight: 600; margin-bottom: 16px; }
+.eval-grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+.eval-card {
+  background: rgb(var(--surface));
+  border: 1px solid rgb(var(--border));
+  border-radius: 10px;
+  padding: 16px;
+}
+.eval-card-title { font-weight: 600; margin-bottom: 6px; font-size: 14px; color: rgb(var(--mint)); }
+.eval-card-text { font-size: 13px; color: rgb(var(--text-muted)); line-height: 1.6; }
+
+footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid rgb(var(--border)); font-size: 12px; color: rgb(var(--text-muted)); }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>Susu Protocol — Design Directions</h1>
+    <p class="subtitle">Six explored visual directions. The committed pick is <strong style="color: rgb(var(--mint));">Direction 1: Phantom-Mint</strong>.</p>
+  </header>
+
+  <div class="committed-banner">
+    <div class="committed-banner-dot"></div>
+    <div class="committed-banner-text">
+      <strong>Committed:</strong> Phantom-fintech dark · Solana mint-green primary (NOT purple) · cyan secondary · cross-skin invariant tokens for protocol identity · dual-skin runtime swap via CSS custom properties on <code class="mono">[data-skin]</code>.
+    </div>
+  </div>
+
+  <div class="directions-grid">
+
+    <!-- D1: COMMITTED -->
+    <div class="direction committed d1">
+      <div class="direction-tag">Committed</div>
+      <div class="direction-preview">
+        <div class="preview-mockup">
+          <h4>Susu Protocol</h4>
+          <div style="font-size:10px; color: rgb(var(--text-muted)); margin-bottom:6px;">Open-source ROSCA primitive on Solana</div>
+          <div class="preview-badges">
+            <span class="preview-badge signal">audit · passed</span>
+            <span class="preview-badge cyan">MIT</span>
+            <span class="preview-badge signal">10K circles ✓</span>
+          </div>
+          <div style="background: rgb(var(--surface-2)); padding:6px; border-radius:4px; font-family: 'Geist Mono', monospace; font-size:9px; color: rgb(var(--text)); margin-top:8px;">$ pnpm susu:demo</div>
+          <div class="preview-btn">Fork on GitHub →</div>
+        </div>
+      </div>
+      <div class="direction-meta">
+        <div class="direction-name">1. Phantom-Mint</div>
+        <div class="direction-desc">Dark-first Phantom-fintech aesthetic, Solana mint-green primary, cyan secondary, generous spacing, glassy elevation.</div>
+        <div class="direction-rationale">
+          <strong>Why this:</strong> matches Andre's stated brief (Phantom-fintech, NOT purple); mint is on-Solana-native and distinctive; cross-skin identity tokens make dual-skin claim structural. Accessibility AAA on text, AAA on primary buttons.
+        </div>
+        <div class="direction-swatches">
+          <div class="direction-swatch" style="background: rgb(10 14 15);"></div>
+          <div class="direction-swatch" style="background: rgb(20 241 149);"></div>
+          <div class="direction-swatch" style="background: rgb(0 209 255);"></div>
+          <div class="direction-swatch" style="background: rgb(255 77 94);"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- D2: Phantom-Cyan -->
+    <div class="direction d2">
+      <div class="direction-rejected">Rejected</div>
+      <div class="direction-preview">
+        <div class="preview-mockup">
+          <h4>Susu Protocol</h4>
+          <div style="font-size:10px; color: rgb(var(--text-muted)); margin-bottom:6px;">Open-source ROSCA primitive on Solana</div>
+          <div class="preview-badges">
+            <span class="preview-badge cyan">audit · passed</span>
+            <span class="preview-badge mint">MIT</span>
+            <span class="preview-badge cyan">10K circles ✓</span>
+          </div>
+          <div style="background: rgb(var(--surface-2)); padding:6px; border-radius:4px; font-family: 'Geist Mono', monospace; font-size:9px; color: rgb(var(--text)); margin-top:8px;">$ pnpm susu:demo</div>
+          <div class="preview-btn">Fork on GitHub →</div>
+        </div>
+      </div>
+      <div class="direction-meta">
+        <div class="direction-name">2. Phantom-Cyan</div>
+        <div class="direction-desc">Same Phantom-fintech posture, but cyan as primary instead of mint.</div>
+        <div class="direction-rationale">
+          <strong>Why rejected:</strong> cyan reads as "cold tech, Web2"; weakens the on-Solana-native register. Mint owns the Solana identity space more decisively.
+        </div>
+        <div class="direction-swatches">
+          <div class="direction-swatch" style="background: rgb(10 14 15);"></div>
+          <div class="direction-swatch" style="background: rgb(0 209 255);"></div>
+          <div class="direction-swatch" style="background: rgb(20 241 149);"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- D3: Linear-minimal -->
+    <div class="direction d3">
+      <div class="direction-rejected">Rejected</div>
+      <div class="direction-preview">
+        <div class="preview-mockup">
+          <h4 style="color: rgb(var(--text));">Susu Protocol</h4>
+          <div style="font-size:10px; color: rgb(var(--text-muted)); margin-bottom:6px;">Open-source ROSCA primitive on Solana</div>
+          <div class="preview-badges">
+            <span class="preview-badge mono">audit · passed</span>
+            <span class="preview-badge mono">MIT</span>
+            <span class="preview-badge mono">10K circles ✓</span>
+          </div>
+          <div style="background: rgb(var(--surface-2)); padding:6px; border-radius:4px; font-family: 'Geist Mono', monospace; font-size:9px; margin-top:8px;">$ pnpm susu:demo</div>
+          <div class="preview-btn">Fork on GitHub →</div>
+        </div>
+      </div>
+      <div class="direction-meta">
+        <div class="direction-name">3. Linear-minimal</div>
+        <div class="direction-desc">Flat, monochrome, almost no accent color — Linear/Vercel-docs aesthetic taken further.</div>
+        <div class="direction-rationale">
+          <strong>Why rejected:</strong> too cold for the heritage skin to layer warmth onto; would force the diaspora skin to feel like a separate codebase. Misses the Phantom-fintech directive entirely.
+        </div>
+        <div class="direction-swatches">
+          <div class="direction-swatch" style="background: rgb(15 17 19);"></div>
+          <div class="direction-swatch" style="background: rgb(232 237 237);"></div>
+          <div class="direction-swatch" style="background: rgb(122 132 137);"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- D4: Solana-gradient -->
+    <div class="direction d4">
+      <div class="direction-rejected">Rejected</div>
+      <div class="direction-preview">
+        <div class="preview-mockup">
+          <h4>Susu Protocol</h4>
+          <div style="font-size:10px; color: rgb(var(--text-muted)); margin-bottom:6px;">Open-source ROSCA primitive on Solana</div>
+          <div class="preview-badges">
+            <span class="preview-badge gradient">audit · passed</span>
+            <span class="preview-badge gradient">MIT</span>
+            <span class="preview-badge gradient">10K circles ✓</span>
+          </div>
+          <div style="background: rgb(var(--surface-2)); padding:6px; border-radius:4px; font-family: 'Geist Mono', monospace; font-size:9px; color: rgb(var(--text)); margin-top:8px;">$ pnpm susu:demo</div>
+          <div class="preview-btn">Fork on GitHub →</div>
+        </div>
+      </div>
+      <div class="direction-meta">
+        <div class="direction-name">4. Solana-gradient</div>
+        <div class="direction-desc">Uses Solana Foundation's official green→cyan→purple gradient as the signature element.</div>
+        <div class="direction-rationale">
+          <strong>Why rejected:</strong> derivative; reads as Solana-Foundation-branded rather than Susu-native. Includes purple, which Andre vetoed. Weakens distinct identity.
+        </div>
+        <div class="direction-swatches">
+          <div class="direction-swatch" style="background: rgb(10 14 15);"></div>
+          <div class="direction-swatch" style="background: linear-gradient(90deg, rgb(20 241 149), rgb(0 209 255), rgb(153 69 255));"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- D5: Anchor-classic -->
+    <div class="direction d5">
+      <div class="direction-rejected">Rejected</div>
+      <div class="direction-preview">
+        <div class="preview-mockup">
+          <h4 style="color: rgb(var(--text));">Susu Protocol</h4>
+          <div style="font-size:10px; color: rgb(var(--text-muted)); margin-bottom:6px;">Open-source ROSCA primitive on Solana</div>
+          <div class="preview-badges">
+            <span class="preview-badge classic">audit · passed</span>
+            <span class="preview-badge classic">MIT</span>
+            <span class="preview-badge classic">10K circles ✓</span>
+          </div>
+          <div style="background: rgb(var(--surface-2)); padding:6px; border-radius:4px; font-family: 'Geist Mono', monospace; font-size:9px; color: rgb(var(--text)); margin-top:8px;">$ pnpm susu:demo</div>
+          <div class="preview-btn">Fork on GitHub →</div>
+        </div>
+      </div>
+      <div class="direction-meta">
+        <div class="direction-name">5. Anchor-classic</div>
+        <div class="direction-desc">Closer to the Anchor docs aesthetic — flatter, more dev-tool, less fintech polish.</div>
+        <div class="direction-rationale">
+          <strong>Why rejected:</strong> reads as dev-tool, not premium fintech. Loses the 30-second judge-scan first-touch impact. Susu's positioning needs both — Anchor vocabulary in the directory tree, Phantom-fintech polish in the README hero.
+        </div>
+        <div class="direction-swatches">
+          <div class="direction-swatch" style="background: rgb(20 22 26);"></div>
+          <div class="direction-swatch" style="background: rgb(120 120 130);"></div>
+          <div class="direction-swatch" style="background: rgb(232 237 237);"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- D6: Heritage-first -->
+    <div class="direction d6">
+      <div class="direction-rejected">Rejected as default</div>
+      <div class="direction-preview">
+        <div class="preview-mockup">
+          <h4 style="color: rgb(240 233 222);">Susu Protocol</h4>
+          <div style="font-size:10px; color: rgb(158 137 116); margin-bottom:6px;">Open-source ROSCA primitive on Solana</div>
+          <div class="preview-badges">
+            <span class="preview-badge mint">audit · passed</span>
+            <span class="preview-badge copper">MIT</span>
+            <span class="preview-badge mint">10K circles ✓</span>
+          </div>
+          <div style="background: rgb(33 27 21); padding:6px; border-radius:4px; font-family: 'Geist Mono', monospace; font-size:9px; color: rgb(240 233 222); margin-top:8px;">$ pnpm susu:demo</div>
+          <div class="preview-btn">Fork on GitHub →</div>
+        </div>
+      </div>
+      <div class="direction-meta">
+        <div class="direction-name">6. Heritage-first</div>
+        <div class="direction-desc">Diaspora skin (copper/terracotta on warm-tinted ink) as the default, neutral skin opt-in.</div>
+        <div class="direction-rationale">
+          <strong>Why rejected as default:</strong> undermines the "infrastructure neutrality" framing of the protocol. Heritage is voice + opt-in skin, not the default chrome of an audited primitive. <strong>However:</strong> this becomes the diaspora-skin variant of Direction 1 — same structure, swapped accent tokens, mint stays for protocol identity.
+        </div>
+        <div class="direction-swatches">
+          <div class="direction-swatch" style="background: rgb(22 18 14);"></div>
+          <div class="direction-swatch" style="background: rgb(229 165 82);"></div>
+          <div class="direction-swatch" style="background: rgb(194 83 61);"></div>
+          <div class="direction-swatch" style="background: rgb(20 241 149);"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="eval-criteria">
+    <h2>Evaluation criteria applied</h2>
+    <div class="eval-grid">
+      <div class="eval-card">
+        <div class="eval-card-title">Phantom-fintech alignment</div>
+        <div class="eval-card-text">Dark-first, generous whitespace, glassy elevation, premium type hierarchy. D1 wins; D3 too cold; D5 too flat.</div>
+      </div>
+      <div class="eval-card">
+        <div class="eval-card-title">NOT purple</div>
+        <div class="eval-card-text">Andre's explicit veto. Eliminates D4 (gradient includes purple). D1 mint-green is the on-Solana-native pivot.</div>
+      </div>
+      <div class="eval-card">
+        <div class="eval-card-title">Dual-skin structural support</div>
+        <div class="eval-card-text">Cross-skin invariant tokens (mint for protocol identity) make the dual-skin claim structural. D1+D6 share this.</div>
+      </div>
+      <div class="eval-card">
+        <div class="eval-card-title">30-second judge scan</div>
+        <div class="eval-card-text">Badge-dense first viewport must read in 30s. D1 + D6 both deliver; D3 too monochrome to differentiate badges.</div>
+      </div>
+      <div class="eval-card">
+        <div class="eval-card-title">Accessibility AA minimum</div>
+        <div class="eval-card-text">All six clear AA on text. Only D1 (mint on ink) clears AAA on primary buttons; D6 (copper on warm ink) is AA Large.</div>
+      </div>
+      <div class="eval-card">
+        <div class="eval-card-title">Distinctive Solana identity</div>
+        <div class="eval-card-text">D1 mint owns "on-Solana-native" most decisively without copying Phantom (purple) or Foundation (gradient).</div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    Susu Protocol UX Design Specification · Design Directions Explorer · v0.1 · 2026-05-05<br>
+    Six directions explored · Direction 1 (Phantom-Mint) committed · Direction 6 (Heritage) becomes the diaspora skin variant of Direction 1
+  </footer>
+</div>
+</body>
+</html>
