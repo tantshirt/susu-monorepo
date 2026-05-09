@@ -83,8 +83,8 @@ _Last updated: 2026-05-09T07:35:00Z_
 | 7.17 | 7 | Mobile-first responsive layout 360px floor + breakpoints + Playwright visual regression | done | #81 | #209 | merged | 7.1, 7.2, 7.3, 7.4, 7.5, 7.6, 7.7, 7.8, 7.9, 7.10, 7.11, 7.12, 7.13, 7.14, 7.15, 7.16 | ✅ Done |
 | 7.18 | 7 | Accessibility surface — WCAG 2.1 AA + RTL + reduced-motion + axe-core CI + non-crypto pilot | done | #82 | #203 | merged | none | ✅ Done |
 | 8.1 | 8 | README first-viewport with badge architecture | ready-for-dev | #83 | — | — | 1.4, 5.1, 5.6, 8.2, 8.3 | ❌ No (needs 8.2, 8.3) |
-| 8.2 | 8 | <AdversaryBadge /> server-rendered from latest report | ready-for-dev | #84 | — | — | 5.4 | ✅ Ready |
-| 8.3 | 8 | <UpgradeBurnedBadge /> server-rendered from solana program show | ready-for-dev | #85 | — | — | 1.1, 5.4, 8.2 | ❌ No (needs 8.2) |
+| 8.2 | 8 | <AdversaryBadge /> server-rendered from latest report | done | #84 | #210 | merged | 5.4 | ✅ Done |
+| 8.3 | 8 | <UpgradeBurnedBadge /> server-rendered from solana program show | ready-for-dev | #85 | — | — | 1.1, 5.4, 8.2 | ✅ Ready |
 | 8.4 | 8 | Inline animated SVG curve plot + <CurveVisualizer /> interactive variant | ready-for-dev | #86 | — | — | 1.4, 7.11, 8.1 | ❌ No (needs 8.1) |
 | 8.5 | 8 | README link cluster | ready-for-dev | — | — | — | 8.1 | ❌ No (Epic 7 not complete) |
 | 8.6 | 8 | 60-90s demo video production + embed | ready-for-dev | — | — | — | 6.7, 8.4 | ❌ No (Epic 7 not complete) |

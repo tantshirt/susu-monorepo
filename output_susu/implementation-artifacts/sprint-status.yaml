@@ -138,7 +138,7 @@ development_status:
   # Epic 8: README Hero, Demo Video & Submission Marketing Surface
   epic-8: in-progress
   8-1-readme-first-viewport: ready-for-dev
-  8-2-adversary-badge: ready-for-dev
+  8-2-adversary-badge: done # merged via PR #210
   8-3-upgrade-burned-badge: ready-for-dev
   8-4-curve-svg-plot: ready-for-dev
   8-5-readme-link-cluster: ready-for-dev
