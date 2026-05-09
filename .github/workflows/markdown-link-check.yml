@@ -1,0 +1,52 @@
+name: markdown-link-check
+
+on:
+  pull_request:
+    paths:
+      - 'README.md'
+      - 'docs/**/*.md'
+      - 'log/latest.md'
+      - '.github/workflows/markdown-link-check.yml'
+      - '.markdown-link-check.json'
+  push:
+    branches:
+      - main
+    paths:
+      - 'README.md'
+      - 'docs/**/*.md'
+      - 'log/latest.md'
+      - '.github/workflows/markdown-link-check.yml'
+      - '.markdown-link-check.json'
+
+jobs:
+  link-check:
+    name: Check markdown links
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+
+      - name: Install markdown-link-check
+        run: npm install -g markdown-link-check@3.13.6
+
+      - name: Sync latest log mirror
+        run: bash scripts/sync-latest-log.sh
+
+      - name: Check README links
+        run: markdown-link-check README.md --config .markdown-link-check.json --verbose
+
+      - name: Check docs/ links
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+          for f in docs/*.md; do
+            echo "checking $f"
+            markdown-link-check "$f" --config .markdown-link-check.json --verbose
+          done
