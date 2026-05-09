@@ -1,0 +1,27 @@
+Susu Protocol — 60-90s demo voiceover (English)
+================================================
+
+Synced to docs/demo/storyboard.md and apps/reference/public/demo.en.vtt.
+
+[00:00 - 00:10] Segment 1 — Rotating-money animation
+Your grandma's savings circle, on a blockchain, with the math worked out this time.
+
+[00:10 - 00:30] Segment 2 — Curve explainer
+Susu uses a dynamic-collateral curve.
+The recipient with the most to gain posts the most collateral.
+We proved no rational defector profits — ten thousand adversarial circles, every rotation slot.
+
+[00:30 - 00:50] Segment 3 — Integration code typed on screen
+Five SDK calls.
+Privy handles the wallet.
+Susu handles the curve.
+The rotation runs itself.
+
+[00:50 - 01:00] Segment 4 — Dual-skin toggle
+Two skins, one protocol.
+Mint-green stays.
+Communities theme the rest.
+
+[01:00 - 01:08] Segment 5 — Fork-me CTA
+Public from commit zero.
+Fork it. Run it. Ship a circle.

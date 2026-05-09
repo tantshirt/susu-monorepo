@@ -1,0 +1,33 @@
+Susu Protocol — Lời thuyết minh demo 60-90s (Tiếng Việt)
+=========================================================
+
+TODO (Story 8.6 follow-up): high-fidelity Vietnamese translation.
+The cue timestamps below mirror docs/demo/voiceover-en.txt and
+apps/reference/public/demo.vi.vtt so subtitle alignment stays valid
+even before the polished translation lands. The translator should
+preserve the canonical opener line and keep cue boundaries intact.
+
+[00:00 - 00:10] Phân đoạn 1 — Hoạt hình tiền xoay vòng
+TODO(vi): Bắt đầu bằng câu mở đầu PRD — "vòng tiết kiệm của bà bạn,
+trên blockchain, lần này với phép toán đã được tính kỹ".
+
+[00:10 - 00:30] Phân đoạn 2 — Giải thích đường cong tài sản đảm bảo
+TODO(vi): Susu dùng đường cong tài sản đảm bảo động.
+Người nhận có nhiều thứ để được nhất phải đặt cọc nhiều nhất.
+Đã chứng minh: không có kẻ phản bội hợp lý nào có lợi —
+10.000 vòng đối kháng, mọi vị trí trong vòng quay.
+
+[00:30 - 00:50] Phân đoạn 3 — Mã tích hợp được gõ trực tiếp trên màn hình
+TODO(vi): Năm lệnh gọi SDK.
+Privy lo phần ví.
+Susu lo phần đường cong.
+Vòng quay tự chạy.
+
+[00:50 - 01:00] Phân đoạn 4 — Chuyển đổi giao diện kép
+TODO(vi): Hai giao diện, một giao thức.
+Màu xanh bạc-hà giữ nguyên.
+Cộng đồng tự chỉnh phần còn lại.
+
+[01:00 - 01:08] Phân đoạn 5 — Lời kêu gọi fork
+TODO(vi): Công khai từ commit số không.
+Fork đi. Chạy đi. Khởi động một vòng tiết kiệm.

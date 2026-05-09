@@ -1,0 +1,7 @@
+# Susu Protocol — Git LFS routing
+#
+# The 60-90s demo video lives at apps/reference/public/demo.mp4. The repo
+# currently ships a tiny placeholder file so the embed wires up cleanly;
+# Story 8.6 adds this LFS attribute so when the real recording lands, it
+# is routed through Git LFS instead of inflating git history.
+*.mp4 filter=lfs diff=lfs merge=lfs -text

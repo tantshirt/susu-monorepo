@@ -5,7 +5,8 @@
     { "pattern": "^https?://(?:img\\.shields\\.io|shields\\.io)/" },
     { "pattern": "^https?://(?:www\\.)?github\\.com/" },
     { "pattern": "^https?://api\\.github\\.com/" },
-    { "pattern": "^#$" }
+    { "pattern": "^#$" },
+    { "pattern": "^https?://(?:www\\.)?youtube\\.com/.*TODO" }
   ],
   "replacementPatterns": [],
   "httpHeaders": [],
