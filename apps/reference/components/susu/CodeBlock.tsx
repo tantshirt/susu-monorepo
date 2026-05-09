@@ -62,7 +62,7 @@ export const CodeBlock = React.forwardRef<HTMLDivElement, CodeBlockProps>(
         <pre className="overflow-x-auto p-4 font-mono text-caption leading-6 text-text">
           <code className="font-mono">{code}</code>
         </pre>
-        <div className="absolute right-2 top-2">
+        <div className="absolute end-2 top-2">
           <Button
             type="button"
             variant="ghost"
