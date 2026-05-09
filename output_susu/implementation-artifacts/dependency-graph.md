@@ -1,5 +1,5 @@
 # Story Dependency Graph
-_Last updated: 2026-05-09T21:15:00Z_
+_Last updated: 2026-05-09T07:35:00Z_
 
 ## Epic Readiness Summary
 
@@ -11,6 +11,7 @@ _Last updated: 2026-05-09T21:15:00Z_
 | 4 | `sprint-status.yaml` marks `epic-4` `done`; Stories 4.1, 4.2, 4.3, 4.4, 4.5, and 4.6 are `done`. | Story 4.1 merged via PR #157; Story 4.2 merged via PR #158; Story 4.3 merged via PR #159; Story 4.4 merged via PR #161; Story 4.5 merged via PR #160; Story 4.6 merged via PR #162. | Complete |
 | 5 | `sprint-status.yaml` marks `epic-5` `done`; Stories 5.1–5.9 `done`; `epic-5-retrospective` `done`. | Merged story PRs #166–#175; retrospective PR #176. Issues #44–#52 closed. | Complete |
 | 6 | `sprint-status.yaml` marks `epic-6` and Stories 6.1–6.12 `done`; `epic-6-retrospective` is `optional`. | Stories 6.1–6.12 merged on `main` (capstone verify + release PR #187). Issues #53–#64 closed. | Complete |
+| 7 | `sprint-status.yaml` marks `epic-7` `in-progress` with Story 7.1 `done`. | Story 7.1 merged via PR #192. | In progress (Wave A complete) |
 
 ## Stories
 
@@ -63,7 +64,7 @@ _Last updated: 2026-05-09T21:15:00Z_
 | 6.10 | 6 | pnpm susu:demo orchestrator hitting NFR-P2 ≤60s | done | #62 | #184 | merged | 6.1, 6.2, 6.3 | ✅ Done |
 | 6.11 | 6 | pnpm verify orchestrator hitting NFR-Re4 ≤10min | done | #63 | #187 | merged | 5.4, 6.5, 6.10 | ✅ Done |
 | 6.12 | 6 | SDK + crate publishing pipeline via OIDC | done | #64 | #187 | merged | 6.1, 6.2, 6.3, 6.4, 6.5, 6.11 | ✅ Done |
-| 7.1 | 7 | Next.js 15 reference app scaffold + provider order + Zod env loader | ready-for-dev | — | — | — | 1.1, 1.4 | ✅ Ready |
+| 7.1 | 7 | Next.js 15 reference app scaffold + provider order + Zod env loader | done | #65 | #192 | merged | 1.1, 1.4 | ✅ Done |
 | 7.2 | 7 | Design tokens — tokens.css + dual-skin overrides + Tailwind config (UX-DR1–8) | ready-for-dev | — | — | — | 7.1 | ❌ No |
 | 7.3 | 7 | Typography self-hosted via next/font + type scale + .numeric utility | ready-for-dev | — | — | — | 7.1, 7.2 | ❌ No |
 | 7.4 | 7 | shadcn/ui primitives copied + reskinned via tokens (UX-DR24) | ready-for-dev | — | — | — | 7.2, 7.3, 7.7 | ❌ No |
@@ -168,3 +169,4 @@ _Last updated: 2026-05-09T21:15:00Z_
 - Epic 4 is complete through Story 4.6; PR #162 merged the lifecycle capstone.
 - **Ready to Work** for Epic 5 is now unblocked by epic ordering; re-run BAD Phase 0 before selecting the next Epic 5 story batch.
 - Re-run this reconciliation after each Epic 4 story PR merges so BAD can select the next unblocked story batch.
+- **2026-05-09**: Story 7.1 (Next.js 15 reference app scaffold) merged via PR #192 (squash) at SHA `3291097f136128bebd751c0f300361169363ef3d`. Epic 7 is now `in-progress`. Wave B candidates (7.2, 7.7, 7.13) unblocked.
