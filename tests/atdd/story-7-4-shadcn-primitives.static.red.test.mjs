@@ -151,10 +151,12 @@ test('Story 7.4 Button declares all five variants (primary, secondary, ghost, de
   }
 });
 
-test('Story 7.4 Button declares size variants sm 32 / md 40 / lg 48 per UX-DR38', () => {
+test('Story 7.4 Button declares size variants sm/md/lg meeting the WCAG 2.5.5 44px floor (raised by Story 7.17)', () => {
   const src = read(`${uiDir}/button.tsx`);
-  // h-8 (32px), h-10 (40px), h-12 (48px) — Tailwind's 4px scale.
-  for (const cls of ['h-8', 'h-10', 'h-12']) {
+  // Story 7.17 lifted the size variants from 32 / 40 / 48 to 44 / 48 / 56 px
+  // to honour WCAG 2.5.5 (44 × 44 minimum touch target). The Tailwind 4px
+  // scale gives h-11 (44px) / h-12 (48px) / h-14 (56px).
+  for (const cls of ['h-11', 'h-12', 'h-14']) {
     assert.ok(src.includes(cls), `button.tsx must include the ${cls} class for size variants`);
   }
 });

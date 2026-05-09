@@ -39,6 +39,7 @@ env_hits="$({
   grep -rEn --include='*.ts' --include='*.tsx' 'process\.env\.[A-Za-z_][A-Za-z0-9_]*' apps sdk examples 2>/dev/null || true
 } \
   | grep -v '^apps/reference/lib/env.ts:' \
+  | grep -v '^apps/reference/playwright.config.ts:' \
   | grep -v '^sdk/ts/src/generated/' \
   || true)"
 print_hits "process.env outside apps/reference/lib/env.ts" "$env_hits"

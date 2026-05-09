@@ -8,7 +8,12 @@ import { cn } from "@/lib/utils";
 /**
  * Button — UX-DR38 hierarchy: primary (mint bg + ink text, only one per
  * view), secondary (surface-2 + border), ghost (transparent), destructive
- * (danger bg), link (primary text + underline). Sizes sm 32 / md 40 / lg 48.
+ * (danger bg), link (primary text + underline).
+ *
+ * Story 7.17 raised the size variants to honour the 44 × 44 px touch-target
+ * floor (WCAG 2.5.5). Sizes are now sm 44 / md 48 / lg 56 / icon 44 — the
+ * pre-7.17 32 / 40 / 48 px values regressed mobile usability on Linh's
+ * 360px handset. Hit-area now exceeds the floor at every breakpoint.
  *
  * UX-DR28: every interactive element wires a 2px `--signal` (mint) focus ring
  * at 2px offset via `focus-visible:` so the cross-skin focus identity is
@@ -37,10 +42,13 @@ const buttonVariants = cva(
         link: "bg-transparent text-primary underline-offset-4 hover:underline",
       },
       size: {
-        sm: "h-8 px-3 text-caption",
-        md: "h-10 px-4 text-body",
-        lg: "h-12 px-6 text-body",
-        icon: "h-10 w-10",
+        // Story 7.17: bumped sm 32→44, md 40→48, lg 48→56, icon 40→44 to
+        // honour WCAG 2.5.5 (44×44 minimum) on mobile. The Tailwind spacing
+        // scale uses 4px steps, so h-11 = 44px / h-12 = 48px / h-14 = 56px.
+        sm: "h-11 px-3 text-caption",
+        md: "h-12 px-4 text-body",
+        lg: "h-14 px-6 text-body",
+        icon: "h-11 w-11",
       },
     },
     defaultVariants: {

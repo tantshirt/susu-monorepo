@@ -207,13 +207,17 @@ export default function DevComponentsPage() {
   }
 
   return (
-    <main className="flex flex-col gap-8 p-6">
+    <main className="mx-auto flex w-full max-w-7xl flex-col gap-8 p-4 md:p-6">
       <header>
-        <h1 className="text-h1 font-bold text-text">Component preview</h1>
+        {/* Story 7.17: drop `text-h1` (40px) to `text-h2` (32px) at 360px to
+            stay within the mobile floor; restore at md+. */}
+        <h1 className="text-h2 font-bold text-text md:text-h1">Component preview</h1>
         <p className="text-body text-muted">
           Story 7.4 — every shadcn primitive rendered against both skin tokens.
         </p>
       </header>
+      {/* Story 7.17: stack columns vertically below md (single column),
+          two-up at lg+. */}
       <div className="grid gap-8 lg:grid-cols-2">
         <DevSection skin="neutral" title="Neutral skin" />
         <DevSection skin="diaspora" title="Diaspora skin" />

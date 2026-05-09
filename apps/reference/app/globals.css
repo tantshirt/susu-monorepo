@@ -47,6 +47,12 @@
   --text-display-1: 56px;
   --text-display-1--line-height: 64px;
   --text-display-1--letter-spacing: -0.02em;
+  /* Story 7.17 — `display-2` is the mobile drop for `display-1`. Hero
+     surfaces use `text-display-2 md:text-display-1` so the 360px floor
+     never triggers horizontal scroll. */
+  --text-display-2: 40px;
+  --text-display-2--line-height: 48px;
+  --text-display-2--letter-spacing: -0.02em;
   --text-h1: 40px;
   --text-h1--line-height: 48px;
   --text-h1--letter-spacing: -0.02em;

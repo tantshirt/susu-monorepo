@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "e2e:visual": "playwright test --project=visual"
   },
   "dependencies": {
     "@privy-io/react-auth": "^2.0.0",
@@ -39,6 +40,7 @@
   },
   "devDependencies": {
     "@axe-core/cli": "^4.10.1",
+    "@playwright/test": "^1.48.0",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
