@@ -19,6 +19,14 @@
     "confirm": "Confirm",
     "close": "Close"
   },
+  "contribute": {
+    "buttonLabel": "Contribute",
+    "connectPrompt": "Connect a wallet to contribute to this group.",
+    "modalTitle": "Confirm contribution",
+    "modalDescription": "Review the simulated outcome before signing. Your contribution is recorded on-chain immediately after confirmation.",
+    "receiptTitle": "Contribution receipt",
+    "nextStepsLead": "Next contribution opens at the start of the following rotation window."
+  },
   "rotation": {
     "title": "Rotation {index} of {total}",
     "recipient": "Recipient",

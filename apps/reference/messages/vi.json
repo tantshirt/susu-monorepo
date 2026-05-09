@@ -19,6 +19,14 @@
     "confirm": "Xác nhận",
     "close": "Đóng"
   },
+  "contribute": {
+    "buttonLabel": "Đóng góp",
+    "connectPrompt": "Kết nối ví để đóng góp cho nhóm này.",
+    "modalTitle": "Xác nhận đóng góp",
+    "modalDescription": "Hãy xem kết quả mô phỏng trước khi ký. Khoản đóng góp của bạn được ghi nhận on-chain ngay sau khi xác nhận.",
+    "receiptTitle": "Biên nhận đóng góp",
+    "nextStepsLead": "Lần đóng góp kế tiếp mở vào đầu chu kỳ vòng kế tiếp."
+  },
   "rotation": {
     "title": "Vòng {index} trên {total}",
     "recipient": "Người nhận",
