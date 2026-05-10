@@ -4,6 +4,7 @@ import { WalletStatus } from "@/components/nav/WalletStatus";
 import { MobileNavMenu } from "@/components/nav/MobileNavMenu";
 import { NavSettingsMenu } from "@/components/nav/NavSettingsMenu";
 import { AuthNavLinks, type AuthNavLink } from "@/components/nav/AuthNavLinks";
+import { TopNavChrome } from "@/components/nav/TopNavChrome";
 // Story 7.17 — explicit type-only re-export of the DropdownMenu primitive
 // so `<MobileNavMenu />` (the < md hamburger) and the static-test contract
 // both anchor on `@/components/ui/dropdown-menu` from this file.
@@ -19,7 +20,8 @@ import { cn } from "@/lib/utils";
  * Renders on every reference-app route — including `/404` — per UX-DR16
  * (always-visible cluster) and FR47 / NFR-S8 (cluster discipline).
  *
- * Layout (premium floating shell):
+ * Layout (premium floating shell via `<TopNavChrome />` — glass at top, more
+ * opaque after scroll; respects prefers-reduced-motion):
  *
  *   [ Susu | Dashboard · Groups · Create · Join · How it works ] ... [ ClusterPill | Wallet | (mobile menu) ]
  *
@@ -45,32 +47,32 @@ export async function TopNav({ locale }: TopNavProps) {
     { href: `/${locale}/how-it-works`, label: t("howItWorks") },
   ] satisfies readonly AuthNavLink[];
 
-  const navText =
-    "text-sm font-medium text-text/90 transition-colors hover:text-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal focus-visible:ring-offset-2 focus-visible:ring-offset-surface";
+  const brandWordmark =
+    "font-display text-sm font-medium tracking-tight text-text/95 transition-colors duration-200 motion-reduce:transition-none hover:text-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal focus-visible:ring-offset-2 focus-visible:ring-offset-surface";
+
+  const navLinkBase =
+    "text-sm font-medium text-text/70 transition-colors duration-200 motion-reduce:transition-none hover:text-text focus-visible:text-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal focus-visible:ring-offset-2 focus-visible:ring-offset-surface underline-offset-[5px] decoration-from-font hover:underline hover:decoration-text/35 focus-visible:underline focus-visible:decoration-text/60";
 
   return (
     <header
       className="sticky top-0 z-40 w-full pointer-events-none px-4 pt-3 pb-2 md:px-6 md:pt-4"
       data-component="TopNav"
     >
-      <nav
-        className="pointer-events-auto mx-auto flex max-w-5xl items-center justify-between gap-2 rounded-full border border-border/60 bg-surface/90 shadow-1 backdrop-blur-xl supports-[backdrop-filter]:bg-surface/75 md:gap-3 md:px-5 md:py-2.5 px-3 py-2"
-        aria-label="Primary"
-      >
-        <div className="flex min-w-0 flex-1 items-center gap-2 md:gap-6">
+      <TopNavChrome aria-label="Primary">
+        <div className="flex min-w-0 flex-1 items-center gap-3 md:gap-7">
           <Link
             href={`/${locale}`}
-            className={cn(
-              navText,
-              "shrink-0 rounded-md px-1 py-1 tracking-tight",
-            )}
+            className={cn(brandWordmark, "shrink-0 rounded-md px-1 py-1")}
           >
             Susu
           </Link>
           <AuthNavLinks
             links={navLinks}
-            className="hidden min-w-0 shrink-0 items-center gap-0.5 md:flex"
-            linkClassName={cn(navText, "rounded-pill px-3 py-2 hover:bg-surface2/90")}
+            className="hidden min-w-0 shrink-0 items-center gap-1 md:flex"
+            linkClassName={cn(
+              navLinkBase,
+              "rounded-pill px-3 py-2 hover:bg-surface2/50",
+            )}
           />
         </div>
         <div className="flex shrink-0 items-center gap-2">
@@ -90,7 +92,7 @@ export async function TopNav({ locale }: TopNavProps) {
             <MobileNavMenu locale={locale} initialSkin={initialSkin} navLinks={navLinks} />
           </div>
         </div>
-      </nav>
+      </TopNavChrome>
     </header>
   );
 }
