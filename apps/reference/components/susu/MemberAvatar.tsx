@@ -15,7 +15,7 @@ import { cn } from "@/lib/utils";
  * Cross-skin: tint indices map to token classes, not raw colors. The same
  * pubkey renders with the neutral palette under the neutral skin and the
  * diaspora palette under `[data-skin="diaspora"]` because the underlying
- * tokens (`bg-surface2`, `bg-info`, `bg-signal`, `bg-warn`, `bg-primary`)
+ * tokens (`bg-surface2`, `bg-signal`, `bg-warn`, `bg-primary`, `bg-secondary`)
  * already swap per skin. No `process.env`, no random — pure derivation.
  *
  * Story 7.14, 7.15, 7.17 consume this for member rosters; Story 8.1 README
@@ -44,10 +44,10 @@ const SIZE_CLASS: Record<MemberAvatarSize, string> = {
 // across `[data-skin]` automatically because the tokens themselves swap.
 const TINT_CLASSES = [
   "bg-surface2 text-text",
-  "bg-info text-bg",
-  "bg-signal text-bg",
-  "bg-warn text-bg",
-  "bg-primary text-bg",
+  "bg-primary/10 text-primary",
+  "bg-signal/10 text-primary",
+  "bg-warn/10 text-text",
+  "bg-secondary/10 text-secondary",
 ] as const;
 
 /**

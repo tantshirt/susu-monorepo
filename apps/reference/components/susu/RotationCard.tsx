@@ -112,43 +112,74 @@ export function RotationCard({
   })();
 
   const isActionable = state === "active";
+  const paddedIndex = String(i).padStart(2, "0");
 
   return (
-    <Card className={cn("w-full", className)} {...props}>
-      <CardHeader>
-        <div className="flex items-center justify-between gap-3">
-          <CardTitle>{t("title", { index: i, total: n })}</CardTitle>
-          <Badge variant={stateBadgeVariant(state)}>{stateLabel}</Badge>
+    <Card
+      className={cn(
+        "group relative w-full overflow-hidden rounded-2xl border-border/70 bg-white/95 shadow-1 transition-[box-shadow,transform] hover:-translate-y-0.5 hover:shadow-2",
+        className,
+      )}
+      {...props}
+    >
+      <div
+        aria-hidden
+        className={cn(
+          "absolute inset-y-0 left-0 w-1",
+          state === "active"
+            ? "bg-primary"
+            : state === "claimed"
+              ? "bg-signal"
+              : "bg-warn",
+        )}
+      />
+      <CardHeader className="gap-4 p-5 ps-6">
+        <div className="flex items-start justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-border bg-surface2 font-mono text-caption font-semibold text-primary">
+              {paddedIndex}
+            </div>
+            <div className="min-w-0">
+              <CardTitle>{t("title", { index: i, total: n })}</CardTitle>
+              <CardDescription className="mt-1">{t("recipient")}</CardDescription>
+            </div>
+          </div>
+          <Badge variant={stateBadgeVariant(state)} className="shrink-0">
+            {stateLabel}
+          </Badge>
         </div>
-        <CardDescription>{t("recipient")}</CardDescription>
       </CardHeader>
-      <CardContent className="flex flex-col gap-4">
-        <div className="flex items-center gap-3">
-          <MemberAvatar
-            pubkey={recipient}
-            displayName={recipientDisplayName ?? null}
-            highlighted={state === "active"}
-            size="md"
-          />
-          <span className="break-all font-mono text-caption text-text">
-            {recipientDisplayName?.trim() || truncatePubkey(recipient)}
-          </span>
-        </div>
-        <div className="flex flex-col gap-1">
-          <span className="text-caption text-muted">
-            {t("contributionsProgress", {
-              received: contributionsReceived,
-              required: contributionsRequired,
-            })}
-          </span>
+      <CardContent className="grid gap-4 p-5 pt-0 ps-6 md:grid-cols-[minmax(0,1fr)_minmax(14rem,0.8fr)]">
+        <div className="flex min-w-0 flex-col gap-4 rounded-xl border border-border/70 bg-surface2/60 p-4">
+          <div className="flex items-center gap-3">
+            <MemberAvatar
+              pubkey={recipient}
+              displayName={recipientDisplayName ?? null}
+              highlighted={state === "active"}
+              size="md"
+            />
+            <div className="min-w-0">
+              <p className="break-all font-mono text-caption font-semibold text-text">
+                {recipientDisplayName?.trim() || truncatePubkey(recipient)}
+              </p>
+              <p className="mt-1 text-caption text-muted">
+                {t("contributionsProgress", {
+                  received: contributionsReceived,
+                  required: contributionsRequired,
+                })}
+              </p>
+            </div>
+          </div>
           <Progress value={progressValue} />
         </div>
-        <div className="flex flex-col gap-1">
-          <span className="text-caption text-muted">{t("deadline")}</span>
-          <span className="font-mono text-caption text-text">{deadlineLabel}</span>
-        </div>
-        <div className="flex justify-end">
-          <Button variant={isActionable ? "primary" : "secondary"} size="md">
+        <div className="flex flex-col justify-between gap-4 rounded-xl border border-border/70 bg-white p-4">
+          <div className="flex flex-col gap-1">
+            <span className="text-caption font-semibold uppercase tracking-wide text-muted">
+              {t("deadline")}
+            </span>
+            <span className="font-mono text-caption text-text">{deadlineLabel}</span>
+          </div>
+          <Button variant={isActionable ? "primary" : "secondary"} size="md" className="w-full">
             {isActionable ? t("claim") : t("viewDetails")}
           </Button>
         </div>

@@ -11,16 +11,16 @@ import { cn } from "@/lib/utils";
  */
 const toastVariants = cva(
   cn(
-    "pointer-events-auto relative flex w-full items-center justify-between gap-3 overflow-hidden rounded-md border p-4 shadow-2",
+    "pointer-events-auto relative flex w-full items-center justify-between gap-3 overflow-hidden rounded-xl border p-4 shadow-2",
     "transition-all",
   ),
   {
     variants: {
       variant: {
         default: "border-border bg-surface text-text",
-        signal: "border-signal bg-surface text-text",
-        warn: "border-warn bg-surface text-text",
-        danger: "border-danger bg-surface text-text",
+        signal: "border-signal/20 bg-signal/10 text-text",
+        warn: "border-warn/20 bg-warn/10 text-text",
+        danger: "border-danger/20 bg-danger/10 text-text",
       },
     },
     defaultVariants: { variant: "default" },

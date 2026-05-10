@@ -10,6 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useWallet } from "@/lib/wallet/useWallet";
+import { cn } from "@/lib/utils";
 
 /**
  * Story 7.9 — `<WalletStatus />`.
@@ -28,7 +29,12 @@ function truncateAddress(address: string): string {
   return `${address.slice(0, 4)}...${address.slice(-4)}`;
 }
 
-export function WalletStatus() {
+export interface WalletStatusProps {
+  /** Merged onto the trigger `<Button />` so callers can align nav typography. */
+  className?: string;
+}
+
+export function WalletStatus({ className }: WalletStatusProps) {
   const { connected, address, provider } = useWallet();
   const privy = usePrivy();
   // Wrap action calls so an unexpected throw at click-time can't crash the
@@ -55,6 +61,7 @@ export function WalletStatus() {
         type="button"
         variant="primary"
         size="sm"
+        className={cn("text-sm font-medium", className)}
         aria-label="Connect wallet"
         data-wallet-state="disconnected"
         onClick={login}
@@ -72,6 +79,7 @@ export function WalletStatus() {
           type="button"
           variant="secondary"
           size="sm"
+          className={cn("text-sm font-medium", className)}
           aria-label={`Wallet ${label} (${provider ?? "unknown"})`}
           data-wallet-state="connected"
           data-wallet-provider={provider ?? "unknown"}

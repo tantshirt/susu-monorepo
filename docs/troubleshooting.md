@@ -14,7 +14,7 @@ Bucket: `devnet-airdrop-limit`
 
 Message: "Devnet airdrop rate limit. Run `solana airdrop 2` manually or wait 24h."
 
-Recovery: retry with an already funded keypair via `SUSU_DEMO_KEYPAIR_PATH`, run `solana airdrop 2 <pubkey> --url <rpc>` manually, or point `SUSU_DEMO_RPC_URL` at a Surfpool fork where local airdrops are deterministic.
+Recovery: retry with an already funded keypair via `SUSU_DEMO_KEYPAIR_PATH`, run `solana airdrop 2 <pubkey> --url <rpc>` manually, or point `SUSU_DEMO_RPC_URL` at a Surfpool fork where local airdrops are deterministic. For a full walkthrough (including `SUSU_DEMO_SKIP_PREFLIGHT` and CI parity), see [`docs/demo-setup.md`](./demo-setup.md).
 
 ## Dependency Mismatch
 

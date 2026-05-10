@@ -20,6 +20,13 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      screens: {
+        sm: "40rem",
+        md: "48rem",
+        lg: "64rem",
+        xl: "80rem",
+        "2xl": "96rem",
+      },
       colors: {
         bg: "rgb(var(--bg) / <alpha-value>)",
         surface: "rgb(var(--surface) / <alpha-value>)",
@@ -61,7 +68,7 @@ const config: Config = {
         "xl": "24px",
         "pill": "9999px",
       },
-      // Phantom-style shadows (UX-DR8).
+      // Soft fintech shadows (UX-DR8).
       boxShadow: {
         "1": "var(--shadow-1)",
         "2": "var(--shadow-2)",

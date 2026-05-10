@@ -76,6 +76,7 @@ export function LocaleDropdown({ currentLocale }: LocaleDropdownProps) {
           type="button"
           variant="secondary"
           size="sm"
+          className="text-sm font-medium"
           aria-label="Switch language"
           data-current-locale={currentLocale}
         >

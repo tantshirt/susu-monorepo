@@ -2,13 +2,14 @@
 
 import * as React from "react";
 import { Button } from "@/components/ui/button";
+import type { Skin } from "@/lib/theme/skin-shared";
+import { DEFAULT_SKIN } from "@/lib/theme/skin-shared";
 
 /**
  * Story 7.5 — `<SkinToggle />`.
  *
- * Toggles the `data-skin` attribute on `<html>` between `"neutral"` and
- * `"diaspora"` (the two values defined by Story 7.2's `tokens.css` +
- * `skin-diaspora.css`). Persists to two stores so SSR + client agree:
+ * Toggles the `data-skin` attribute on `<html>` between the light fintech
+ * default and the warmer community skin. Persists to two stores so SSR + client agree:
  *
  *   - `localStorage["susu-skin"]` — fast client-side read.
  *   - `document.cookie` `susu-skin=...; Path=/; Max-Age=31536000; SameSite=Lax`
@@ -17,17 +18,16 @@ import { Button } from "@/components/ui/button";
  *     no flash of unstyled content.
  *
  * The visible label uses the shadcn `Button` primitive (Story 7.4) so the
- * mint primary token (cross-skin protocol identity per UX-DR direction)
- * carries through both skins.
+ * same polished control treatment carries through both skins.
  *
  * State is mirrored via `useSyncExternalStore`: the `<html data-skin>`
  * attribute is the live store; `subscribe` listens on a private
  * `EventTarget` that the toggle and any future cross-tab listener emit on.
- * This avoids setState-in-effect and keeps SSR + first-paint snapshots
- * deterministically `"neutral"` (matching the `getServerSnapshot`).
+ *
+ * `getServerSnapshot` must match `initialSkin` from `getServerSkin()` so
+ * when the cookie is `diaspora` the SSR tree and the store snapshot agree
+ * (a fixed `"neutral"` snapshot would break hydration).
  */
-
-type Skin = "neutral" | "diaspora";
 
 const COOKIE_KEY = "susu-skin";
 const STORAGE_KEY = "susu-skin";
@@ -41,7 +41,7 @@ const skinEvents: EventTarget =
 const SKIN_CHANGED = "susu-skin-changed";
 
 function readCurrentSkin(): Skin {
-  if (typeof document === "undefined") return "neutral";
+  if (typeof document === "undefined") return DEFAULT_SKIN;
   const fromAttr = document.documentElement.dataset.skin;
   return fromAttr === "diaspora" ? "diaspora" : "neutral";
 }
@@ -70,9 +70,13 @@ function subscribeSkin(onChange: () => void): () => void {
   return () => skinEvents.removeEventListener(SKIN_CHANGED, onChange);
 }
 
-const getServerSnapshot = (): Skin => "neutral";
+export interface SkinToggleProps {
+  /** Must match `<html data-skin>` from SSR (`getServerSkin`). */
+  initialSkin?: Skin;
+}
 
-export function SkinToggle() {
+export function SkinToggle({ initialSkin = DEFAULT_SKIN }: SkinToggleProps) {
+  const getServerSnapshot = React.useCallback((): Skin => initialSkin, [initialSkin]);
   const skin = React.useSyncExternalStore(
     subscribeSkin,
     readCurrentSkin,
@@ -87,18 +91,19 @@ export function SkinToggle() {
   }, []);
 
   const label =
-    skin === "neutral" ? "Switch to Diaspora skin" : "Switch to Neutral skin";
+    skin === "neutral" ? "Switch to Community skin" : "Switch to Fintech skin";
 
   return (
     <Button
       type="button"
       variant="secondary"
       size="sm"
+      className="text-sm font-medium"
       onClick={toggle}
       aria-label={label}
       data-skin-current={skin}
     >
-      {skin === "neutral" ? "Diaspora" : "Neutral"}
+      {skin === "neutral" ? "Community" : "Fintech"}
     </Button>
   );
 }

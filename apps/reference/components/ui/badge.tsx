@@ -7,21 +7,21 @@ import { cn } from "@/lib/utils";
 /**
  * Badge — status pill. Used by 7.11 RotationCard status, Epic 8 invariant
  * pass/fail indicators, etc. Token colours only; the `signal` variant
- * surfaces the cross-skin protocol-identity mint.
+ * surfaces the cross-skin success/trust color.
  */
 const badgeVariants = cva(
   cn(
-    "inline-flex items-center rounded-pill border px-2.5 py-0.5 text-caption font-semibold",
+    "inline-flex items-center rounded-pill border px-3 py-1 text-caption font-semibold",
     "transition-colors",
   ),
   {
     variants: {
       variant: {
         default: "border-border bg-surface2 text-text",
-        signal: "border-transparent bg-signal text-bg",
-        warn: "border-transparent bg-warn text-bg",
-        danger: "border-transparent bg-danger text-bg",
-        outline: "border-border bg-transparent text-text",
+        signal: "border-signal/20 bg-signal/10 text-primary",
+        warn: "border-warn/20 bg-warn/10 text-text",
+        danger: "border-danger/20 bg-danger/10 text-danger",
+        outline: "border-border bg-surface text-muted",
       },
     },
     defaultVariants: { variant: "default" },

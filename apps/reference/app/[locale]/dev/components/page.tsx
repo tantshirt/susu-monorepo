@@ -41,7 +41,7 @@ function DevSection({ skin, title }: { skin: "neutral" | "diaspora"; title: stri
   return (
     <section
       data-skin={skin}
-      className="rounded-lg border border-border bg-bg p-6"
+      className="rounded-xl border border-border bg-bg p-6 shadow-1"
       aria-label={`${title} preview`}
     >
       <h2 className="mb-4 text-h3 font-semibold text-text">{title}</h2>
@@ -51,6 +51,7 @@ function DevSection({ skin, title }: { skin: "neutral" | "diaspora"; title: stri
         <Button variant="secondary">Secondary</Button>
         <Button variant="ghost">Ghost</Button>
         <Button variant="destructive">Destructive</Button>
+        <Button variant="outline">Outline</Button>
         <Button variant="link">Link</Button>
       </div>
 
@@ -207,11 +208,11 @@ export default function DevComponentsPage() {
   }
 
   return (
-    <main className="mx-auto flex w-full max-w-7xl flex-col gap-8 p-4 md:p-6">
+    <main className="mx-auto flex w-full max-w-7xl flex-col gap-8 p-4 py-12 md:p-8 md:py-16">
       <header>
         {/* Story 7.17: drop `text-h1` (40px) to `text-h2` (32px) at 360px to
             stay within the mobile floor; restore at md+. */}
-        <h1 className="text-h2 font-bold text-text md:text-h1">Component preview</h1>
+        <h1 className="text-h2 font-bold tracking-tight text-text md:text-h1">Component preview</h1>
         <p className="text-body text-muted">
           Story 7.4 — every shadcn primitive rendered against both skin tokens.
         </p>
@@ -219,8 +220,8 @@ export default function DevComponentsPage() {
       {/* Story 7.17: stack columns vertically below md (single column),
           two-up at lg+. */}
       <div className="grid gap-8 lg:grid-cols-2">
-        <DevSection skin="neutral" title="Neutral skin" />
-        <DevSection skin="diaspora" title="Diaspora skin" />
+        <DevSection skin="neutral" title="Fintech skin" />
+        <DevSection skin="diaspora" title="Community skin" />
       </div>
     </main>
   );

@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 
 /**
  * RadioGroup — Radix wrapper. UX-DR28 focus ring; `data-state=checked` paints
- * `--signal` mint as the cross-skin protocol identity.
+ * `--signal` as the cross-skin trust color.
  */
 export const RadioGroup = React.forwardRef<
   React.ElementRef<typeof RadioGroupPrimitive.Root>,
@@ -23,7 +23,7 @@ export const RadioGroupItem = React.forwardRef<
   <RadioGroupPrimitive.Item
     ref={ref}
     className={cn(
-      "aspect-square h-4 w-4 rounded-pill border border-border bg-surface text-text",
+      "aspect-square h-5 w-5 rounded-pill border border-border bg-surface text-text",
       "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal focus-visible:ring-offset-2 focus-visible:ring-offset-bg",
       "disabled:cursor-not-allowed disabled:opacity-50",
       "data-[state=checked]:border-signal",
@@ -32,7 +32,7 @@ export const RadioGroupItem = React.forwardRef<
     {...props}
   >
     <RadioGroupPrimitive.Indicator className="flex items-center justify-center">
-      <span aria-hidden className="block h-2 w-2 rounded-pill bg-signal" />
+      <span aria-hidden className="block h-2.5 w-2.5 rounded-pill bg-signal" />
     </RadioGroupPrimitive.Indicator>
   </RadioGroupPrimitive.Item>
 ));

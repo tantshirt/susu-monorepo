@@ -10,14 +10,32 @@
 
 import { z } from "zod";
 
+/** Known placeholder from an older `.env.example`; Privy returns 400 if used. */
+const PRIVY_APP_ID_PLACEHOLDER = "clw0000000000000000000000";
+
 const EnvSchema = z.object({
   NEXT_PUBLIC_HELIUS_RPC_URL: z.string().url({
     message: "NEXT_PUBLIC_HELIUS_RPC_URL must be a valid URL (see apps/reference/.env.example)",
   }),
-  NEXT_PUBLIC_PRIVY_APP_ID: z.string().length(25, {
-    message:
-      "NEXT_PUBLIC_PRIVY_APP_ID must be a 25-character Privy app id (see apps/reference/.env.example)",
-  }),
+  NEXT_PUBLIC_PRIVY_APP_ID: z
+    .string()
+    .length(25, {
+      message:
+        "NEXT_PUBLIC_PRIVY_APP_ID must be a 25-character Privy app id from https://dashboard.privy.io (see apps/reference/.env.example)",
+    })
+    // Block the docs placeholder in production only so `next dev` can run for
+    // UI/fixture demos without a Privy account (Privy still returns 400 until
+    // a real id is set).
+    .refine(
+      (id) =>
+        (process.env.NODE_ENV ?? "development") !== "production"
+          ? true
+          : id !== PRIVY_APP_ID_PLACEHOLDER,
+      {
+        message:
+          "NEXT_PUBLIC_PRIVY_APP_ID is still the example placeholder. Set a real App ID from https://dashboard.privy.io before `next build` / production (see apps/reference/.env.example)",
+      },
+    ),
   NEXT_PUBLIC_CONVEX_URL: z.string().url({
     message: "NEXT_PUBLIC_CONVEX_URL must be a valid URL (see apps/reference/.env.example)",
   }),
@@ -77,6 +95,14 @@ function loadEnv(): Env {
       .join("\n");
     throw new Error(
       `Invalid or missing environment variables. Copy apps/reference/.env.example to apps/reference/.env.local and fill the values.\n${issues}`,
+    );
+  }
+  if (
+    (process.env.NODE_ENV ?? "development") !== "production" &&
+    parsed.data.NEXT_PUBLIC_PRIVY_APP_ID === PRIVY_APP_ID_PLACEHOLDER
+  ) {
+    console.warn(
+      "[@susu/reference] NEXT_PUBLIC_PRIVY_APP_ID is the example placeholder — Privy login will not work until you set a real App ID (https://dashboard.privy.io) in apps/reference/.env.local",
     );
   }
   return parsed.data;

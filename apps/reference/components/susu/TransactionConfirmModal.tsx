@@ -17,6 +17,7 @@ import { useToastQueue } from "@/lib/tx/toast-queue";
 import type { SimulationResult, SusuTxError, TxSignature } from "@/lib/tx/types";
 import { isSusuError } from "@/lib/tx/types";
 import { cn } from "@/lib/utils";
+import { useTranslations } from "next-intl";
 
 /**
  * Story 7.10 — `<TransactionConfirmModal />`.
@@ -128,6 +129,8 @@ function TransactionConfirmModalInner({
 }: TransactionConfirmModalProps) {
   const [state, setState] = React.useState<InternalState>(INITIAL);
   const toast = useToastQueue();
+  const t = useTranslations("tx");
+  const tCommon = useTranslations("common");
 
   // Pin the latest `buildTx` / `simulate` / `onError` closures via refs so
   // the build-and-simulate effect can run exactly once per mount without
@@ -202,8 +205,8 @@ function TransactionConfirmModalInner({
       const sig = await submit(state.tx);
       setState((s) => ({ ...s, phase: "done", signature: sig }));
       toast.push({
-        title: "Transaction confirmed",
-        description: "Receipt available below.",
+        title: t("toastConfirmedTitle"),
+        description: t("toastConfirmedDescription"),
         variant: "signal",
       });
       onSuccess?.(sig);
@@ -211,13 +214,13 @@ function TransactionConfirmModalInner({
       const e = toError(err);
       setState((s) => ({ ...s, phase: "failed", error: e }));
       toast.push({
-        title: "Transaction failed",
+        title: t("toastFailedTitle"),
         description: e.message,
         variant: "danger",
       });
       onError?.(e);
     }
-  }, [state.phase, state.tx, submit, onSuccess, onError, toast]);
+  }, [state.phase, state.tx, submit, onSuccess, onError, toast, t]);
 
   // Mid-signing the modal cannot be dismissed (UX-DR42). The Radix-level
   // event guards on `<DialogContent>` already block escape / overlay-click
@@ -247,7 +250,7 @@ function TransactionConfirmModalInner({
     !state.simulation.ok;
 
   const showReceipt = state.phase === "done" && state.signature;
-  const submittingLabel = state.phase === "submitting" ? "Submitting…" : "Confirm";
+  const submittingLabel = state.phase === "submitting" ? t("submitting") : t("confirm");
 
   return (
     <DialogContent
@@ -255,21 +258,29 @@ function TransactionConfirmModalInner({
       onEscapeKeyDown={blockDuringSubmit}
       onPointerDownOutside={blockDuringSubmit}
       onInteractOutside={blockDuringSubmit}
-      className={cn("max-w-md")}
+      className={cn("max-w-lg gap-0 overflow-hidden rounded-2xl border-border/70 bg-white p-0 shadow-2")}
     >
-        <DialogHeader>
-          <DialogTitle>
-            {title}
+        <DialogHeader className="border-b border-border/70 bg-surface2/70 px-6 py-5">
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <DialogTitle className="text-h3 font-semibold tracking-tight text-text">
+                {title}
+              </DialogTitle>
+              {description ? (
+                <DialogDescription className="mt-2 max-w-md text-body text-muted">
+                  {description}
+                </DialogDescription>
+              ) : null}
+            </div>
             {actionLabel ? (
-              <span className="ms-2 text-caption font-mono text-muted">
+              <span className="shrink-0 rounded-pill border border-primary/20 bg-primary/10 px-3 py-1 font-mono text-caption font-semibold text-primary">
                 {actionLabel}
               </span>
             ) : null}
-          </DialogTitle>
-          {description ? <DialogDescription>{description}</DialogDescription> : null}
+          </div>
         </DialogHeader>
 
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-4 px-6 py-5">
           <SimulationResultBlock
             result={state.simulation}
             pending={state.phase === "building" || state.phase === "simulating"}
@@ -289,14 +300,14 @@ function TransactionConfirmModalInner({
           ) : null}
         </div>
 
-        <DialogFooter>
+        <DialogFooter className="border-t border-border/70 bg-surface2/60 px-6 py-4">
           <Button
             type="button"
             variant="ghost"
             onClick={requestClose}
             disabled={state.phase === "submitting"}
           >
-            {state.phase === "done" ? "Close" : "Cancel"}
+            {state.phase === "done" ? tCommon("close") : tCommon("cancel")}
           </Button>
           {state.phase !== "done" ? (
             <Button
