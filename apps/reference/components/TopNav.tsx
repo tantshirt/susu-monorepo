@@ -3,7 +3,7 @@ import { ClusterPill } from "@/components/nav/ClusterPill";
 import { WalletStatus } from "@/components/nav/WalletStatus";
 import { MobileNavMenu } from "@/components/nav/MobileNavMenu";
 import { NavSettingsMenu } from "@/components/nav/NavSettingsMenu";
-import { DEMO_GROUP_PRIMARY_PDA } from "@/lib/member-app/fixtures";
+import { AuthNavLinks, type AuthNavLink } from "@/components/nav/AuthNavLinks";
 // Story 7.17 — explicit type-only re-export of the DropdownMenu primitive
 // so `<MobileNavMenu />` (the < md hamburger) and the static-test contract
 // both anchor on `@/components/ui/dropdown-menu` from this file.
@@ -21,7 +21,7 @@ import { cn } from "@/lib/utils";
  *
  * Layout (premium floating shell):
  *
- *   [ Susu | How it works · Demo ] .......... [ ClusterPill | Wallet | (mobile menu) ]
+ *   [ Susu | Dashboard · Groups · Create · Join · How it works ] ... [ ClusterPill | Wallet | (mobile menu) ]
  *
  * Locale and skin: mobile hamburger below `md`, compact settings menu on
  * desktop (`NavSettingsMenu`). Cluster remains outside menus so it is never hidden.
@@ -37,8 +37,13 @@ export interface TopNavProps {
 export async function TopNav({ locale }: TopNavProps) {
   const t = await getTranslations("nav");
   const initialSkin = await getServerSkin();
-  const demoHref = `/${locale}/groups/${DEMO_GROUP_PRIMARY_PDA}`;
-  const howItWorksHref = `/${locale}#how-it-works`;
+  const navLinks = [
+    { href: `/${locale}`, label: t("dashboard"), requiresWallet: true },
+    { href: `/${locale}/groups`, label: t("groups"), requiresWallet: true },
+    { href: `/${locale}/groups/new`, label: t("createGroup"), requiresWallet: true },
+    { href: `/${locale}/join`, label: t("joinGroup"), requiresWallet: true },
+    { href: `/${locale}/how-it-works`, label: t("howItWorks") },
+  ] satisfies readonly AuthNavLink[];
 
   const navText =
     "text-sm font-medium text-text/90 transition-colors hover:text-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal focus-visible:ring-offset-2 focus-visible:ring-offset-surface";
@@ -62,17 +67,11 @@ export async function TopNav({ locale }: TopNavProps) {
           >
             Susu
           </Link>
-          <div
+          <AuthNavLinks
+            links={navLinks}
             className="hidden min-w-0 shrink-0 items-center gap-0.5 md:flex"
-            data-nav-links
-          >
-            <Link href={howItWorksHref} className={cn(navText, "rounded-pill px-3 py-2 hover:bg-surface2/90")}>
-              {t("howItWorks")}
-            </Link>
-            <Link href={demoHref} className={cn(navText, "rounded-pill px-3 py-2 hover:bg-surface2/90")}>
-              {t("demo")}
-            </Link>
-          </div>
+            linkClassName={cn(navText, "rounded-pill px-3 py-2 hover:bg-surface2/90")}
+          />
         </div>
         <div className="flex shrink-0 items-center gap-2">
           <ClusterPill quiet />
@@ -81,14 +80,14 @@ export async function TopNav({ locale }: TopNavProps) {
             data-nav-desktop-controls
           >
             <NavSettingsMenu locale={locale} initialSkin={initialSkin} />
-            <WalletStatus />
+            <WalletStatus hideWhenDisconnected />
           </div>
           <div
             className="flex shrink-0 items-center gap-2 md:hidden"
             data-nav-mobile-controls
           >
-            <WalletStatus />
-            <MobileNavMenu locale={locale} initialSkin={initialSkin} demoHref={demoHref} howItWorksHref={howItWorksHref} />
+            <WalletStatus hideWhenDisconnected />
+            <MobileNavMenu locale={locale} initialSkin={initialSkin} navLinks={navLinks} />
           </div>
         </div>
       </nav>

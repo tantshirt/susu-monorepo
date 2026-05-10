@@ -2,7 +2,7 @@
 
 import { PrivyProvider } from "@privy-io/react-auth";
 import type { ReactNode } from "react";
-import { createSolanaRpc } from "@solana/kit";
+import { createSolanaRpc, createSolanaRpcSubscriptions } from "@solana/kit";
 import { env } from "@/lib/env";
 import { getRpcUrl } from "@/lib/rpc/getRpcUrl";
 
@@ -51,24 +51,27 @@ export function PrivyProviderWrapper({ children }: { children: ReactNode }) {
   const _kitRpc = createSolanaRpc(rpcUrl);
   void _kitRpc;
 
-  // Privy's Solana RPC mapping keys by chain id. We map our app cluster
-  // (`mainnet-beta` / `devnet` / `testnet` / `localnet`) onto the
-  // canonical Solana CAIP-2 chain ids so Privy can correlate signing
-  // requests. localnet falls back to devnet's id since Privy doesn't
-  // ship a localnet entry.
-  const chainIdByCluster: Record<typeof cluster, string> = {
-    "mainnet-beta": "mainnet-beta",
-    devnet: "devnet",
-    testnet: "testnet",
-    localnet: "devnet",
+  // Privy keys Solana standard-wallet RPCs by canonical chain id.
+  // localnet falls back to devnet's chain id because Privy only exposes the
+  // public Solana clusters in the standard wallet integration.
+  const chainIdByCluster: Record<typeof cluster, "solana:mainnet" | "solana:devnet" | "solana:testnet"> = {
+    "mainnet-beta": "solana:mainnet",
+    devnet: "solana:devnet",
+    testnet: "solana:testnet",
+    localnet: "solana:devnet",
   };
-  const privySolanaRpcs: Record<string, { rpcUrl: string }> = {
-    [chainIdByCluster[cluster]]: { rpcUrl },
+  const privySolanaRpcs = {
+    [chainIdByCluster[cluster]]: {
+      rpc: createSolanaRpc(rpcUrl),
+      rpcSubscriptions: createSolanaRpcSubscriptions(toWebsocketUrl(rpcUrl)),
+      blockExplorerUrl: "https://explorer.solana.com",
+    },
   };
 
   return (
     <PrivyProvider
       appId={env.NEXT_PUBLIC_PRIVY_APP_ID}
+      clientId={env.NEXT_PUBLIC_PRIVY_CLIENT_ID ?? undefined}
       config={{
         // Email is the primary CTA per FR39; "wallet" provides the
         // Wallet-Standard browser-extension fallback per FR46.
@@ -76,14 +79,12 @@ export function PrivyProviderWrapper({ children }: { children: ReactNode }) {
         embeddedWallets: {
           // Email-only sign-ins get an embedded wallet automatically; users
           // who already have a Wallet-Standard wallet keep using it.
-          createOnLogin: "users-without-wallets",
+          solana: { createOnLogin: "users-without-wallets" },
         },
         appearance: {
           // Match the publish-ready light fintech app shell.
           theme: "light",
         },
-        // `solana.rpcs` is a Privy-typed loose record; cast to the same
-        // shape the Privy SDK accepts without pulling its internal types.
         solana: { rpcs: privySolanaRpcs } as unknown as Record<string, unknown>,
       }}
     >
@@ -96,4 +97,10 @@ export function PrivyProviderWrapper({ children }: { children: ReactNode }) {
       {children}
     </PrivyProvider>
   );
+}
+
+function toWebsocketUrl(rpcUrl: string): string {
+  const url = new URL(rpcUrl);
+  url.protocol = url.protocol === "https:" ? "wss:" : "ws:";
+  return url.toString();
 }

@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { usePrivy } from "@privy-io/react-auth";
-import { Button } from "@/components/ui/button";
+import { Button, type ButtonProps } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -32,9 +32,19 @@ function truncateAddress(address: string): string {
 export interface WalletStatusProps {
   /** Merged onto the trigger `<Button />` so callers can align nav typography. */
   className?: string;
+  hideWhenDisconnected?: boolean;
+  disconnectedLabel?: string;
+  disconnectedAriaLabel?: string;
+  disconnectedVariant?: ButtonProps["variant"];
 }
 
-export function WalletStatus({ className }: WalletStatusProps) {
+export function WalletStatus({
+  className,
+  hideWhenDisconnected = false,
+  disconnectedLabel = "Connect wallet",
+  disconnectedAriaLabel,
+  disconnectedVariant = "primary",
+}: WalletStatusProps) {
   const { connected, address, provider } = useWallet();
   const privy = usePrivy();
   // Wrap action calls so an unexpected throw at click-time can't crash the
@@ -56,17 +66,20 @@ export function WalletStatus({ className }: WalletStatusProps) {
   }, [privy]);
 
   if (!connected || !address) {
+    if (hideWhenDisconnected) {
+      return null;
+    }
     return (
       <Button
         type="button"
-        variant="primary"
+        variant={disconnectedVariant}
         size="sm"
         className={cn("text-sm font-medium", className)}
-        aria-label="Connect wallet"
+        aria-label={disconnectedAriaLabel ?? disconnectedLabel}
         data-wallet-state="disconnected"
         onClick={login}
       >
-        Connect
+        {disconnectedLabel}
       </Button>
     );
   }

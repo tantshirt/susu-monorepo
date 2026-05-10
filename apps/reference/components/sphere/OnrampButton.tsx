@@ -7,7 +7,7 @@ import { isSphereEnabled } from "@/lib/sphere/isEnabled";
 /**
  * Story 7.16 — placeholder Sphere on-ramp button. Gated behind
  * `NEXT_PUBLIC_SPHERE_ENABLED` (FR44, NFR-R3): renders nothing when the
- * flag is off so the demo happy-path is Sphere-disabled.
+ * flag is off so production surfaces stay Sphere-disabled by default.
  *
  * The real Sphere SDK wiring (KYC handoff, off-ramp, "Fund wallet" deep
  * flow in Linh's Story 7.20 path) lands in a future story; this component

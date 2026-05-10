@@ -1,9 +1,7 @@
-import { getDemoGroupDetail } from "./fixtures";
 import type { RotationViewModel } from "./types";
 
 const DEFAULT_OFFSET_S = 7 * 24 * 60 * 60;
 
-/** Fallback when no fixture exists (unknown `groupPda`). */
 export function fallbackRotation(groupPda: string): RotationViewModel {
   return {
     i: 1,
@@ -18,15 +16,11 @@ export function fallbackRotation(groupPda: string): RotationViewModel {
 }
 
 /**
- * Active rotation view for contribute/claim UIs. Fixtures provide data today;
- * swap this module to call the SDK without changing pages.
+ * Active rotation view for contribute/claim UIs. This is an explicit placeholder
+ * until the production indexer provides live rotation state.
  */
 export function resolveRotationForGroupPda(groupPda: string): RotationViewModel {
-  const detail = getDemoGroupDetail(groupPda);
-  if (!detail?.rotations.length) {
-    return fallbackRotation(groupPda);
-  }
-  return detail.rotations[detail.activeRotationIndex] ?? detail.rotations[0];
+  return fallbackRotation(groupPda);
 }
 
 /** Zero-based rotation index for `ContributeParams` / `ClaimParams`. */

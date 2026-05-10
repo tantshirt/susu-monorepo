@@ -31,6 +31,11 @@ const schema = defineSchema({
   inviteLinks: defineTable({
     groupPda: v.string(),
     token: v.string(),
+    status: v.optional(v.union(v.literal("active"), v.literal("revoked"))),
+    expiresAt: v.optional(v.number()),
+    maxUses: v.optional(v.number()),
+    uses: v.optional(v.number()),
+    createdBy: v.optional(v.string()),
     createdAt: v.number(),
   })
     .index("by_groupPda", ["groupPda"])

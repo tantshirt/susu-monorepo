@@ -43,11 +43,26 @@ for (const viewport of VIEWPORTS) {
         );
       });
 
-      test(`pilot ${route}`, async ({ page }) => {
-        await page.goto(`${route}/pilot`);
+      test(`join ${route}`, async ({ page }) => {
+        await page.goto(`${route}/join`);
         await page.waitForSelector("[lang]");
         await expect(page).toHaveScreenshot(
-          `pilot${route.replace("/", "-")}-${viewport.name}.png`,
+          `join${route.replace("/", "-")}-${viewport.name}.png`,
+          {
+            fullPage: true,
+            mask: [
+              page.locator('[data-component="ClusterPill"]'),
+              page.locator('[data-testid="dynamic-timestamp"]'),
+            ],
+          },
+        );
+      });
+
+      test(`how it works ${route}`, async ({ page }) => {
+        await page.goto(`${route}/how-it-works`);
+        await page.waitForSelector("[lang]");
+        await expect(page).toHaveScreenshot(
+          `how-it-works${route.replace("/", "-")}-${viewport.name}.png`,
           {
             fullPage: true,
             mask: [

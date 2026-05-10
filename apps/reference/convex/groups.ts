@@ -54,12 +54,61 @@ export const getGroupMetadata = query({
 export const getInviteLink = query({
   args: { token: v.string() },
   handler: async (ctx, { token }) => {
-    return await ctx.db
+    const row = await ctx.db
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       .query("inviteLinks" as any)
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       .withIndex("by_token" as any, (q: any) => q.eq("token", token))
       .unique();
+    if (!row) return null;
+    if (row.status === "revoked") return null;
+    if (typeof row.expiresAt === "number" && row.expiresAt <= Date.now()) return null;
+    if (
+      typeof row.maxUses === "number" &&
+      typeof row.uses === "number" &&
+      row.uses >= row.maxUses
+    ) {
+      return null;
+    }
+    return row;
+  },
+});
+
+export const createInviteLink = mutation({
+  args: {
+    groupPda: v.string(),
+    token: v.string(),
+    createdBy: v.optional(v.string()),
+    expiresAt: v.optional(v.number()),
+    maxUses: v.optional(v.number()),
+  },
+  handler: async (ctx, { groupPda, token, createdBy, expiresAt, maxUses }) => {
+    return await withGroupLock(ctx as never, groupPda, async () => {
+      const existing = await ctx.db
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        .query("inviteLinks" as any)
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        .withIndex("by_token" as any, (q: any) => q.eq("token", token))
+        .unique();
+      const payload = {
+        groupPda,
+        token,
+        status: "active" as const,
+        uses: 0,
+        ...(createdBy ? { createdBy } : {}),
+        ...(typeof expiresAt === "number" ? { expiresAt } : {}),
+        ...(typeof maxUses === "number" ? { maxUses } : {}),
+      };
+      if (existing) {
+        await ctx.db.patch(existing._id, payload);
+        return existing._id;
+      }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      return await ctx.db.insert("inviteLinks" as any, {
+        ...payload,
+        createdAt: Date.now(),
+      });
+    });
   },
 });
 

@@ -23,9 +23,8 @@ const EnvSchema = z.object({
       message:
         "NEXT_PUBLIC_PRIVY_APP_ID must be a 25-character Privy app id from https://dashboard.privy.io (see apps/reference/.env.example)",
     })
-    // Block the docs placeholder in production only so `next dev` can run for
-    // UI/fixture demos without a Privy account (Privy still returns 400 until
-    // a real id is set).
+    // Block the docs placeholder in production only so `next dev` can run
+    // without a Privy account (Privy still returns 400 until a real id is set).
     .refine(
       (id) =>
         (process.env.NODE_ENV ?? "development") !== "production"
@@ -36,6 +35,11 @@ const EnvSchema = z.object({
           "NEXT_PUBLIC_PRIVY_APP_ID is still the example placeholder. Set a real App ID from https://dashboard.privy.io before `next build` / production (see apps/reference/.env.example)",
       },
     ),
+  NEXT_PUBLIC_PRIVY_CLIENT_ID: z
+    .string()
+    .trim()
+    .optional()
+    .transform((v) => (v && v.length > 0 ? v : null)),
   NEXT_PUBLIC_CONVEX_URL: z.string().url({
     message: "NEXT_PUBLIC_CONVEX_URL must be a valid URL (see apps/reference/.env.example)",
   }),
@@ -50,7 +54,7 @@ const EnvSchema = z.object({
   }),
   // Story 7.16 — Sphere on-ramp/off-ramp is gated behind this flag (FR44,
   // NFR-R3). Defaults to "false" so production builds without the flag set
-  // continue to work cleanly and the demo happy-path stays Sphere-disabled.
+  // continue to work cleanly.
   NEXT_PUBLIC_SPHERE_ENABLED: z
     .enum(["true", "false"], {
       errorMap: () => ({
@@ -81,6 +85,7 @@ function loadEnv(): Env {
   const candidate = {
     NEXT_PUBLIC_HELIUS_RPC_URL: process.env.NEXT_PUBLIC_HELIUS_RPC_URL,
     NEXT_PUBLIC_PRIVY_APP_ID: process.env.NEXT_PUBLIC_PRIVY_APP_ID,
+    NEXT_PUBLIC_PRIVY_CLIENT_ID: process.env.NEXT_PUBLIC_PRIVY_CLIENT_ID,
     NEXT_PUBLIC_CONVEX_URL: process.env.NEXT_PUBLIC_CONVEX_URL,
     NEXT_PUBLIC_PROGRAM_ID: process.env.NEXT_PUBLIC_PROGRAM_ID,
     NEXT_PUBLIC_CLUSTER: process.env.NEXT_PUBLIC_CLUSTER,

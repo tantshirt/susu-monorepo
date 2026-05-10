@@ -1,3 +1,3 @@
 export * from "./types";
-export * from "./fixtures";
+export * from "./defaults";
 export * from "./resolve-rotation";
