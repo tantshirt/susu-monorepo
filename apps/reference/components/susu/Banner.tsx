@@ -15,16 +15,16 @@ import { cn } from "@/lib/utils";
  */
 const bannerVariants = cva(
   cn(
-    "flex w-full items-start gap-3 rounded-md border px-4 py-3 text-body",
+    "flex w-full items-start gap-3 rounded-xl border px-4 py-3 text-body shadow-1",
     "transition-colors",
   ),
   {
     variants: {
       variant: {
-        info: "border-border bg-surface2 text-text",
-        warn: "border-transparent bg-warn text-bg",
-        danger: "border-transparent bg-danger text-bg",
-        success: "border-transparent bg-signal text-bg",
+        info: "border-border/80 bg-surface text-text",
+        warn: "border-warn/20 bg-warn/10 text-text",
+        danger: "border-danger/20 bg-danger/10 text-danger",
+        success: "border-signal/20 bg-signal/10 text-primary",
       },
     },
     defaultVariants: { variant: "info" },

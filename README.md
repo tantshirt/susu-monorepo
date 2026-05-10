@@ -36,6 +36,11 @@
 </p>
 
 <!-- susu:hero:demo -->
+### Local reference app and demo script
+
+- **[Demo setup (`pnpm susu:demo`, env vars, airdrop recovery)](./docs/demo-setup.md)** — read this if `devnet-airdrop-limit` or Surfpool CI parity blocked you.
+- **[Epic 9 mainnet gate checklist](./docs/epic9-mainnet-gate.md)** — audit/deploy/immutability (separate from devnet demos).
+
 ### One command to run the demo
 
 Copy this into your terminal:

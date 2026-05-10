@@ -8,6 +8,7 @@
     "susu:demo": "bash scripts/susu-demo.sh",
     "verify": "bash scripts/verify.sh",
     "sdk:codegen": "node codama.config.mjs",
+    "postinstall": "pnpm --filter @susu/sdk build",
     "i18n:check": "tsx scripts/check-i18n-parity.ts",
     "a11y:check": "axe http://localhost:3000/en --tags wcag2aa,wcag21aa",
     "link:check": "markdown-link-check README.md --config .markdown-link-check.json",

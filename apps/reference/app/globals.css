@@ -6,16 +6,13 @@
 /**
  * Susu reference app — Tailwind v4 token bridge (UX-DR1–10).
  *
- * Tokens live in `lib/theme/tokens.css` (neutral skin) and
- * `lib/theme/skin-diaspora.css` (diaspora override). Story 7.3 adds the
+ * Tokens live in `lib/theme/tokens.css` (light fintech skin) and
+ * `lib/theme/skin-diaspora.css` (warm community override). Story 7.3 adds the
  * type scale tokens (`--text-*`) and the typography stack variables
  * (`--font-display`, `--font-body`, `--font-mono`). The `@theme` block
  * below mirrors `tailwind.config.ts` so v4's CSS-first pipeline emits
  * matching utility classes (`bg-bg`, `text-primary`, `text-display-1`,
  * `font-display`, `shadow-1`, etc.).
- *
- * Cross-skin invariants (UX-DR2): `--bg`, `--signal`, `--warn`, `--danger`
- * are protocol-locked and only defined in the neutral skin.
  */
 @theme inline {
   --color-bg: rgb(var(--bg) / <alpha-value>);
@@ -74,12 +71,43 @@
 
   --shadow-1: var(--shadow-1);
   --shadow-2: var(--shadow-2);
+
+  --breakpoint-sm: 40rem;
+  --breakpoint-md: 48rem;
+  --breakpoint-lg: 64rem;
+  --breakpoint-xl: 80rem;
+  --breakpoint-2xl: 96rem;
 }
 
 body {
-  background: rgb(var(--bg));
+  background:
+    radial-gradient(circle at top left, rgb(var(--secondary) / 0.10), transparent 34rem),
+    radial-gradient(circle at top right, rgb(var(--primary) / 0.10), transparent 32rem),
+    rgb(var(--bg));
   color: rgb(var(--text));
   font-family: var(--font-body, var(--font-display), Arial, Helvetica, sans-serif);
+}
+
+::selection {
+  background: rgb(var(--primary) / 0.18);
+  color: rgb(var(--text));
+}
+
+@media (max-width: 767px) {
+  [data-component="TopNav"] [data-nav-links],
+  [data-component="TopNav"] [data-nav-desktop-controls] {
+    display: none !important;
+  }
+
+  [data-component="TopNav"] [data-nav-mobile-controls] {
+    display: flex !important;
+  }
+}
+
+@media (min-width: 768px) {
+  [data-component="TopNav"] [data-nav-mobile-controls] {
+    display: none !important;
+  }
 }
 
 /**

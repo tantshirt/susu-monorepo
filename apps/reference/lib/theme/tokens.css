@@ -1,38 +1,49 @@
 /**
  * Susu Protocol — design tokens (UX-DR1–8).
  *
- * The neutral skin is Susu's default Phantom-fintech dark surface with
- * Solana mint as the cross-skin protocol-identity primary. Tokens are
+ * The neutral skin is Susu's default light fintech surface with
+ * navy text, teal actions, and a calm off-white canvas. Tokens are
  * exposed as space-separated RGB triples so Tailwind utilities can apply
  * `<alpha-value>` modifiers via `rgb(var(--token) / <alpha-value>)`.
- *
- * Cross-skin invariants (UX-DR2): forks may reskin --surface, --primary,
- * --secondary, --border, --text*, --shadow-* — but `--bg`, `--signal`,
- * `--warn`, `--danger` are protocol-locked so the safety semantics never
- * shift between skins.
  */
 
+:root {
+  --bg: 246 249 252;
+  --surface: 255 255 255;
+  --surface-2: 238 244 248;
+  --border: 211 222 232;
+  --text: 15 23 42;
+  --text-muted: 71 85 105;
+  --primary: 13 148 136;
+  --secondary: 37 99 235;
+  --signal: 13 148 136;
+  --warn: 217 119 6;
+  --danger: 220 38 38;
+  --shadow-1: 0 1px 2px 0 rgb(15 23 42 / 0.05), 0 1px 3px 0 rgb(15 23 42 / 0.08);
+  --shadow-2: 0 24px 60px -32px rgb(15 23 42 / 0.30);
+}
+
 :root[data-skin="neutral"] {
-  /* Surfaces (UX-DR3) — Phantom-fintech dark stack. */
-  --bg: 11 13 18;
-  --surface: 18 21 28;
-  --surface-2: 26 30 38;
-  --border: 39 44 54;
+  /* Surfaces (UX-DR3) — modern light fintech stack. */
+  --bg: 246 249 252;
+  --surface: 255 255 255;
+  --surface-2: 238 244 248;
+  --border: 211 222 232;
 
   /* Text (UX-DR3). */
-  --text: 240 243 248;
-  --text-muted: 148 156 170;
+  --text: 15 23 42;
+  --text-muted: 71 85 105;
 
-  /* Brand + signal. Mint is cross-skin protocol identity. */
-  --primary: 20 241 149;     /* Solana mint #14F195 */
-  --secondary: 0 217 255;    /* Solana cyan accent */
-  --signal: 20 241 149;      /* protocol-locked mint */
-  --warn: 251 191 36;        /* amber */
-  --danger: 248 113 113;     /* coral */
+  /* Brand + signal. Navy/teal keeps the app trustworthy without feeling cold. */
+  --primary: 13 148 136;     /* teal */
+  --secondary: 37 99 235;    /* blue */
+  --signal: 13 148 136;      /* positive/success */
+  --warn: 217 119 6;         /* amber */
+  --danger: 220 38 38;       /* red */
 
-  /* Phantom-style shadows (UX-DR8). */
-  --shadow-1: 0 1px 2px 0 rgb(0 0 0 / 0.4);
-  --shadow-2: 0 8px 24px -8px rgb(0 0 0 / 0.6);
+  /* Soft, publish-ready elevation (UX-DR8). */
+  --shadow-1: 0 1px 2px 0 rgb(15 23 42 / 0.05), 0 1px 3px 0 rgb(15 23 42 / 0.08);
+  --shadow-2: 0 24px 60px -32px rgb(15 23 42 / 0.30);
 
   /* Radius scale (UX-DR7). */
   --radius-sm: 6px;

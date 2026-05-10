@@ -3,8 +3,9 @@ import localFont from "next/font/local";
 /**
  * Story 7.3 — typography stack, fully self-hosted.
  *
- * Per UX-DR9 the multilingual chain is Geist (display) → Inter (body) →
- * Geist Mono (numerics/code) with Noto Sans (Yoruba/Latin extended) and
+ * Per UX-DR9 the multilingual chain now uses Inter for both display and body
+ * so the reference app feels unified and polished. Geist Mono remains for
+ * numerics/code, with Noto Sans (Yoruba/Latin extended) and
  * Noto Sans Arabic as language-specific fallbacks. All assets ship from
  * `public/fonts/` so production builds make zero `fonts.googleapis.com`
  * requests at runtime.
@@ -22,7 +23,7 @@ import localFont from "next/font/local";
 export const geistDisplay = localFont({
   src: [
     {
-      path: "../../public/fonts/GeistVF.woff2",
+      path: "../../public/fonts/InterVF.woff2",
       style: "normal",
       weight: "100 900",
     },

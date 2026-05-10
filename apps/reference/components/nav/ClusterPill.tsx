@@ -29,13 +29,26 @@ function variantFor(cluster: Cluster): "signal" | "warn" | "default" {
   return "default";
 }
 
-export function ClusterPill() {
+export interface ClusterPillProps {
+  /**
+   * Smaller, lower-contrast treatment for dense nav bars (still always visible).
+   */
+  quiet?: boolean;
+}
+
+export function ClusterPill({ quiet }: ClusterPillProps) {
   const cluster = env.NEXT_PUBLIC_CLUSTER as Cluster;
+  const variant = quiet ? "outline" : variantFor(cluster);
   return (
     <Badge
-      variant={variantFor(cluster)}
+      variant={variant}
       aria-label={`Active Solana cluster: ${cluster}`}
       data-cluster={cluster}
+      className={
+        quiet
+          ? "max-w-[5.5rem] truncate px-2.5 py-1 text-[11px] font-medium uppercase tracking-wide text-muted"
+          : undefined
+      }
     >
       {cluster}
     </Badge>

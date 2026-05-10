@@ -4,19 +4,15 @@ import * as React from "react";
 import { Banner } from "@/components/susu/Banner";
 import { FieldError } from "@/components/susu/FieldError";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 /**
- * Non-crypto pilot page (Story 7.18, UX-DR49).
+ * Wallet-free preview page.
  *
  * Intentionally has zero wallet / Privy / Convex coupling so that
- * non-technical pilot testers (Vietnamese-speaker, Arabic-speaker,
- * English-speaker) can complete the flow on mobile without ever holding a
- * wallet — they're testing UX/a11y, not crypto. Renders a small "intro
- * yourself" form using the components Epic 7 ships (Banner, FieldError,
- * shadcn Button/Input/Label) so the page also doubles as an axe-core
- * smoke-test surface.
+ * Visitors can complete the flow on mobile without ever holding a wallet.
  *
  * All styling rides semantic tokens; layout uses logical Tailwind directional
  * properties (`ms-*` / `me-*` / `ps-*` / `pe-*`) so RTL flips correctly when
@@ -39,74 +35,105 @@ export default function PilotPage() {
   }
 
   return (
-    <main className="mx-auto flex w-full max-w-xl flex-col gap-6 px-4 py-12">
-      <header className="flex flex-col gap-2">
-        <h1 className="text-h2 font-semibold text-text">Pilot — say hello</h1>
-        <p className="text-body text-muted">
-          A short non-crypto preview so you can experience Susu&apos;s look,
-          language, and motion without a wallet. Your input stays in this
-          browser tab.
-        </p>
-      </header>
+    <main className="mx-auto grid w-full max-w-6xl gap-8 px-4 py-10 md:px-8 md:py-14 lg:grid-cols-[minmax(0,0.95fr)_minmax(24rem,1fr)] lg:items-start">
+      <section className="overflow-hidden rounded-3xl border border-border/70 bg-white/95 shadow-2">
+        <div className="flex min-h-full flex-col justify-between gap-10 bg-gradient-to-br from-white via-surface to-primary/10 p-6 md:p-8">
+          <header className="flex flex-col gap-4">
+            <p className="font-mono text-caption font-semibold uppercase tracking-[0.18em] text-primary">
+              Wallet-free preview
+            </p>
+            <h1 className="text-h1 font-semibold tracking-tight text-text">Try Susu without a wallet</h1>
+            <p className="max-w-xl text-body leading-7 text-muted">
+              This short preview lets you see the layout and language before you
+              connect anything. Your input stays in this browser tab.
+            </p>
+          </header>
 
-      <Banner variant="info">
-        This page intentionally avoids wallets, on-chain calls, and Convex —
-        it&apos;s a pure UI / a11y showcase.
-      </Banner>
+          <div className="grid gap-3">
+            <div className="rounded-2xl border border-border/70 bg-white p-4 shadow-1">
+              <p className="text-caption font-semibold uppercase tracking-wide text-muted">Preview mode</p>
+              <p className="mt-2 text-body text-text">No wallet signature or on-chain write is required.</p>
+            </div>
+            <div className="rounded-2xl border border-border/70 bg-white p-4 shadow-1">
+              <p className="text-caption font-semibold uppercase tracking-wide text-muted">What you will see</p>
+              <p className="mt-2 text-body text-text">Circle context, contribution flow, payout review, and receipts.</p>
+            </div>
+          </div>
+        </div>
+      </section>
 
-      {submitted ? (
-        <Banner variant="success">
-          Thanks, {name.trim()} — noted: &ldquo;{goal.trim()}&rdquo;.
+      <section className="flex flex-col gap-6">
+        <Banner variant="info" className="rounded-2xl border-border/70 bg-white/90">
+          No wallet is needed here. Use this page to get a feel for the app first.
         </Banner>
-      ) : (
-        <form onSubmit={onSubmit} noValidate className="flex flex-col gap-4">
-          <div className="flex flex-col gap-2">
-            <Label htmlFor="pilot-name">Your name</Label>
-            <Input
-              id="pilot-name"
-              name="name"
-              autoComplete="name"
-              value={name}
-              onChange={(event) => setName(event.target.value)}
-              aria-invalid={Boolean(nameError)}
-              aria-describedby={nameError ? "pilot-name-error" : undefined}
-              required
-            />
-            {nameError ? <FieldError id="pilot-name-error">{nameError}</FieldError> : null}
-          </div>
 
-          <div className="flex flex-col gap-2">
-            <Label htmlFor="pilot-goal">A savings goal you care about</Label>
-            <Input
-              id="pilot-goal"
-              name="goal"
-              value={goal}
-              onChange={(event) => setGoal(event.target.value)}
-              aria-invalid={Boolean(goalError)}
-              aria-describedby={goalError ? "pilot-goal-error" : undefined}
-              required
-            />
-            {goalError ? <FieldError id="pilot-goal-error">{goalError}</FieldError> : null}
-          </div>
+        {submitted ? (
+          <Banner variant="success" className="rounded-2xl bg-white">
+            Thanks, {name.trim()} - noted: &ldquo;{goal.trim()}&rdquo;.
+          </Banner>
+        ) : (
+          <Card className="overflow-hidden rounded-2xl border-border/70 bg-white/95 shadow-1">
+            <CardHeader className="border-b border-border/70 bg-surface2/60">
+              <CardTitle>Start with your circle goal</CardTitle>
+              <CardDescription>Use sample information to preview the member experience.</CardDescription>
+            </CardHeader>
+            <CardContent className="p-5">
+              <form onSubmit={onSubmit} noValidate className="flex flex-col gap-5">
+                <div className="flex flex-col gap-2">
+                  <Label htmlFor="pilot-name">Your name</Label>
+                  <Input
+                    id="pilot-name"
+                    name="name"
+                    autoComplete="name"
+                    value={name}
+                    onChange={(event) => setName(event.target.value)}
+                    aria-invalid={Boolean(nameError)}
+                    aria-describedby={nameError ? "pilot-name-error" : undefined}
+                    className="h-12 rounded-xl bg-white"
+                    required
+                  />
+                  {nameError ? <FieldError id="pilot-name-error">{nameError}</FieldError> : null}
+                </div>
 
-          <div className="flex items-center gap-3">
-            <Button type="submit" variant="primary">
-              Say hello
-            </Button>
-            <Button
-              type="button"
-              variant="ghost"
-              onClick={() => {
-                setName("");
-                setGoal("");
-                setTouched(false);
-              }}
-            >
-              Reset
-            </Button>
-          </div>
-        </form>
-      )}
+                <div className="flex flex-col gap-2">
+                  <Label htmlFor="pilot-goal">A savings goal you care about</Label>
+                  <Input
+                    id="pilot-goal"
+                    name="goal"
+                    value={goal}
+                    onChange={(event) => setGoal(event.target.value)}
+                    aria-invalid={Boolean(goalError)}
+                    aria-describedby={goalError ? "pilot-goal-error" : undefined}
+                    className="h-12 rounded-xl bg-white"
+                    required
+                  />
+                  {goalError ? <FieldError id="pilot-goal-error">{goalError}</FieldError> : null}
+                </div>
+
+                <div className="flex flex-col gap-3 rounded-2xl border border-primary/20 bg-primary/10 p-4 sm:flex-row sm:items-center sm:justify-between">
+                  <p className="text-body text-text">Preview first. Connect only when ready to sign.</p>
+                  <div className="flex items-center gap-3">
+                    <Button type="submit" variant="primary">
+                      Say hello
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      onClick={() => {
+                        setName("");
+                        setGoal("");
+                        setTouched(false);
+                      }}
+                    >
+                      Reset
+                    </Button>
+                  </div>
+                </div>
+              </form>
+            </CardContent>
+          </Card>
+        )}
+      </section>
     </main>
   );
 }

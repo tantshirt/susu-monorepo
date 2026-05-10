@@ -4,7 +4,7 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 
 /**
- * Card — surface container. Token-only surfaces (`--surface` + `--border`).
+ * Card — elevated surface container. Token-only surfaces (`--surface` + `--border`).
  * Used by 7.11 RotationCard, 7.10 transaction modals, etc.
  */
 export const Card = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
@@ -12,7 +12,7 @@ export const Card = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDi
     <div
       ref={ref}
       className={cn(
-        "rounded-lg border border-border bg-surface text-text shadow-1",
+        "rounded-xl border border-border/80 bg-surface text-text shadow-1",
         className,
       )}
       {...props}
@@ -23,7 +23,7 @@ Card.displayName = "Card";
 
 export const CardHeader = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => (
-    <div ref={ref} className={cn("flex flex-col gap-1.5 p-6", className)} {...props} />
+    <div ref={ref} className={cn("flex flex-col gap-2 p-6", className)} {...props} />
   ),
 );
 CardHeader.displayName = "CardHeader";
@@ -32,7 +32,7 @@ export const CardTitle = React.forwardRef<HTMLDivElement, React.HTMLAttributes<H
   ({ className, ...props }, ref) => (
     <div
       ref={ref}
-      className={cn("text-h3 font-semibold leading-none tracking-tight text-text", className)}
+      className={cn("text-h3 font-semibold leading-tight tracking-tight text-text", className)}
       {...props}
     />
   ),

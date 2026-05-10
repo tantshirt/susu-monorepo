@@ -1,4 +1,10 @@
 import { cookies } from "next/headers";
+import {
+  DEFAULT_SKIN,
+  SKIN_COOKIE,
+  type Skin,
+  isSkin,
+} from "@/lib/theme/skin-shared";
 
 /**
  * Story 7.5 — server-side skin reader.
@@ -15,15 +21,13 @@ import { cookies } from "next/headers";
  * holds a different value than the cookie (e.g., user toggled in another
  * tab), it overrides `document.documentElement.dataset.skin` synchronously
  * before React hydrates.
+ *
+ * Import this file only from Server Components. Client code should use
+ * `@/lib/theme/skin-shared` for `Skin` / `DEFAULT_SKIN`.
  */
-export type Skin = "neutral" | "diaspora";
 
-export const SKIN_COOKIE = "susu-skin";
-export const DEFAULT_SKIN: Skin = "neutral";
-
-function isSkin(value: string | undefined): value is Skin {
-  return value === "neutral" || value === "diaspora";
-}
+export type { Skin } from "@/lib/theme/skin-shared";
+export { SKIN_COOKIE, DEFAULT_SKIN } from "@/lib/theme/skin-shared";
 
 export async function getServerSkin(): Promise<Skin> {
   const store = await cookies();

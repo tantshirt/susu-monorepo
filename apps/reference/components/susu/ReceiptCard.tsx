@@ -79,36 +79,55 @@ export const ReceiptCard = React.forwardRef<HTMLDivElement, ReceiptCardProps>(
   ) => {
     const url = explorerUrl(signature);
     return (
-      <Card ref={ref} className={cn("w-full", className)} {...props}>
-        <CardHeader>
-          <div className="flex items-center justify-between gap-3">
-            <CardTitle>{title}</CardTitle>
-            <Badge variant={statusVariant(status)}>{statusLabel(status)}</Badge>
+      <Card
+        ref={ref}
+        className={cn(
+          "w-full overflow-hidden rounded-2xl border-signal/20 bg-white/95 shadow-1",
+          className,
+        )}
+        {...props}
+      >
+        <CardHeader className="border-b border-border/70 bg-signal/10">
+          <div className="flex items-start justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white font-mono text-caption font-semibold text-primary shadow-1">
+                OK
+              </div>
+              <div>
+                <CardTitle>{title}</CardTitle>
+                <CardDescription className="mt-1 font-mono text-caption">
+                  On-chain proof
+                </CardDescription>
+              </div>
+            </div>
+            <Badge variant={statusVariant(status)} className="shrink-0">
+              {statusLabel(status)}
+            </Badge>
           </div>
           {amount ? (
             <CardDescription className="font-mono numeric">{amount}</CardDescription>
           ) : null}
         </CardHeader>
-        <CardContent className="flex flex-col gap-2">
-          <div className="flex flex-col gap-1">
+        <CardContent className="flex flex-col gap-4 p-5">
+          <div className="rounded-xl border border-border/70 bg-surface2/60 p-4">
             <span className="text-caption text-muted">Signature</span>
             <a
               href={url}
               target="_blank"
               rel="noreferrer noopener"
-              className="break-all font-mono text-caption text-primary underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
+              className="mt-1 block break-all font-mono text-caption font-semibold text-primary underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
             >
               {signature}
             </a>
           </div>
           {timestamp ? (
-            <div className="flex flex-col gap-1">
+            <div className="flex flex-col gap-1 rounded-xl border border-border/70 bg-white p-4">
               <span className="text-caption text-muted">Timestamp</span>
               <span className="font-mono text-caption text-text">{timestamp}</span>
             </div>
           ) : null}
           {nextSteps ? (
-            <div className="mt-2 border-t border-border pt-3 text-body text-muted">
+            <div className="rounded-xl border border-border/70 bg-white p-4 text-body text-muted">
               {nextSteps}
             </div>
           ) : null}

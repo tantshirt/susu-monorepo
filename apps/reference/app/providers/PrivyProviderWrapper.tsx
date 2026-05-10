@@ -79,8 +79,8 @@ export function PrivyProviderWrapper({ children }: { children: ReactNode }) {
           createOnLogin: "users-without-wallets",
         },
         appearance: {
-          // Matches the Phantom-fintech dark skin (project_ux_design memory).
-          theme: "dark",
+          // Match the publish-ready light fintech app shell.
+          theme: "light",
         },
         // `solana.rpcs` is a Privy-typed loose record; cast to the same
         // shape the Privy SDK accepts without pulling its internal types.

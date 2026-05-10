@@ -11,10 +11,8 @@ import { cn } from "@/lib/utils";
  *   - **static-svg** (default, Story 7.11) — pure SVG, no JS, no animation.
  *     Used by the README hero embed and any context where the parameters
  *     are fixed at render time.
- *   - **interactive** (`interactive` prop, Story 8.4) — adds parameter
- *     sliders for `n` and `contribution`, plus a "30% Cartel" toggle that
- *     highlights positions 4..6 in the warn token with a labeled callout
- *     (UX-DR12). Renders client-side so the sliders can drive React state.
+ *   - **interactive** (`interactive` prop) — adds parameter sliders for `n`
+ *     and `contribution`, plus a late-turn highlight for positions 4..6.
  *
  * Story 8.4 file is marked `"use client"` so the interactive controls work
  * out of the box. The static-svg variant still works correctly inside Server
@@ -56,7 +54,7 @@ export interface CurveVisualizerProps extends Omit<React.SVGAttributes<SVGSVGEle
   /** Visual size preset. */
   size?: CurveVisualizerSize;
   /** When `true`, render parameter sliders for `n` and `contribution` plus
-   *  a "30% Cartel" toggle that highlights positions 4..6. Defaults to
+   *  a late-turn toggle that highlights positions 4..6. Defaults to
    *  `false` (static-svg variant unchanged from Story 7.11). */
   interactive?: boolean;
   /** User-facing copy for the interactive variant. The docs/curve page
@@ -75,12 +73,12 @@ export interface CurveVisualizerCopy {
 const DEFAULT_COPY: CurveVisualizerCopy = {
   sliderN: "Group size (n)",
   sliderContribution: "Contribution per round (USDC)",
-  cartelToggle: "30% Cartel highlight",
+  cartelToggle: "Highlight late turns",
   cartelCallout:
-    "Positions 4–6 are the cartel-controlled slots in the documented adversary scenario. The curve still keeps every defaulter underwater (UX-DR12).",
+    "These highlighted turns would need more collateral, because later recipients have more reason to stop paying after they receive their payout.",
 };
 
-/** Cartel positions per `docs/collateral-curve.md` (zero-indexed slots 4..6). */
+/** Late-turn positions used for the public docs highlight (zero-indexed slots 4..6). */
 const CARTEL_POSITIONS: readonly number[] = [4, 5, 6];
 
 /** Contribution slider bounds per AC. */
@@ -308,10 +306,10 @@ export function CurveVisualizer({
             aria-pressed={cartelOn}
             onClick={() => setCartelOn((value) => !value)}
             className={cn(
-              "inline-flex items-center justify-center rounded-md border px-4 py-2 text-body font-medium",
+              "inline-flex items-center justify-center rounded-pill border px-5 py-2 text-body font-semibold transition-colors",
               cartelOn
                 ? "border-warn bg-warn/10 text-warn"
-                : "border-border bg-surface text-text hover:bg-muted/10",
+                : "border-border bg-surface text-text hover:bg-surface2",
             )}
             data-testid="curve-cartel-toggle"
           >
@@ -320,7 +318,7 @@ export function CurveVisualizer({
           {cartelOn ? (
             <p
               role="note"
-              className="rounded-md border border-warn/40 bg-warn/10 p-3 text-caption text-warn"
+              className="rounded-xl border border-warn/40 bg-warn/10 p-3 text-caption text-text"
               data-testid="curve-cartel-callout"
             >
               {localizedCopy.cartelCallout}

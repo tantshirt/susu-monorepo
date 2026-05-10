@@ -16,6 +16,8 @@ Partner integration docs must keep copy-paste runnable walkthroughs in lockstep 
 
 - [Codama Rust renderer status](./codama-rust-status.md)
 - [Surfpool integration status](./surfpool-status.md)
+- [Demo setup and `pnpm susu:demo`](./demo-setup.md)
+- [Epic 9 mainnet gate](./epic9-mainnet-gate.md)
 
 ## Compliance Framing
 

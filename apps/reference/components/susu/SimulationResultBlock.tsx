@@ -96,7 +96,7 @@ export const SimulationResultBlock = React.forwardRef<
       {result && result.logs.length > 0 ? (
         <details
           className={cn(
-            "rounded-md border border-border bg-surface2 p-3",
+            "rounded-xl border border-border bg-surface2 p-3",
             "text-caption text-muted",
           )}
         >

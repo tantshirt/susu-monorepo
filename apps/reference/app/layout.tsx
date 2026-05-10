@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { getLocale, getMessages } from "next-intl/server";
 import "./globals.css";
 import { PrivyProviderWrapper } from "./providers/PrivyProviderWrapper";
@@ -37,8 +37,14 @@ const skinHydrationScript = `(() => {
 })();`;
 
 export const metadata: Metadata = {
-  title: "Susu Reference App",
-  description: "Reference UX surface for the Susu Protocol monorepo.",
+  title: "Susu — rotating savings circles",
+  description:
+    "Susu helps savings circles show the schedule, preview each transaction, and keep receipts members can check.",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
 };
 
 /**
@@ -53,7 +59,7 @@ export const metadata: Metadata = {
  *
  * Story 7.3 wires the self-hosted typography variables onto `<html>` so
  * the entire tree (including portals + popovers rendered outside the body
- * subtree) inherits the design typography stack. No runtime Google Fonts
+ * subtree) inherits the unified Inter-led typography stack. No runtime Google Fonts
  * request is made — assets ship from `public/fonts/`.
  */
 export default async function RootLayout({
