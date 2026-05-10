@@ -13,6 +13,11 @@ import { useQuery } from "convex/react";
 export type InviteLinkRow = {
   groupPda: string;
   token: string;
+  status?: "active" | "revoked";
+  expiresAt?: number;
+  maxUses?: number;
+  uses?: number;
+  createdBy?: string;
   createdAt: number;
 } | null;
 

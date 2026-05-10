@@ -1,7 +1,7 @@
 /**
  * Shared view-model types for the reference member app.
- * Demo fixtures implement these shapes; live SDK/Convex wiring can adapt
- * on-chain data into the same interfaces without page refactors.
+ * SDK/Convex wiring can adapt on-chain data into these interfaces without
+ * page refactors once the production indexer is available.
  */
 
 export type RotationLifecycleState = "pending" | "active" | "claimed";
@@ -27,7 +27,6 @@ export interface GroupListItemViewModel {
   contributionLabel: string;
   mintSymbol: string;
   nextDeadlineUnix: number | null;
-  isDemo: boolean;
 }
 
 /** Full group detail for `/groups/[groupPda]`. */
@@ -39,7 +38,7 @@ export interface GroupDetailViewModel extends GroupListItemViewModel {
   collateralSummary: string;
 }
 
-/** Default contribution in USDC major units for demo entry fields. */
+/** Default contribution in USDC major units for transaction entry fields. */
 export interface GroupContributionDefaults {
   usdcMajor: string;
   /** 6 decimals */

@@ -10,6 +10,7 @@ import { ReceiptCard } from "@/components/susu/ReceiptCard";
 import { RotationCard } from "@/components/susu/RotationCard";
 import { TransactionConfirmModal } from "@/components/susu/TransactionConfirmModal";
 import { WalletStatus } from "@/components/nav/WalletStatus";
+import { WalletGate } from "@/components/auth/WalletGate";
 import { useWallet } from "@/lib/wallet/useWallet";
 import { useGroupMetadata } from "@/lib/convex/use-group-metadata";
 import {
@@ -139,13 +140,14 @@ export function ClaimClient({ groupPda, locale }: ClaimClientProps) {
   );
 
   return (
+    <WalletGate locale={locale}>
     <main className="mx-auto flex w-full max-w-6xl flex-col gap-8 px-4 py-10 md:px-8 md:py-14">
       <section className="overflow-hidden rounded-3xl border border-border/70 bg-white/95 shadow-2">
         <div className="bg-gradient-to-br from-white via-surface to-secondary/10 p-6 md:p-8">
           <Button asChild variant="ghost" size="sm" className="w-fit text-muted hover:text-text">
             <Link href={`/${locale}/groups/${groupPda}`}>← {t("backToGroup")}</Link>
           </Button>
-          <header className="mt-6 grid gap-6 md:grid-cols-[minmax(0,1fr)_18rem] md:items-end">
+          <header className="mt-6 grid gap-6 xl:grid-cols-[minmax(0,1fr)_18rem] xl:items-end">
             <div className="flex flex-col gap-3">
               <p className="font-mono text-caption font-semibold uppercase tracking-[0.18em] text-primary">
                 Payout eligibility check
@@ -166,7 +168,7 @@ export function ClaimClient({ groupPda, locale }: ClaimClientProps) {
         </div>
       </section>
 
-      <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(20rem,0.75fr)] lg:items-start">
+      <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_minmax(20rem,0.75fr)] xl:items-start">
         <div className="flex flex-col gap-6">
           <Card className="overflow-hidden rounded-2xl border-border/70 bg-white/95 shadow-1">
             <CardHeader className="border-b border-border/70 bg-surface2/60">
@@ -250,7 +252,7 @@ export function ClaimClient({ groupPda, locale }: ClaimClientProps) {
           )}
         </div>
 
-        <aside className="flex flex-col gap-6 lg:sticky lg:top-24">
+        <aside className="flex flex-col gap-6 xl:sticky xl:top-24">
           <RotationCard
             rotation={{
               i: rotation.i,
@@ -281,5 +283,6 @@ export function ClaimClient({ groupPda, locale }: ClaimClientProps) {
         onSuccess={onSuccess}
       />
     </main>
+    </WalletGate>
   );
 }

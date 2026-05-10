@@ -51,7 +51,11 @@ export function NavSettingsMenu({ locale, initialSkin }: NavSettingsMenuProps) {
           </svg>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" sideOffset={8} className="flex w-64 flex-col gap-3 p-3">
+      <DropdownMenuContent
+        align="end"
+        sideOffset={8}
+        className="z-[90] flex w-64 flex-col gap-3 border-text/20 bg-white p-3 shadow-2 ring-1 ring-text/10"
+      >
         <div className="flex items-center justify-between gap-2">
           <span className="text-sm font-medium text-muted">{t("switchLocale")}</span>
           <LocaleDropdown currentLocale={locale} />
