@@ -51,10 +51,20 @@ jobs:
       - name: Install Playwright browsers
         run: pnpm --filter @susu/reference exec playwright install --with-deps chromium
 
-      - name: Copy .env.example to .env.local
+      - name: Compose CI .env.local for visual screenshots
+        # apps/reference/.env.example intentionally ships with an empty
+        # NEXT_PUBLIC_PRIVY_APP_ID so local devs are forced to set a real
+        # one before `next dev` boots. CI doesn't need real Privy login —
+        # the visual specs only mask the wallet/cluster pill and snapshot
+        # the surrounding chrome — so we copy the example and then override
+        # the Privy ID with a 25-character CI-shape value that satisfies
+        # the lib/env.ts Zod schema (`.length(25)`). NODE_ENV stays
+        # "development" under `next dev`, so the production-only refine
+        # that rejects the doc placeholder doesn't fire.
         run: |
           if [ -f apps/reference/.env.example ]; then
             cp apps/reference/.env.example apps/reference/.env.local
+            sed -i 's|^NEXT_PUBLIC_PRIVY_APP_ID=$|NEXT_PUBLIC_PRIVY_APP_ID=cltest1234567890abcdefghi|' apps/reference/.env.local
           fi
 
       - name: Run visual regression
