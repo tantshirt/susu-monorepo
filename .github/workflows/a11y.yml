@@ -42,6 +42,15 @@ jobs:
       - name: Install JS dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Install matched ChromeDriver
+        # @axe-core/cli ships a chromedriver bundled to a specific Chrome
+        # major. The GitHub Actions ubuntu-latest image's preinstalled
+        # Chrome can lag the bundled driver by one major (e.g. driver wants
+        # 148, runner has 147 → "session not created"). browser-driver-manager
+        # installs a chromedriver matched to whatever Chrome version is
+        # currently on the runner.
+        run: npx --yes browser-driver-manager@1 install chrome
+
       - name: Compose CI .env.local for axe-core scans
         # apps/reference/.env.example ships with an empty
         # NEXT_PUBLIC_PRIVY_APP_ID by design (forces local devs to set a
