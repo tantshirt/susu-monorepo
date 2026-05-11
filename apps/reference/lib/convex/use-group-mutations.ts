@@ -13,7 +13,7 @@
 
 import { useMutation } from "convex/react";
 
-export type UpsertGroupMetadataInput = {
+export type CreateGroupMetadataInput = {
   groupPda: string;
   name: string;
   locale: string;
@@ -27,10 +27,10 @@ export type CreateInviteLinkInput = {
   maxUses?: number;
 };
 
-export function useUpsertGroupMetadata(): (args: UpsertGroupMetadataInput) => Promise<unknown> {
+export function useCreateGroupMetadata(): (args: CreateGroupMetadataInput) => Promise<unknown> {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return useMutation("groups:upsertGroupMetadata" as any) as unknown as (
-    args: UpsertGroupMetadataInput,
+  return useMutation("groups:createGroupMetadata" as any) as unknown as (
+    args: CreateGroupMetadataInput,
   ) => Promise<unknown>;
 }
 

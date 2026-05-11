@@ -7,7 +7,7 @@
  *     guarantees snapshot consistency for a single query.
  *   - Writes (mutations) acquire a per-`groupPda` advisory lock by upserting a
  *     sentinel row in the `groupMetadata` table within the same transaction,
- *     so two concurrent `upsertGroupMetadata` calls for the same group are
+ *     so two concurrent `createGroupMetadata` calls for the same group are
  *     serialized by Convex's optimistic-concurrency engine on the index row.
  *     Concurrent writes to *different* groups proceed in parallel.
  *
@@ -144,7 +144,7 @@ export const createInviteLink = mutation({
  * restriction and add an authenticated update path tied to the on-chain
  * group creator pubkey.
  */
-export const upsertGroupMetadata = mutation({
+export const createGroupMetadata = mutation({
   args: {
     groupPda: v.string(),
     name: v.string(),
@@ -159,7 +159,7 @@ export const upsertGroupMetadata = mutation({
         .withIndex("by_groupPda" as any, (q: any) => q.eq("groupPda", groupPda))
         .unique();
       if (existing) {
-        throw new Error("upsertGroupMetadata: group already has metadata; updates require authenticated mutation");
+        throw new Error("createGroupMetadata: group already has metadata; updates require an authenticated mutation (post Convex-auth)");
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       return await ctx.db.insert("groupMetadata" as any, {

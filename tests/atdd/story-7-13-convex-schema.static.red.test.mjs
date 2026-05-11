@@ -54,7 +54,11 @@ test('Story 7.13 groups.ts exports query, mutation, eraseUserData and per-group 
   assert.match(src, /from\s+["']convex\/server["']|from\s+["'](\.\.\/)*_generated\/server["']/, 'groups.ts must import server helpers');
 
   assert.match(src, /\bgetGroupMetadata\b/, 'groups.ts must export getGroupMetadata query');
-  assert.match(src, /\bupsertGroupMetadata\b/, 'groups.ts must export upsertGroupMetadata mutation');
+  // Post-2026-05 security fix: the mutation became insert-only and was
+  // renamed from upsertGroupMetadata → createGroupMetadata so the function
+  // name no longer claims update semantics it can't deliver. The
+  // export-name contract is the new createGroupMetadata identifier.
+  assert.match(src, /\bcreateGroupMetadata\b/, 'groups.ts must export createGroupMetadata mutation (insert-only)');
   assert.match(src, /\beraseUserData\b/, 'groups.ts must export eraseUserData mutation (Article 17)');
 
   // Article 17: erasure operates on memberDisplayNames for a given pubkey.
