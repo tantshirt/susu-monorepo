@@ -152,36 +152,44 @@ fi
 # -----------------------------------------------------------------------------
 # Build the program (must be reproducible)
 # -----------------------------------------------------------------------------
+#
+# Always rebuild — never deploy a stale `.so`. The mainnet ceremony is
+# irreversible; deploying yesterday's bytecode while staring at today's git
+# HEAD is the worst possible failure mode. The dry-run path skips this so
+# the smoke test stays fast.
 
 PROGRAM_SO="target/deploy/susu.so"
 
-if [[ ! -f "$PROGRAM_SO" ]]; then
+if [[ "$DRY_RUN" == "0" ]]; then
   echo "deploy-mainnet: building program (anchor build)"
-  if [[ "$DRY_RUN" == "0" ]]; then
-    anchor build
-  else
-    echo "deploy-mainnet: [dry-run] would run: anchor build"
+  anchor build
+  if [[ ! -f "$PROGRAM_SO" ]]; then
+    echo "deploy-mainnet: anchor build did not produce ${PROGRAM_SO}" >&2
+    exit 1
   fi
+else
+  echo "deploy-mainnet: [dry-run] skipping anchor build"
 fi
 
 # -----------------------------------------------------------------------------
 # Deploy
 # -----------------------------------------------------------------------------
+#
+# Build the args array in a single pass so the `--url` override (when
+# `--rpc-url` is supplied) replaces the cluster default rather than appearing
+# twice. Bash's `${array[@]/pat/repl}` operates on individual elements, so
+# the previous "remove `--url $CLUSTER`" approach didn't actually remove
+# anything when the two were separate array elements.
 
 DEPLOY_ARGS=(program deploy "$PROGRAM_SO" --upgrade-authority "$INCINERATOR")
 
-case "$CLUSTER" in
-  mainnet-beta)
-    DEPLOY_ARGS+=(--url mainnet-beta)
-    ;;
-  devnet)
-    DEPLOY_ARGS+=(--url devnet)
-    ;;
-esac
-
 if [[ -n "$RPC_URL" ]]; then
-  DEPLOY_ARGS=("${DEPLOY_ARGS[@]/--url $CLUSTER/}")
   DEPLOY_ARGS+=(--url "$RPC_URL")
+else
+  case "$CLUSTER" in
+    mainnet-beta) DEPLOY_ARGS+=(--url mainnet-beta) ;;
+    devnet)       DEPLOY_ARGS+=(--url devnet) ;;
+  esac
 fi
 
 if [[ -n "$PROGRAM_KEYPAIR" ]]; then
@@ -200,11 +208,14 @@ if [[ "$DRY_RUN" == "1" ]]; then
   exit 0
 fi
 
-# Real deploy.
-DEPLOY_OUTPUT="$(solana "${DEPLOY_ARGS[@]}")"
-echo "$DEPLOY_OUTPUT"
+# Real deploy. Tee through a logfile so the operator sees progress in real
+# time AND we can parse the program id from the captured output afterward
+# (a long-running ceremony staring at a frozen terminal is the wrong UX).
+DEPLOY_LOG="$(mktemp -t susu-deploy.XXXXXX.log)"
+trap 'echo "deploy-mainnet: log preserved at ${DEPLOY_LOG}" >&2' EXIT
+solana "${DEPLOY_ARGS[@]}" 2>&1 | tee "$DEPLOY_LOG"
 
-PROGRAM_ID="$(printf '%s\n' "$DEPLOY_OUTPUT" | awk '/^Program Id:/ {print $3; exit}')"
+PROGRAM_ID="$(awk '/^Program Id:/ {print $3; exit}' "$DEPLOY_LOG")"
 if [[ -z "$PROGRAM_ID" ]]; then
   echo "deploy-mainnet: failed to parse Program Id from solana output" >&2
   exit 1
@@ -225,7 +236,16 @@ esac
 
 DEPLOY_SHA="$(git rev-parse HEAD)"
 DEPLOY_AT="$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
-IDL_HASH="$(sha256sum programs/susu/idl/susu.json | awk '{print $1}')"
+
+# Portable SHA-256: GNU coreutils ships sha256sum; macOS / BSD ship shasum.
+if command -v sha256sum >/dev/null 2>&1; then
+  IDL_HASH="$(sha256sum programs/susu/idl/susu.json | awk '{print $1}')"
+elif command -v shasum >/dev/null 2>&1; then
+  IDL_HASH="$(shasum -a 256 programs/susu/idl/susu.json | awk '{print $1}')"
+else
+  echo "deploy-mainnet: neither sha256sum nor shasum found; cannot hash IDL" >&2
+  exit 1
+fi
 
 cat > "$OUT_PATH" <<EOF
 # ${CLUSTER} program id

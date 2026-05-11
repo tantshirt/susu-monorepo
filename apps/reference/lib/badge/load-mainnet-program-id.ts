@@ -13,12 +13,18 @@ import path from "node:path";
  *
  * Returning `undefined` is the explicit "pre-mainnet" signal — the badge
  * route falls back to the `pending` state.
+ *
+ * The repo-root walk uses `pnpm-workspace.yaml` as the root marker so the
+ * resolver works regardless of which directory Next.js was invoked from
+ * (Vercel monorepo "root directory" config, `pnpm --filter @susu/reference
+ * build` from repo root, `pnpm dev` inside `apps/reference/`, etc.).
  */
 export function loadMainnetProgramIdFromFile(): string | undefined {
-  const candidate = path.resolve(process.cwd(), "..", "..", "MAINNET_PROGRAM_ID.md");
-  const fallback = path.resolve(process.cwd(), "MAINNET_PROGRAM_ID.md");
-  const target = existsSync(candidate) ? candidate : existsSync(fallback) ? fallback : null;
-  if (!target) return undefined;
+  const repoRoot = findRepoRoot(process.cwd());
+  if (repoRoot === null) return undefined;
+
+  const target = path.join(repoRoot, "MAINNET_PROGRAM_ID.md");
+  if (!existsSync(target)) return undefined;
 
   const contents = readFileSync(target, "utf8");
   // The Story 9.2 template writes the program id as a backticked cell in
@@ -29,4 +35,17 @@ export function loadMainnetProgramIdFromFile(): string | undefined {
   if (!match) return undefined;
   const id = match[1].trim();
   return id.length > 0 ? id : undefined;
+}
+
+function findRepoRoot(start: string): string | null {
+  let dir = path.resolve(start);
+  // Walk at most 8 levels up — defends against pathological cwd values
+  // without requiring an unbounded loop.
+  for (let i = 0; i < 8; i++) {
+    if (existsSync(path.join(dir, "pnpm-workspace.yaml"))) return dir;
+    const parent = path.dirname(dir);
+    if (parent === dir) return null;
+    dir = parent;
+  }
+  return null;
 }

@@ -44,7 +44,10 @@ jobs:
         if: steps.gate.outputs.deployed == 'true'
         id: program
         run: |
-          PROGRAM_ID="$(grep -E '^\| Program ID \|' MAINNET_PROGRAM_ID.md | sed -E 's/.*`([^`]+)`.*/\1/')"
+          # Permissive regex matching apps/reference/lib/badge/load-mainnet-program-id.ts
+          # so a doc-style tweak to MAINNET_PROGRAM_ID.md doesn't break this workflow.
+          PROGRAM_ID="$(grep -oE '^\|[[:space:]]*Program ID[[:space:]]*\|[[:space:]]*`[^`]+`' MAINNET_PROGRAM_ID.md \
+            | sed -E 's/.*`([^`]+)`.*/\1/')"
           if [[ -z "$PROGRAM_ID" ]]; then
             echo "::error::failed to parse program id from MAINNET_PROGRAM_ID.md"
             exit 1

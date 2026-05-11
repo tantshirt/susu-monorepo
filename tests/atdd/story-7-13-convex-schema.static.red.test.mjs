@@ -57,9 +57,22 @@ test('Story 7.13 groups.ts exports query, mutation, eraseUserData and per-group 
   assert.match(src, /\bupsertGroupMetadata\b/, 'groups.ts must export upsertGroupMetadata mutation');
   assert.match(src, /\beraseUserData\b/, 'groups.ts must export eraseUserData mutation (Article 17)');
 
-  // Article 17: erasure deletes from memberDisplayNames for a given pubkey
-  assert.match(src, /memberDisplayNames/, 'eraseUserData must operate on memberDisplayNames table');
-  assert.match(src, /\.delete\(/, 'eraseUserData must delete rows');
+  // Article 17: erasure operates on memberDisplayNames for a given pubkey.
+  // Post-2026-05 security fix: the previous unsafe implementation accepted
+  // any anonymous caller and deleted any pubkey's PII (mass-wipe vector).
+  // Until Convex auth + signed-message proof-of-ownership is wired, the
+  // mutation throws to prevent abuse. The function is preserved as a stub
+  // so the API surface stays alignment-checkable; the schema's
+  // memberDisplayNames table remains the GDPR target for the real handler.
+  assert.match(src, /memberDisplayNames/, 'groups.ts must reference memberDisplayNames (GDPR target)');
+  // Either: (a) currently disabled stub that throws, OR
+  //         (b) re-armed handler with actual .delete() once auth lands.
+  const stubbedDisabled = /eraseUserData[\s\S]*throw\s+new\s+Error/.test(src);
+  const armedWithDelete = /eraseUserData[\s\S]*\.delete\(/.test(src);
+  assert.ok(
+    stubbedDisabled || armedWithDelete,
+    'eraseUserData must either throw (disabled stub) or actually delete rows (post-auth re-arm)',
+  );
 
   // Isolation lock (ARCH-31): per-group lock keyed by groupPda for writes
   assert.match(src, /isolation\s*lock|acquireLock|groupLock|lockKey|withGroupLock/i,
