@@ -76,12 +76,18 @@ jobs:
         # and exits 0; the snapshots are uploaded as an artifact below for
         # one-time commit.
         #
+        # We invoke `playwright test` directly via `pnpm exec` instead of
+        # going through the package.json script, because pnpm's `-- ` flag
+        # forwarding turns into "test name filter" semantics on
+        # `playwright test`, producing "No tests found." Passing the flag
+        # directly keeps Playwright's own argument parser in charge.
+        #
         # TODO(visual-baselines): once a maintainer downloads the
         # `playwright-snapshots` artifact and commits the `*-linux.png`
         # files alongside the existing `*-darwin.png` baselines, REMOVE
         # `--update-snapshots` from the command below so this workflow
         # becomes a real regression gate again.
-        run: pnpm --filter @susu/reference run e2e:visual -- --update-snapshots
+        run: pnpm --filter @susu/reference exec playwright test --project=visual --update-snapshots
         env:
           CI: 'true'
 
