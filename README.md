@@ -169,26 +169,26 @@ The full lifecycle of one susu round, end to end:
 sequenceDiagram
     autonumber
     participant Creator
-    participant Members as Members (n total)
+    participant Members
     participant Susu as Susu Program
-    participant Vault as Vault PDA (contract-owned)
+    participant Vault as Vault PDA
 
-    Creator->>Susu: create_group(n, contribution, period)
-    Creator->>Members: invite_members(pubkeys[])
+    Creator->>Susu: create_group
+    Creator->>Members: invite_members
     loop For each member
-        Members->>Susu: accept_invite()
-        Members->>Vault: post_collateral (curve-determined amount)
+        Members->>Susu: accept_invite
+        Members->>Vault: post_collateral
     end
-    Susu->>Susu: start_contributions() — assigns rotation order
-    loop For each rotation slot i = 0..n-1
-        Members->>Vault: contribute (every member sends contribution)
-        Note over Susu: After deadline...
-        Members->>Susu: claim_payout (only the slot-i recipient succeeds)
-        Susu->>Members: vault transfers contribution × n to recipient
+    Susu->>Susu: start_contributions
+    loop For each rotation slot
+        Members->>Vault: contribute
+        Note over Susu: After deadline
+        Members->>Susu: claim_payout
+        Susu->>Members: pot transferred to slot recipient
     end
     loop For each member
-        Members->>Susu: withdraw_collateral (after final rotation)
-        Susu->>Members: vault returns posted collateral
+        Members->>Susu: withdraw_collateral
+        Susu->>Members: collateral returned
     end
 ```
 
@@ -224,21 +224,21 @@ pnpm --filter @susu/reference dev
 
 ```mermaid
 flowchart LR
-    subgraph User["User's browser"]
-        UI["apps/reference (Next.js)"]
+    subgraph Browser["User browser"]
+        UI["apps/reference Next.js"]
     end
-    subgraph Wallet["Wallet"]
-        Privy["Privy embedded wallet<br/>(email login)"]
-        Standard["Wallet-Standard<br/>(Phantom, Solflare, …)"]
+    subgraph WalletGroup["Wallet"]
+        Privy["Privy embedded wallet"]
+        Standard["Wallet-Standard browser extensions"]
     end
-    subgraph Client["Client SDK"]
-        TS["@susu/sdk (TypeScript)"]
-        Rust["susu-sdk (Rust)"]
+    subgraph SDK["Client SDK"]
+        TS["susu-sdk TypeScript"]
+        Rust["susu-sdk Rust"]
     end
     subgraph Chain["Solana"]
-        Program["programs/susu<br/>(Anchor program)"]
-        Vault["Vault PDA<br/>(SPL token account)"]
-        Receipt["RotationReceipt PDA<br/>(double-claim guard)"]
+        Program["programs/susu Anchor program"]
+        Vault["Vault PDA"]
+        Receipt["RotationReceipt PDA"]
     end
 
     UI --> Privy
