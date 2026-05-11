@@ -44,7 +44,10 @@ test('Story 7.3 lib/theme/fonts.ts exports next/font/local instances with locked
   assert.match(src, /--font-noto-arabic/, 'must expose --font-noto-arabic for RTL fallback');
   assert.match(src, /--font-noto-sans/, 'must expose --font-noto-sans for Yoruba/Latin-ext fallback');
   // Each font asset path referenced.
-  assert.match(src, /GeistVF\.woff2/, 'must reference GeistVF.woff2');
+  // Post-2026-05 design pivot (project_ux_design.md): Inter is now the
+  // unified display + body face per UX-DR9. Geist Mono remains for numerics
+  // and code; the original Geist sans was retired with the publish-ready
+  // light fintech shell.
   assert.match(src, /GeistMonoVF\.woff2/, 'must reference GeistMonoVF.woff2');
   assert.match(src, /InterVF\.woff2/, 'must reference InterVF.woff2');
   assert.match(src, /NotoSansArabic-Regular\.ttf/, 'must reference NotoSansArabic-Regular.ttf');

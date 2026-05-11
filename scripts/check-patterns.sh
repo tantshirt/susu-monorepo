@@ -22,7 +22,9 @@ seed_hits="$({
 print_hits "seed literal outside seeds.rs" "$seed_hits"
 
 convex_hits="$({
-  grep -rEn --include='*.ts' --include='*.tsx' "from[[:space:]]+['\"](convex|convex/react|@convex-dev/[^'\"]+)['\"]" apps sdk examples 2>/dev/null || true
+  grep -rEn --include='*.ts' --include='*.tsx' \
+    --exclude-dir='.next' --exclude-dir='node_modules' --exclude-dir='dist' --exclude-dir='build' \
+    "from[[:space:]]+['\"](convex|convex/react|@convex-dev/[^'\"]+)['\"]" apps sdk examples 2>/dev/null || true
 } \
   | grep -v '^apps/reference/lib/convex/' \
   | grep -v '^apps/reference/app/providers/ConvexProviderWrapper\.tsx:' \
@@ -31,12 +33,16 @@ convex_hits="$({
 print_hits "convex import outside apps/reference/lib/convex" "$convex_hits"
 
 directional_hits="$({
-  grep -rEn --include='*.ts' --include='*.tsx' --include='*.css' '\b(ml-|mr-|pl-|pr-|left-|right-)[0-9]+' apps 2>/dev/null || true
+  grep -rEn --include='*.ts' --include='*.tsx' --include='*.css' \
+    --exclude-dir='.next' --exclude-dir='node_modules' --exclude-dir='dist' --exclude-dir='build' \
+    '\b(ml-|mr-|pl-|pr-|left-|right-)[0-9]+' apps 2>/dev/null || true
 } | grep -v '^apps/reference/messages/' || true)"
 print_hits "directional Tailwind classes" "$directional_hits"
 
 env_hits="$({
-  grep -rEn --include='*.ts' --include='*.tsx' 'process\.env\.[A-Za-z_][A-Za-z0-9_]*' apps sdk examples 2>/dev/null || true
+  grep -rEn --include='*.ts' --include='*.tsx' \
+    --exclude-dir='.next' --exclude-dir='node_modules' --exclude-dir='dist' --exclude-dir='build' \
+    'process\.env\.[A-Za-z_][A-Za-z0-9_]*' apps sdk examples 2>/dev/null || true
 } \
   | grep -v '^apps/reference/lib/env.ts:' \
   | grep -v '^apps/reference/playwright.config.ts:' \

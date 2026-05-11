@@ -4,6 +4,7 @@ import {
   type UpgradeBurnedRpc,
 } from "@/lib/badge/upgrade-burned-resolver";
 import { renderUpgradeBurnedSvg } from "@/lib/badge/upgrade-burned";
+import { loadMainnetProgramIdFromFile } from "@/lib/badge/load-mainnet-program-id";
 import { env } from "@/lib/env";
 
 /**
@@ -58,15 +59,15 @@ export function setProgramIdForTesting(programId: string | null): void {
 }
 
 export async function GET(): Promise<Response> {
-  // The mainnet program id only exists once Epic 9 deploys; before that
-  // the env var may be empty/missing. We treat that as `pending` rather
-  // than failing the build.
+  // The mainnet program id only exists once Epic 9 deploys. Resolution
+  // order (Story 9.4): explicit test override → MAINNET_PROGRAM_ID.md (the
+  // committed artifact written by scripts/deploy-mainnet.sh) → env var.
+  // Anything missing degrades to `pending` rather than failing the build.
   const programId =
     programIdOverride !== null
       ? programIdOverride
-      : env.NEXT_PUBLIC_CLUSTER === "mainnet-beta"
-        ? env.NEXT_PUBLIC_PROGRAM_ID
-        : undefined;
+      : loadMainnetProgramIdFromFile() ??
+        (env.NEXT_PUBLIC_CLUSTER === "mainnet-beta" ? env.NEXT_PUBLIC_PROGRAM_ID : undefined);
 
   const rpc = rpcFactory();
   const { state, authorityOrProgramId } = await resolveUpgradeBurnedState(rpc, programId);

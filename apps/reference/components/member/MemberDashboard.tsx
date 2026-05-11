@@ -163,18 +163,6 @@ export function MemberDashboard({ locale }: MemberDashboardProps) {
         </div>
       </section>
 
-      {!wallet.connected ? (
-        <section className="grid gap-4 border border-primary/20 bg-primary/10 p-5 md:grid-cols-[minmax(0,1fr)_auto] md:items-center">
-          <div>
-            <h2 className="text-h3 font-semibold tracking-tight text-text">{t("connectPanelTitle")}</h2>
-            <p className="mt-2 max-w-2xl text-body leading-7 text-muted">{t("connectPanelBody")}</p>
-          </div>
-          <div className="justify-self-start md:justify-self-end">
-            <WalletStatus />
-          </div>
-        </section>
-      ) : null}
-
       <div className="grid gap-8 xl:grid-cols-[minmax(0,1fr)_22rem]">
         <section className="flex min-w-0 flex-col gap-6">
           <div className="flex flex-col gap-3">

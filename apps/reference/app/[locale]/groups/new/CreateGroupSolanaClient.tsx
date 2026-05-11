@@ -3,7 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
-import { useMutation } from "convex/react";
+import { useCreateGroupMetadata, useCreateInviteLink } from "@/lib/convex/use-group-mutations";
 import {
   useConnectedStandardWallets,
   useSendTransaction,
@@ -67,18 +67,8 @@ export function CreateGroupSolanaClient({ locale }: CreateGroupSolanaClientProps
   const t = useTranslations("createGroup");
   const tTx = useTranslations("tx");
   const wallet = useWallet();
-  const upsertGroupMetadata = useMutation("groups:upsertGroupMetadata" as never) as unknown as (args: {
-    groupPda: string;
-    name: string;
-    locale: string;
-  }) => Promise<unknown>;
-  const createInviteLink = useMutation("groups:createInviteLink" as never) as unknown as (args: {
-    groupPda: string;
-    token: string;
-    createdBy?: string;
-    expiresAt?: number;
-    maxUses?: number;
-  }) => Promise<unknown>;
+  const createGroupMetadata = useCreateGroupMetadata();
+  const createInviteLink = useCreateInviteLink();
   const mintOptions = React.useMemo(() => supportedCreateGroupMints(wallet.cluster), [wallet.cluster]);
   const [groupName, setGroupName] = React.useState(() => t("defaultGroupName"));
   const [groupId, setGroupId] = React.useState(() => generateGroupId().toString());
@@ -186,7 +176,7 @@ export function CreateGroupSolanaClient({ locale }: CreateGroupSolanaClientProps
       const name = groupName.trim() || t("defaultGroupName");
       const now = Date.now();
       void Promise.all([
-        upsertGroupMetadata({ groupPda, name, locale }),
+        createGroupMetadata({ groupPda, name, locale }),
         createInviteLink({
           groupPda,
           token: normalizedAccessCode,
@@ -205,7 +195,7 @@ export function CreateGroupSolanaClient({ locale }: CreateGroupSolanaClientProps
       locale,
       n,
       t,
-      upsertGroupMetadata,
+      createGroupMetadata,
       wallet.address,
       normalizedAccessCode,
     ],

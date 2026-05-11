@@ -36,8 +36,11 @@ const DIASPORA_OVERRIDES = [
   '--shadow-2',
 ];
 
-// Cross-skin invariants per UX-DR2.
-const DIASPORA_FORBIDDEN = ['--bg', '--signal', '--warn', '--danger'];
+// Cross-skin value-equality invariants (post-2026-05 design pivot, project_ux_design.md).
+// Diaspora MAY restate these tokens, but their resolved values must match the neutral
+// skin so semantic meaning ("signal = protocol identity", "warn = caution",
+// "danger = destructive") remains identical across skins.
+const DIASPORA_VALUE_INVARIANT = ['--signal', '--warn', '--danger'];
 
 const SEMANTIC_COLORS = [
   'bg',
@@ -82,16 +85,17 @@ test('Story 7.2 lib/theme/tokens.css defines neutral skin with every UX-DR3 toke
   }
 });
 
-test('Story 7.2 neutral primary is Solana mint, not purple', () => {
+test('Story 7.2 neutral primary is the protocol teal (post-2026-05 publish-ready pivot)', () => {
   const tokens = read(tokensPath);
-  // Match the --primary line in the neutral block.
-  // Mint green canonical RGB component pattern: green channel dominates.
-  // Locked Solana mint value used by Susu UX direction: 20 241 149 (#14F195).
-  const mintLine = /--primary\s*:\s*20\s+241\s+149/;
+  // Per project_ux_design.md (2026-05-11 pivot): publish-ready light fintech
+  // shell, primary is teal `13 148 136` (#0D9488). The Solana mint
+  // (20 241 149 / #14F195) was retired as the primary; mint is no longer the
+  // protocol-identity color in this codebase.
+  const tealLine = /--primary\s*:\s*13\s+148\s+136/;
   assert.match(
     tokens,
-    mintLine,
-    '--primary in neutral skin must be Solana mint (20 241 149) per UX direction',
+    tealLine,
+    '--primary in neutral skin must be the protocol teal (13 148 136) per project_ux_design.md',
   );
 });
 
@@ -114,14 +118,26 @@ test('Story 7.2 lib/theme/skin-diaspora.css overrides correct tokens and preserv
     );
   }
 
-  // Cross-skin invariants per UX-DR2.
-  for (const token of DIASPORA_FORBIDDEN) {
+  // Cross-skin VALUE invariants — diaspora may restate these tokens, but
+  // their resolved RGB values must match the neutral skin so the semantic
+  // meaning is preserved across skins.
+  const tokens = read(tokensPath);
+  for (const token of DIASPORA_VALUE_INVARIANT) {
     const escaped = token.replace(/-/g, '\\-');
-    assert.doesNotMatch(
-      diaspora,
-      new RegExp(`${escaped}\\s*:`),
-      `skin-diaspora.css must NOT redefine ${token} (cross-skin invariant per UX-DR2)`,
-    );
+    const valueRe = new RegExp(`${escaped}\\s*:\\s*([^;]+);`);
+    const neutralMatch = tokens.match(valueRe);
+    const diasporaMatch = diaspora.match(valueRe);
+    if (diasporaMatch) {
+      assert.ok(
+        neutralMatch,
+        `tokens.css must define ${token} so the cross-skin value invariant has a baseline`,
+      );
+      assert.equal(
+        diasporaMatch[1].trim(),
+        neutralMatch[1].trim(),
+        `${token} must resolve to the same value across neutral and diaspora skins`,
+      );
+    }
   }
 });
 

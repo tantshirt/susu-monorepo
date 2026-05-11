@@ -125,7 +125,7 @@ export function RotationCard({
       <div
         aria-hidden
         className={cn(
-          "absolute inset-y-0 left-0 w-1",
+          "absolute inset-y-0 start-0 w-1",
           state === "active"
             ? "bg-primary"
             : state === "claimed"

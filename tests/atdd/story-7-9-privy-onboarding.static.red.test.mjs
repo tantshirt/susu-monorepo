@@ -39,12 +39,16 @@ test('Story 7.9 PrivyProviderWrapper configures embedded wallet creation for use
   );
 });
 
-test('Story 7.9 PrivyProviderWrapper sets dark appearance theme', () => {
+test('Story 7.9 PrivyProviderWrapper sets light appearance theme to match the publish-ready fintech shell', () => {
+  // Post-2026-05 design pivot (project_ux_design.md): the reference app
+  // ships as a publish-ready light fintech shell. The original Phantom-dark
+  // theme was retired here so the Privy login modal blends into the light
+  // surfaces instead of inverting them.
   const src = read(privyWrapperPath);
   assert.match(
     src,
-    /appearance[^}]*?theme[^}]*?dark/,
-    'appearance.theme must be "dark" to match the Phantom-fintech skin',
+    /appearance[^}]*?theme[^}]*?light/,
+    'appearance.theme must be "light" to match the publish-ready fintech shell',
   );
 });
 

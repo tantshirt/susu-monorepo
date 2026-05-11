@@ -104,9 +104,13 @@ test('Story 7.17 TopNav.tsx wires the mobile DropdownMenu hamburger and keeps Cl
     /md:hidden/,
     'TopNav must hide the hamburger on md+ (md:hidden)',
   );
+  // Allow optional intervening utilities (e.g. `shrink-0`) between
+  // `hidden` and `items-center` — the post-2026-05 quiet-luxury TopNav
+  // refactor adds layout helpers there but preserves the contract that
+  // the desktop control row is hidden below md and revealed at md+.
   assert.match(
     src,
-    /hidden\s+items-center\s+gap-\d+\s+md:flex/,
+    /hidden\b[^"'`]*\bitems-center\b[^"'`]*\bgap-\d+\b[^"'`]*\bmd:flex\b/,
     'TopNav must hide the desktop control row on < md (hidden md:flex)',
   );
   // ClusterPill must NOT live inside the collapsed wrapper. Its line

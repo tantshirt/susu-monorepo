@@ -17,18 +17,26 @@ Use this after:
 3. **`pnpm verify`** — passes on a clean clone within the reproducibility budget.
 4. **`scripts/check-immutability.sh`** — understand that immutability checks are enforced when `CLUSTER=mainnet-beta` (see script and [CONTRIBUTING.md](../CONTRIBUTING.md)).
 
-## Deploy and burn (high level)
+## Deploy and burn (atomic ceremony)
 
-1. Deploy to **mainnet-beta** through the **approved** deploy procedure (multisig / authority workflow as defined by the team).
-2. **Burn upgrade authority** to the System Program incinerator (`1nc1nerator11111111111111111111111111111111`) when ready for immutability.
-3. Re-run immutability / IDL checks on `mainnet-beta`.
-4. Update public surfaces: README badges, environment defaults for production, and any “upgrade burned” API routes.
+The atomic ceremony is automated by [`scripts/deploy-mainnet.sh`](../scripts/deploy-mainnet.sh) (Story 9.2). See the **Mainnet ceremony** section in [`/CONTRIBUTING.md`](../CONTRIBUTING.md) for the full pre-flight checklist and step-by-step.
 
-## After mainnet
+Summary:
 
-- Tag release (e.g. `v0.1.0-mainnet`) with matching IDL artifact.
-- Monitor RPC, incident response, and communication for integrators.
-- Keep devnet documentation (e.g. [demo-setup.md](./demo-setup.md)) accurate for developers **not** on mainnet yet.
+1. Confirm audit gate passes; remove `audits/SKIP_AUDIT_GATE`.
+2. Smoke test on devnet: `bash scripts/deploy-mainnet.sh --cluster devnet --dry-run`.
+3. Run the mainnet ceremony: `bash scripts/deploy-mainnet.sh --cluster mainnet-beta --program-keypair … --payer …`. Deploy + burn happen in the same transaction (`--upgrade-authority 1nc1nerator11111111111111111111111111111111`).
+4. The script writes [`MAINNET_PROGRAM_ID.md`](../MAINNET_PROGRAM_ID.md) at the repo root with program ID, deploy SHA, IDL hash, and timestamp.
+
+## After mainnet (Story 9.4 — manual)
+
+1. Commit `MAINNET_PROGRAM_ID.md`.
+2. The badge route at [`apps/reference/app/api/badge/upgrade-burned/route.ts`](../apps/reference/app/api/badge/upgrade-burned/route.ts) auto-resolves the program id from this file via [`apps/reference/lib/badge/load-mainnet-program-id.ts`](../apps/reference/lib/badge/load-mainnet-program-id.ts), flipping the badge from `pending` to `verified` on the next build.
+3. The [`immutability-check.yml`](../.github/workflows/immutability-check.yml) workflow (Story 9.3) starts asserting the burn on every push and nightly cron.
+4. Tag the release: `git tag v0.1.0-mainnet && git push --tags`. Release notes should cite program ID, audit report path, adversary artifact, IDL hash, legal opinion path, and deployed-at timestamp.
+5. Monitor RPC, incident response, and communicate the new program id to integrators.
+6. Add a daily-log entry at `/log/YYYY-MM-DD.md` documenting the moment the badge first flipped — the canonical "Susu became infrastructure" log.
+7. Keep devnet documentation (e.g. [demo-setup.md](./demo-setup.md)) accurate for developers **not** on mainnet yet.
 
 ## References
 

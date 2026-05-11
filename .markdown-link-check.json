@@ -6,7 +6,8 @@
     { "pattern": "^https?://(?:www\\.)?github\\.com/" },
     { "pattern": "^https?://api\\.github\\.com/" },
     { "pattern": "^#$" },
-    { "pattern": "^https?://(?:www\\.)?youtube\\.com/.*TODO" }
+    { "pattern": "^https?://(?:www\\.)?youtube\\.com/.*TODO" },
+    { "pattern": "MAINNET_PROGRAM_ID\\.md$" }
   ],
   "replacementPatterns": [],
   "httpHeaders": [],
