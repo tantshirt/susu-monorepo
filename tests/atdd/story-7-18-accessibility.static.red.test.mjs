@@ -80,41 +80,12 @@ test('Story 7.18 axe-core CI workflow exists and targets en/vi/ar with wcag2aa t
   assert.match(src, /\/ar\b/, 'a11y workflow must scan /ar (RTL)');
 });
 
-test('Story 7.18 pilot page exists, is non-crypto, uses Banner + FieldError + shadcn primitives', () => {
-  assertExists(PILOT_PAGE);
-  const src = read(PILOT_PAGE);
-  // Must not import wallet/privy/convex modules — pilot is non-crypto.
-  assert.doesNotMatch(
-    src,
-    /@privy-io|convex|@solana\/|@\/lib\/wallet/,
-    'pilot page must not import wallet/Privy/Convex — pilot is intentionally non-crypto',
-  );
-  assert.match(
-    src,
-    /@\/components\/susu\/Banner/,
-    'pilot page must use the Banner component',
-  );
-  assert.match(
-    src,
-    /@\/components\/susu\/FieldError/,
-    'pilot page must use the FieldError component',
-  );
-  assert.match(
-    src,
-    /@\/components\/ui\/button/,
-    'pilot page must use the shadcn Button primitive',
-  );
-  // No hardcoded color literals (UX-DR2).
-  assert.doesNotMatch(src, FORBID_HEX, 'pilot page must not contain hex color literals');
-  assert.doesNotMatch(src, FORBID_RGB, 'pilot page must not contain rgb() literals');
-  assert.doesNotMatch(src, FORBID_HSL, 'pilot page must not contain hsl() literals');
-  // No directional Tailwind utilities (UX-DR33).
-  assert.doesNotMatch(
-    src,
-    FORBID_DIRECTIONAL,
-    'pilot page must use logical Tailwind directional classes (ms-/me-/ps-/pe-/start-/end-) only',
-  );
-});
+// The non-crypto /pilot page was retired with the post-2026-05 design pivot
+// (project_ux_design.md). Stakeholder demos and axe-core scans now run
+// against the live `/en` home, `/en/groups`, and `/en/how-it-works` routes
+// instead — the a11y workflow above codifies that. The pilot-page assertion
+// has been removed; if a non-crypto demo surface is needed again later,
+// restore both the page and this test together.
 
 test('Story 7.18 apps/reference/package.json lists @axe-core/cli', () => {
   const pkg = JSON.parse(read(REF_PKG));

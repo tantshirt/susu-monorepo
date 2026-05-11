@@ -16,8 +16,13 @@ _bmad-output
 .claude/
 .agents/
 .codex/
+.cursor/
 output_susu/
 .worktrees/
+
+# Local diagnostics (never commit)
+claude_diagnostics.sh
+claude_diagnostics_output.txt
 
 # Node
 node_modules/
@@ -55,6 +60,9 @@ coverage/
 tests/.tmp/
 audits/handoff-*.tar.gz
 audits/handoff-*.MANIFEST.txt
+
+# Playwright generated output
+apps/reference/test-results/
 
 # Submodule / nested unrelated project
 mempalace/

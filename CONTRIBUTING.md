@@ -72,6 +72,51 @@ Enforcement mode (post-audit, sentinel removed) requires all of:
 
 Story 9.2's mainnet-deploy preflight is responsible for deleting `audits/SKIP_AUDIT_GATE` and confirming the gate then passes; failure at that point is the explicit "audit not done" blocker the operator must surface.
 
+## Mainnet ceremony (Story 9.2 — irreversible)
+
+Mainnet deploy is performed by [`scripts/deploy-mainnet.sh`](./scripts/deploy-mainnet.sh). The deploy and the upgrade-authority burn happen **atomically** — the program is deployed with `--upgrade-authority 1nc1nerator11111111111111111111111111111111` (System Program incinerator) so there is no human-error window between deploy and burn.
+
+**Pre-flight checklist** (each item must be true before running the script):
+
+1. The audit firm has delivered a final report with **zero Critical and zero High** findings.
+2. `audits/audit-summary.json` is updated with the firm's findings counts and signed-off metadata.
+3. The audit report PDF is committed at `audits/{firm-slug}-{YYYY-MM}.pdf`.
+4. `audits/SKIP_AUDIT_GATE` has been deleted (`git rm audits/SKIP_AUDIT_GATE`).
+5. `pnpm audit:check` exits 0.
+6. `pnpm verify` exits 0 from a clean clone.
+7. The intended program keypair and payer keypair are accessible offline.
+
+**Dry-run on devnet** (always do this first to smoke-test the script wiring):
+
+```bash
+bash scripts/deploy-mainnet.sh --cluster devnet --dry-run
+```
+
+**Real mainnet deploy** (irreversible — the burn happens at deploy):
+
+```bash
+bash scripts/deploy-mainnet.sh \
+  --cluster mainnet-beta \
+  --program-keypair ./keys/program.json \
+  --payer ./keys/payer.json
+```
+
+On success the script:
+
+- Submits the deploy transaction with the upgrade authority pinned to the incinerator.
+- Parses the program ID from `solana program show` output.
+- Writes [`MAINNET_PROGRAM_ID.md`](./MAINNET_PROGRAM_ID.md) at the repo root with program ID, deploy timestamp, deploy SHA, IDL SHA-256, and cluster.
+
+**Post-deploy** (Story 9.4 — manual):
+
+1. Commit `MAINNET_PROGRAM_ID.md` with a message like `chore(9.2): mainnet deploy v0.1.0-mainnet`.
+2. Open a PR to flip the README "Upgrade authority: burned" badge — `apps/reference/app/api/badge/upgrade-burned/route.ts` already reads `MAINNET_PROGRAM_ID.md` via `lib/badge/load-mainnet-program-id.ts`, so the badge transitions from `pending` to `verified` on the next CI build.
+3. Verify the [`immutability-check.yml`](./.github/workflows/immutability-check.yml) workflow passes its first post-mainnet run.
+4. Tag the release: `git tag v0.1.0-mainnet && git push --tags`.
+5. Add a daily-log entry at `/log/YYYY-MM-DD.md` documenting the moment the badge first flipped — this is the canonical "Susu became infrastructure" log.
+
+There are no hotfixes after mainnet. Bugs require a new program at a new ID (`susu-v2`).
+
 ## IDL Re-freeze Policy
 
 Any change to `IDL_FREEZE.md` requires all of the following in the same PR:

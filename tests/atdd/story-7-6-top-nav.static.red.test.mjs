@@ -27,11 +27,16 @@ test('Story 7.6 TopNav.tsx exists and is a Server Component (no "use client")', 
   );
 });
 
-test('Story 7.6 TopNav.tsx imports ClusterPill, LocaleDropdown, SkinToggle, WalletStatus', () => {
+test('Story 7.6 TopNav.tsx renders ClusterPill + WalletStatus and surfaces locale + skin via NavSettingsMenu/MobileNavMenu', () => {
+  // Post-2026-05 quiet-luxury TopNav refactor: LocaleDropdown and SkinToggle
+  // are no longer mounted directly inside TopNav. They live one level deeper
+  // inside <NavSettingsMenu /> (md+) and <MobileNavMenu /> (< md), keeping the
+  // chrome free of competing affordances. The downstream wrappers still
+  // import LocaleDropdown / SkinToggle, asserted in their own tests.
   const src = read(topNavPath);
   assert.match(src, /ClusterPill/, 'TopNav must import/render ClusterPill');
-  assert.match(src, /LocaleDropdown/, 'TopNav must import/render LocaleDropdown');
-  assert.match(src, /SkinToggle/, 'TopNav must import/render SkinToggle');
+  assert.match(src, /NavSettingsMenu/, 'TopNav must import/render NavSettingsMenu (locale + skin on md+)');
+  assert.match(src, /MobileNavMenu/, 'TopNav must import/render MobileNavMenu (< md hamburger)');
   assert.match(src, /WalletStatus/, 'TopNav must import/render WalletStatus');
 });
 
