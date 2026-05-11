@@ -11,8 +11,25 @@ permissions:
   attestations: write
 
 jobs:
+  audit-signoff:
+    # Story 9.2 — hard precondition. Mainnet deploy / release publishing must not
+    # run unless the Story 9.1 audit sign-off gate passes in enforce mode (i.e.,
+    # audits/SKIP_AUDIT_GATE has been removed by the audit firm's landing PR and
+    # zero Critical / zero High findings have been recorded).
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Run audit sign-off gate (enforce mode)
+        env:
+          SUSU_AUDIT_GATE: enforce
+        run: bash scripts/check-audit-signoff.sh
+
   verify-build:
     runs-on: ubuntu-latest
+    needs: audit-signoff
     timeout-minutes: 30
 
     steps:
